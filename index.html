@@ -2,18 +2,22 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Ra Quân - 2007</title>
     <style>
         :root {
             --army-green: #3e4a3d; --gold: #f1c40f; --bg: #1a1c1a;
             --card: #2c332b; --white: #ecf0f1; --danger: #e74c3c;
         }
-        body { margin: 0; background-color: var(--bg); color: var(--white); font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+        body { margin: 0; background-color: var(--bg); color: var(--white); font-family: 'Courier New', Courier, monospace; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
         .container, .section { background: var(--card); border: 2px solid var(--army-green); padding: 25px; border-radius: 5px; text-align: center; width: 100%; max-width: 600px; margin-bottom: 20px; }
         h1, h2 { color: var(--gold); text-transform: uppercase; margin: 10px 0; }
-        .btn { background: var(--army-green); color: var(--gold); border: 1px solid var(--gold); padding: 8px 12px; cursor: pointer; text-transform: uppercase; margin: 5px; }
+        .box { background: var(--army-green); padding: 15px; margin: 15px 0; border-radius: 3px; }
+        .number { font-size: 3rem; font-weight: bold; color: var(--gold); }
+        .btn { background: var(--army-green); color: var(--gold); border: 1px solid var(--gold); padding: 10px 15px; cursor: pointer; text-transform: uppercase; margin: 5px; font-weight: bold; }
         .btn:hover { background: var(--gold); color: var(--army-green); }
         .btn-danger { color: var(--danger); border-color: var(--danger); }
+        input { background: #000; border: 1px solid var(--army-green); color: var(--white); padding: 10px; margin: 5px; width: 85%; border-radius: 3px; }
         .hidden { display: none; }
         .memory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
         .memory-item { background: #000; padding: 5px; border: 1px solid var(--army-green); position: relative; }
@@ -21,43 +25,75 @@
         .user-tag { font-size: 0.6rem; color: #fff; position: absolute; top: 5px; left: 5px; background: rgba(62,74,61,0.9); padding: 2px 5px; }
         .del-btn { position: absolute; top: 5px; right: 5px; background: rgba(231,76,60,0.8); color: white; border: none; cursor: pointer; padding: 2px 5px; }
         .date-tag { font-size: 0.6rem; color: var(--gold); display: block; margin-top: 5px; }
+        .admin-panel { border-top: 2px dashed var(--gold); margin-top: 30px; padding-top: 20px; text-align: left; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>LỆNH RA QUÂN</h1>
-        <div class="box"><span class="number" id="days">000</span><br><small>NGÀY CÒN LẠI</small></div>
+        <div style="border-bottom: 1px solid var(--army-green); padding-bottom: 10px;">
+            <b style="color: var(--gold)">NGUYỄN NGỌC HIỆP & NGUYỄN GIA HUY</b><br>
+            <small>MỤC TIÊU: 10/01/2028</small>
+        </div>
+        <div class="box">
+            <span class="number" id="days">000</span><br>
+            <small>NGÀY CÒN LẠI</small>
+        </div>
+        <div style="font-weight: bold; color: var(--gold);">
+            <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+        </div>
     </div>
 
     <div class="section">
         <h2>NHẬT KÝ ĐỒNG ĐỘI</h2>
         <div id="login-area"><button class="btn" onclick="showLogin()">ĐĂNG NHẬP</button></div>
+        
         <div id="login-form" class="hidden">
-            <input type="text" id="user" placeholder="Tài khoản"><input type="password" id="pass" placeholder="Mật khẩu">
+            <input type="text" id="user" placeholder="Tài khoản">
+            <input type="password" id="pass" placeholder="Mật khẩu">
             <button class="btn" onclick="handleLogin()">XÁC NHẬN</button>
         </div>
+
         <div id="upload-area" class="hidden">
             <p>Chào đ/c: <b id="current-display-name" style="color:var(--gold)"></b></p>
             <input type="file" id="imgInput" accept="image/*"><br>
-            <input type="text" id="imgCaption" placeholder="Ghi chú...">
+            <input type="text" id="imgCaption" placeholder="Ghi chú kỷ niệm...">
             <button class="btn" onclick="uploadPhoto()">ĐĂNG ẢNH</button>
             <button class="btn btn-danger" onclick="logout()">THOÁT</button>
         </div>
-        <div id="admin-panel" class="hidden">
-            <hr><h3>ADMIN PANEL</h3>
-            <input type="text" id="new-display-name" placeholder="Tên hiển thị">
+
+        <div id="admin-panel" class="hidden admin-panel">
+            <h3>QUẢN TRỊ VIÊN</h3>
+            <input type="text" id="new-display-name" placeholder="Tên hiển thị (VD: Nguyễn Văn A)">
             <input type="text" id="new-user" placeholder="Tên đăng nhập">
             <input type="text" id="new-pass" placeholder="Mật khẩu">
             <button class="btn" onclick="createNewAccount()">THÊM ĐỒNG CHÍ</button>
         </div>
+
         <div class="memory-grid" id="grid"></div>
     </div>
 
     <script>
+        const target = new Date("January 10, 2028 00:00:00").getTime();
         let currentUser = null;
-        if(!localStorage.getItem("accounts")) localStorage.setItem("accounts", JSON.stringify([{u: "admin", p: "2007", name: "ADMIN TỔNG", role: "admin"}]));
 
+        // Khởi tạo Admin mặc định nếu chưa có
+        if(!localStorage.getItem("accounts")) {
+            localStorage.setItem("accounts", JSON.stringify([{u: "admin", p: "2007", name: "ADMIN TỔNG", role: "admin"}]));
+        }
+
+        // Đếm ngược
+        function updateTimer() {
+            const now = new Date().getTime();
+            const diff = target - now;
+            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        }
+
+        // Tải danh sách ảnh
         function loadPhotos() {
             const mems = JSON.parse(localStorage.getItem("mems") || "[]");
             const isAdmin = currentUser && currentUser.role === "admin";
@@ -73,15 +109,12 @@
         }
 
         function deletePhoto(index) {
-            if(confirm("Đồng chí có chắc muốn xóa kỷ niệm này không?")) {
-                let mems = JSON.parse(localStorage.getItem("mems") || "[]");
-                mems.splice(mems.length - 1 - index, 1);
-                localStorage.setItem("mems", JSON.stringify(mems));
-                loadPhotos();
-            }
+            let mems = JSON.parse(localStorage.getItem("mems") || "[]");
+            mems.splice(mems.length - 1 - index, 1);
+            localStorage.setItem("mems", JSON.stringify(mems));
+            loadPhotos();
         }
 
-        // --- CÁC HÀM CÒN LẠI (Upload, Login, v.v...) GIỮ NGUYÊN NHƯ BẢN TRƯỚC ---
         function uploadPhoto() {
             const file = document.getElementById("imgInput").files[0];
             const cap = document.getElementById("imgCaption").value;
@@ -93,6 +126,7 @@
                 memories.push({img: e.target.result, cap: cap, by: currentUser.name, date: now});
                 localStorage.setItem("mems", JSON.stringify(memories));
                 loadPhotos();
+                document.getElementById("imgCaption").value = "";
             };
             reader.readAsDataURL(file);
         }
@@ -108,14 +142,15 @@
                 document.getElementById("upload-area").classList.remove("hidden");
                 document.getElementById("current-display-name").innerText = found.name;
                 if(found.role === "admin") document.getElementById("admin-panel").classList.remove("hidden");
-                loadPhotos(); // Load lại để hiện nút xóa nếu là admin
-            }
+                loadPhotos();
+            } else { alert("Sai thông tin!"); }
         }
 
         function createNewAccount() {
             const dn = document.getElementById("new-display-name").value;
             const nu = document.getElementById("new-user").value;
             const np = document.getElementById("new-pass").value;
+            if(!dn || !nu || !np) return;
             let accounts = JSON.parse(localStorage.getItem("accounts"));
             accounts.push({u: nu, p: np, name: dn.toUpperCase(), role: "user"});
             localStorage.setItem("accounts", JSON.stringify(accounts));
@@ -124,6 +159,9 @@
 
         function showLogin() { document.getElementById("login-area").classList.add("hidden"); document.getElementById("login-form").classList.remove("hidden"); }
         function logout() { location.reload(); }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
         loadPhotos();
     </script>
 </body>
