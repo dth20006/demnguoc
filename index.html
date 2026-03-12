@@ -2,167 +2,87 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Ra Quân - 2007</title>
+    <title>Lịch Trình Shipper 30 Ngày</title>
     <style>
-        :root {
-            --army-green: #3e4a3d; --gold: #f1c40f; --bg: #1a1c1a;
-            --card: #2c332b; --white: #ecf0f1; --danger: #e74c3c;
-        }
-        body { margin: 0; background-color: var(--bg); color: var(--white); font-family: 'Courier New', Courier, monospace; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
-        .container, .section { background: var(--card); border: 2px solid var(--army-green); padding: 25px; border-radius: 5px; text-align: center; width: 100%; max-width: 600px; margin-bottom: 20px; }
-        h1, h2 { color: var(--gold); text-transform: uppercase; margin: 10px 0; }
-        .box { background: var(--army-green); padding: 15px; margin: 15px 0; border-radius: 3px; }
-        .number { font-size: 3rem; font-weight: bold; color: var(--gold); }
-        .btn { background: var(--army-green); color: var(--gold); border: 1px solid var(--gold); padding: 10px 15px; cursor: pointer; text-transform: uppercase; margin: 5px; font-weight: bold; }
-        .btn:hover { background: var(--gold); color: var(--army-green); }
-        .btn-danger { color: var(--danger); border-color: var(--danger); }
-        input { background: #000; border: 1px solid var(--army-green); color: var(--white); padding: 10px; margin: 5px; width: 85%; border-radius: 3px; }
-        .hidden { display: none; }
-        .memory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
-        .memory-item { background: #000; padding: 5px; border: 1px solid var(--army-green); position: relative; }
-        .memory-item img { width: 100%; height: 120px; object-fit: cover; }
-        .user-tag { font-size: 0.6rem; color: #fff; position: absolute; top: 5px; left: 5px; background: rgba(62,74,61,0.9); padding: 2px 5px; }
-        .del-btn { position: absolute; top: 5px; right: 5px; background: rgba(231,76,60,0.8); color: white; border: none; cursor: pointer; padding: 2px 5px; }
-        .date-tag { font-size: 0.6rem; color: var(--gold); display: block; margin-top: 5px; }
-        .admin-panel { border-top: 2px dashed var(--gold); margin-top: 30px; padding-top: 20px; text-align: left; }
+        body { font-family: 'Segoe UI', sans-serif; background: #2c3e50; padding: 20px; }
+        h2 { text-align: center; color: #fff; text-transform: uppercase; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        th { background: #f39c12; color: white; padding: 12px; font-size: 13px; text-transform: uppercase; }
+        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 12px; }
+        tr:hover { background: #fff9c4; }
+        tr.completed { background: #e0e0e0; opacity: 0.6; }
+        tr.completed td { text-decoration: line-through; }
+        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        .time { font-weight: bold; color: #d35400; display: block; font-size: 11px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>LỆNH RA QUÂN</h1>
-        <div style="border-bottom: 1px solid var(--army-green); padding-bottom: 10px;">
-            <b style="color: var(--gold)">NGUYỄN NGỌC HIỆP & NGUYỄN GIA HUY</b><br>
-            <small>MỤC TIÊU: 10/01/2028</small>
-        </div>
-        <div class="box">
-            <span class="number" id="days">000</span><br>
-            <small>NGÀY CÒN LẠI</small>
-        </div>
-        <div style="font-weight: bold; color: var(--gold);">
-            <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
-        </div>
-    </div>
+<h2>LỊCH TRÌNH CHIẾN BINH SHIPPER</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Ngày</th><th>Ngủ (00-06h)</th><th>Sáng (07-09h)</th><th>Ca 2 (09-11h)</th><th>Trưa (11-14h)</th><th>Ca 4 (14-16h)</th><th>Chiều/Tối (16-23h)</th><th>Done</th>
+        </tr>
+    </thead>
+    <tbody id="body"></tbody>
+</table>
 
-    <div class="section">
-        <h2>NHẬT KÝ ĐỒNG ĐỘI</h2>
-        <div id="login-area"><button class="btn" onclick="showLogin()">ĐĂNG NHẬP</button></div>
-        
-        <div id="login-form" class="hidden">
-            <input type="text" id="user" placeholder="Tài khoản">
-            <input type="password" id="pass" placeholder="Mật khẩu">
-            <button class="btn" onclick="handleLogin()">XÁC NHẬN</button>
-        </div>
+<script>
+    const data = [
+        ["12/03 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Ship", "Ship"],
+        ["13/03 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["14/03 (T7)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["15/03 (CN)", "6 Tiếng", "Ship Full", "Ship Full", "Ship Full", "Ship Full", "Ship Tối"],
+        ["16/03 (T2)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["17/03 (T3)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["18/03 (T4)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["19/03 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["20/03 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["21/03 (T7)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["22/03 (CN)", "6 Tiếng", "Ship Full", "Ship Full", "Ship Full", "Ship Full", "Ship Tối"],
+        ["23/03 (T2)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["24/03 (T3)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["25/03 (T4)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["26/03 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["27/03 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["28/03 (T7)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["29/03 (CN)", "6 Tiếng", "Ship Full", "Ship Full", "Ship Full", "Ship Full", "Ship Tối"],
+        ["30/03 (T2)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["31/03 (T3)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["01/04 (T4)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["02/04 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["03/04 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["04/04 (T7)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["05/04 (CN)", "6 Tiếng", "Ship Full", "Ship Full", "Ship Full", "Ship Full", "Ship Tối"],
+        ["06/04 (T2)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["07/04 (T3)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["08/04 (T4)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
+        ["09/04 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
+        ["10/04 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"]
+    ];
 
-        <div id="upload-area" class="hidden">
-            <p>Chào đ/c: <b id="current-display-name" style="color:var(--gold)"></b></p>
-            <input type="file" id="imgInput" accept="image/*"><br>
-            <input type="text" id="imgCaption" placeholder="Ghi chú kỷ niệm...">
-            <button class="btn" onclick="uploadPhoto()">ĐĂNG ẢNH</button>
-            <button class="btn btn-danger" onclick="logout()">THOÁT</button>
-        </div>
+    const body = document.getElementById('body');
+    data.forEach((row, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td><td>${row[5]}</td><td>${row[6]}</td>
+                        <td><input type="checkbox" onchange="toggle(this, ${i})"></td>`;
+        body.appendChild(tr);
+    });
 
-        <div id="admin-panel" class="hidden admin-panel">
-            <h3>QUẢN TRỊ VIÊN</h3>
-            <input type="text" id="new-display-name" placeholder="Tên hiển thị (VD: Nguyễn Văn A)">
-            <input type="text" id="new-user" placeholder="Tên đăng nhập">
-            <input type="text" id="new-pass" placeholder="Mật khẩu">
-            <button class="btn" onclick="createNewAccount()">THÊM ĐỒNG CHÍ</button>
-        </div>
+    function toggle(cb, i) {
+        cb.closest('tr').classList.toggle('completed', cb.checked);
+        localStorage.setItem('task_'+i, cb.checked);
+    }
 
-        <div class="memory-grid" id="grid"></div>
-    </div>
-
-    <script>
-        const target = new Date("January 10, 2028 00:00:00").getTime();
-        let currentUser = null;
-
-        // Khởi tạo Admin mặc định nếu chưa có
-        if(!localStorage.getItem("accounts")) {
-            localStorage.setItem("accounts", JSON.stringify([{u: "admin", p: "2007", name: "ADMIN TỔNG", role: "admin"}]));
-        }
-
-        // Đếm ngược
-        function updateTimer() {
-            const now = new Date().getTime();
-            const diff = target - now;
-            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-            document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-            document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
-        }
-
-        // Tải danh sách ảnh
-        function loadPhotos() {
-            const mems = JSON.parse(localStorage.getItem("mems") || "[]");
-            const isAdmin = currentUser && currentUser.role === "admin";
-            document.getElementById("grid").innerHTML = mems.map((m, index) => `
-                <div class="memory-item">
-                    <div class="user-tag">${m.by}</div>
-                    ${isAdmin ? `<button class="del-btn" onclick="deletePhoto(${index})">🗑️</button>` : ''}
-                    <img src="${m.img}">
-                    <div style="font-size:0.65rem; color:var(--gold); padding:5px">${m.cap || '...'}</div>
-                    <span class="date-tag">📅 ${m.date}</span>
-                </div>
-            `).reverse().join('');
-        }
-
-        function deletePhoto(index) {
-            let mems = JSON.parse(localStorage.getItem("mems") || "[]");
-            mems.splice(mems.length - 1 - index, 1);
-            localStorage.setItem("mems", JSON.stringify(mems));
-            loadPhotos();
-        }
-
-        function uploadPhoto() {
-            const file = document.getElementById("imgInput").files[0];
-            const cap = document.getElementById("imgCaption").value;
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const now = new Date().toLocaleDateString('vi-VN') + " " + new Date().toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'});
-                const memories = JSON.parse(localStorage.getItem("mems") || "[]");
-                memories.push({img: e.target.result, cap: cap, by: currentUser.name, date: now});
-                localStorage.setItem("mems", JSON.stringify(memories));
-                loadPhotos();
-                document.getElementById("imgCaption").value = "";
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function handleLogin() {
-            const u = document.getElementById("user").value;
-            const p = document.getElementById("pass").value;
-            const accounts = JSON.parse(localStorage.getItem("accounts"));
-            const found = accounts.find(acc => acc.u === u && acc.p === p);
-            if(found) {
-                currentUser = found;
-                document.getElementById("login-form").classList.add("hidden");
-                document.getElementById("upload-area").classList.remove("hidden");
-                document.getElementById("current-display-name").innerText = found.name;
-                if(found.role === "admin") document.getElementById("admin-panel").classList.remove("hidden");
-                loadPhotos();
-            } else { alert("Sai thông tin!"); }
-        }
-
-        function createNewAccount() {
-            const dn = document.getElementById("new-display-name").value;
-            const nu = document.getElementById("new-user").value;
-            const np = document.getElementById("new-pass").value;
-            if(!dn || !nu || !np) return;
-            let accounts = JSON.parse(localStorage.getItem("accounts"));
-            accounts.push({u: nu, p: np, name: dn.toUpperCase(), role: "user"});
-            localStorage.setItem("accounts", JSON.stringify(accounts));
-            alert("Đã tạo tài khoản cho: " + dn);
-        }
-
-        function showLogin() { document.getElementById("login-area").classList.add("hidden"); document.getElementById("login-form").classList.remove("hidden"); }
-        function logout() { location.reload(); }
-
-        setInterval(updateTimer, 1000);
-        updateTimer();
-        loadPhotos();
-    </script>
+    window.onload = () => {
+        document.querySelectorAll('input').forEach((cb, i) => {
+            if(localStorage.getItem('task_'+i) === 'true') {
+                cb.checked = true;
+                cb.closest('tr').classList.add('completed');
+            }
+        });
+    }
+</script>
 </body>
 </html>
