@@ -1,88 +1,378 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <title>Lịch Trình Shipper 30 Ngày</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #2c3e50; padding: 20px; }
-        h2 { text-align: center; color: #fff; text-transform: uppercase; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        th { background: #f39c12; color: white; padding: 12px; font-size: 13px; text-transform: uppercase; }
-        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 12px; }
-        tr:hover { background: #fff9c4; }
-        tr.completed { background: #e0e0e0; opacity: 0.6; }
-        tr.completed td { text-decoration: line-through; }
-        input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
-        .time { font-weight: bold; color: #d35400; display: block; font-size: 11px; }
-    </style>
+<meta charset="UTF-8">
+
+<title>Warrior Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+background:#0f1115;
+color:#e6e6e6;
+margin:0;
+padding:20px;
+}
+
+.title{
+font-size:28px;
+font-weight:700;
+margin-bottom:20px;
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:20px;
+}
+
+.card{
+background:#171a21;
+border-radius:16px;
+padding:20px;
+box-shadow:0 6px 20px rgba(0,0,0,0.5);
+}
+
+.card h3{
+margin-top:0;
+font-weight:600;
+}
+
+.stats{
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+font-size:16px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:12px;
+}
+
+.day{
+background:#1f232b;
+padding:12px;
+border-radius:10px;
+font-size:14px;
+}
+
+.moneyInput{
+width:80px;
+background:#111;
+border:1px solid #444;
+color:white;
+border-radius:6px;
+padding:4px;
+}
+
+input[type=checkbox]{
+accent-color:#5b8cff;
+}
+
+canvas{
+margin-top:10px;
+}
+
+@media(max-width:600px){
+
+.title{
+font-size:22px;
+}
+
+}
+
+</style>
 </head>
+
 <body>
 
-<h2>LỊCH TRÌNH CHIẾN BINH SHIPPER</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Ngày</th><th>Ngủ (00-06h)</th><th>Sáng (07-09h)</th><th>Ca 2 (09-11h)</th><th>Trưa (11-14h)</th><th>Ca 4 (14-16h)</th><th>Chiều/Tối (16-23h)</th><th>Done</th>
-        </tr>
-    </thead>
-    <tbody id="body"></tbody>
-</table>
+<div class="title">🚀 Warrior Productivity Dashboard</div>
+
+<div class="container">
+
+<div class="card">
+
+<h3>📊 Thống kê</h3>
+
+<div class="stats">
+
+<div>Tiến độ: <b id="progress">0%</b></div>
+
+<div>Dự đoán ngày: <b id="dayAI">0</b></div>
+
+<div>Theo giờ: <b id="hourAI">0</b></div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>🧠 AI gợi ý</h3>
+
+<div id="schedule">Chưa có dữ liệu</div>
+
+</div>
+
+<div class="card">
+
+<h3>📊 Doanh thu ngày</h3>
+
+<canvas id="chartDay"></canvas>
+
+</div>
+
+<div class="card">
+
+<h3>📊 Doanh thu tuần</h3>
+
+<canvas id="chartWeek"></canvas>
+
+</div>
+
+<div class="card">
+
+<h3>📊 Doanh thu tháng</h3>
+
+<canvas id="chartMonth"></canvas>
+
+</div>
+
+</div>
+
+<br>
+
+<div class="card">
+
+<h3>📅 Lịch sinh hoạt & làm việc</h3>
+
+<div class="grid" id="grid"></div>
+
+</div>
 
 <script>
-    const data = [
-        ["12/03 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Ship", "Ship"],
-        ["13/03 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["14/03 (T7)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["15/03 (CN)", "6 Tiếng", "Ship Full", "Ship Full", "Ship Full", "Ship Full", "Ship Tối"],
-        ["16/03 (T2)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["17/03 (T3)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["18/03 (T4)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["19/03 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["20/03 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["21/03 (T7)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["22/03 (CN)", "6 Tiếng", "Ship Full", "Ship Full", "Ship Full", "Ship Full", "Ship Tối"],
-        ["23/03 (T2)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["24/03 (T3)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["25/03 (T4)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["26/03 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["27/03 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["28/03 (T7)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["29/03 (CN)", "6 Tiếng", "Ship Full", "Ship Full", "Ship Full", "Ship Full", "Ship Tối"],
-        ["30/03 (T2)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["31/03 (T3)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["01/04 (T4)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["02/04 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["03/04 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["04/04 (T7)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["05/04 (CN)", "6 Tiếng", "Ship Full", "Ship Full", "Ship Full", "Ship Full", "Ship Tối"],
-        ["06/04 (T2)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["07/04 (T3)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["08/04 (T4)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"],
-        ["09/04 (T5)", "6 Tiếng", "Ship", "Anh 1.2", "Ship", "Online", "Ship"],
-        ["10/04 (T6)", "6 Tiếng", "Ship", "Ship", "Ship", "Dữ liệu", "Ship"]
-    ];
 
-    const body = document.getElementById('body');
-    data.forEach((row, i) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td><td>${row[5]}</td><td>${row[6]}</td>
-                        <td><input type="checkbox" onchange="toggle(this, ${i})"></td>`;
-        body.appendChild(tr);
-    });
+const days=[
+"14/03","15/03","16/03","17/03","18/03","19/03","20/03",
+"21/03","22/03","23/03","24/03","25/03","26/03","27/03",
+"28/03","29/03","30/03","31/03"
+];
 
-    function toggle(cb, i) {
-        cb.closest('tr').classList.toggle('completed', cb.checked);
-        localStorage.setItem('task_'+i, cb.checked);
-    }
+const shifts=[
 
-    window.onload = () => {
-        document.querySelectorAll('input').forEach((cb, i) => {
-            if(localStorage.getItem('task_'+i) === 'true') {
-                cb.checked = true;
-                cb.closest('tr').classList.add('completed');
-            }
-        });
-    }
+"😴 00:00-06:00 Ngủ",
+"🚚 06:30-09:00 Ship sáng",
+"🍚 09:00 Ăn sáng",
+"📚 09:25-11:25 Đi học",
+"🚚 11:30-14:00 Ship trưa",
+"📚 14:10-16:10 Đi học",
+"🚚 16:30-20:00 Ship chiều",
+"🍚 20:00 Ăn tối",
+"🚚 20:30-23:30 Ship tối"
+
+];
+
+const grid=document.getElementById("grid");
+
+days.forEach(d=>{
+
+let card=document.createElement("div");
+card.className="day";
+
+let html="<b>"+d+"</b>";
+
+shifts.forEach(s=>{
+
+html+=`
+<div>
+<input type="checkbox" onchange="update()"> ${s}
+</div>
+`;
+
+});
+
+html+=`<br>💰 <input class="moneyInput" type="number" onchange="update()">`;
+
+card.innerHTML=html;
+
+grid.appendChild(card);
+
+});
+
+function getMoney(){
+
+let arr=[];
+
+document.querySelectorAll(".moneyInput").forEach(i=>{
+
+arr.push(Number(i.value)||0);
+
+});
+
+return arr;
+
+}
+
+function update(){
+
+let done=document.querySelectorAll("input[type=checkbox]:checked").length;
+
+let total=document.querySelectorAll("input[type=checkbox]").length;
+
+let progress=Math.round(done/total*100);
+
+document.getElementById("progress").innerText=progress+"%";
+
+buildCharts();
+
+AIoptimize();
+
+}
+
+function buildCharts(){
+
+let data=getMoney();
+
+drawDay(data);
+
+drawWeek(data);
+
+drawMonth(data);
+
+}
+
+function drawDay(data){
+
+if(window.dayChart) window.dayChart.destroy();
+
+window.dayChart=new Chart(document.getElementById("chartDay"),{
+
+type:"line",
+
+data:{
+labels:days,
+datasets:[{
+label:"Doanh thu",
+data:data,
+tension:0.4
+}]
+},
+
+options:{
+animation:{
+duration:1200
+}
+}
+
+});
+
+}
+
+function drawWeek(data){
+
+let weeks=[];
+
+for(let i=0;i<data.length;i+=7){
+
+weeks.push(data.slice(i,i+7).reduce((a,b)=>a+b,0));
+
+}
+
+if(window.weekChart) window.weekChart.destroy();
+
+window.weekChart=new Chart(document.getElementById("chartWeek"),{
+
+type:"bar",
+
+data:{
+labels:["Tuần 1","Tuần 2","Tuần 3","Tuần 4","Tuần 5"],
+datasets:[{
+label:"Doanh thu",
+data:weeks
+}]
+},
+
+options:{
+animation:{
+duration:1200
+}
+}
+
+});
+
+}
+
+function drawMonth(data){
+
+let total=data.reduce((a,b)=>a+b,0);
+
+if(window.monthChart) window.monthChart.destroy();
+
+window.monthChart=new Chart(document.getElementById("chartMonth"),{
+
+type:"doughnut",
+
+data:{
+labels:["Đã kiếm","Mục tiêu"],
+datasets:[{
+data:[total,10000000-total]
+}]
+},
+
+options:{
+animation:{
+animateRotate:true,
+duration:1400
+}
+}
+
+});
+
+}
+
+function AIoptimize(){
+
+let data=getMoney();
+
+let avg=data.reduce((a,b)=>a+b,0)/data.length;
+
+let plan="";
+
+if(avg>200000){
+
+plan="🔥 Buổi tối đang là giờ kiếm tiền tốt nhất";
+
+}
+else if(avg>120000){
+
+plan="🚀 Trưa + tối ổn định";
+
+}
+else{
+
+plan="⚠ Nên chạy thêm buổi sáng";
+
+}
+
+document.getElementById("schedule").innerText=
+"Doanh thu TB: "+Math.round(avg)+"\n"+plan;
+
+document.getElementById("dayAI").innerText=Math.round(avg*1.2);
+
+document.getElementById("hourAI").innerText=Math.round(avg/8);
+
+}
+
 </script>
+
 </body>
 </html>
