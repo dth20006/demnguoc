@@ -3,79 +3,87 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Warrior Dashboard</title>
+<title>⚡ WARRIOR AI PRO</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
-*{
-box-sizing:border-box;
-}
-
 body{
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-background:#0f1115;
+background:
+radial-gradient(circle at top,#1a1f2b,#0f1115);
 color:#e6e6e6;
 margin:0;
 padding:20px;
 }
 
 .title{
-font-size:28px;
-font-weight:700;
+text-align:center;
+font-size:40px;
+text-shadow:0 0 20px #00ffe0;
 margin-bottom:20px;
 }
 
-.container{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-gap:20px;
-}
-
-.card{
-background:#171a21;
-border-radius:16px;
-padding:20px;
-box-shadow:0 6px 20px rgba(0,0,0,0.5);
-}
-
-.card h3{
-margin-top:0;
-font-weight:600;
-}
-
-.stats{
-display:flex;
-flex-wrap:wrap;
-gap:20px;
-font-size:16px;
+.panel{
+border:1px solid #00ffe0;
+padding:18px;
+border-radius:12px;
+margin-bottom:20px;
+background:#111a2f;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:12px;
+grid-template-columns:repeat(3,1fr);
+gap:14px;
 }
 
 .day{
-background:#1f232b;
+background:#182544;
 padding:12px;
-border-radius:10px;
-font-size:14px;
+border-radius:8px;
 }
 
 .moneyInput{
-width:80px;
-background:#111;
-border:1px solid #444;
+width:90px;
+background:#0f1115;
+border:1px solid #333;
 color:white;
-border-radius:6px;
-padding:4px;
+border-radius:8px;
+padding:6px;
+transition:all .2s;
+}
+
+.moneyInput:focus{
+outline:none;
+border-color:#5b8cff;
+box-shadow:0 0 8px rgba(91,140,255,.4);
 }
 
 input[type=checkbox]{
+width:16px;
+height:16px;
 accent-color:#5b8cff;
+cursor:pointer;
+}
+
+.card{
+background:rgba(255,255,255,0.03);
+border-radius:20px;
+padding:20px;
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.05);
+box-shadow:
+0 10px 30px rgba(0,0,0,0.5),
+inset 0 1px rgba(255,255,255,0.05);
+transition:all .3s;
+}
+
+.card:hover{
+transform:translateY(-4px);
+box-shadow:
+0 20px 40px rgba(0,0,0,0.6);
 }
 
 canvas{
@@ -83,11 +91,9 @@ margin-top:10px;
 }
 
 @media(max-width:600px){
-
 .title{
 font-size:22px;
 }
-
 }
 
 </style>
@@ -95,7 +101,7 @@ font-size:22px;
 
 <body>
 
-<div class="title">🚀 Warrior Productivity Dashboard</div>
+<div class="title">⚡ WARRIOR AI PRO</div>
 
 <div class="container">
 
@@ -232,6 +238,8 @@ let progress=Math.round(done/total*100);
 
 document.getElementById("progress").innerText=progress+"%";
 
+saveData();
+
 buildCharts();
 
 AIoptimize();
@@ -263,7 +271,31 @@ labels:days,
 datasets:[{
 label:"Doanh thu",
 data:data,
-tension:0.4
+tension:0.4,
+fill:true,
+backgroundColor:(ctx)=>{
+
+const chart=ctx.chart;
+const {ctx:canvas,chartArea}=chart;
+
+if(!chartArea) return null;
+
+const gradient=canvas.createLinearGradient(
+0,
+chartArea.top,
+0,
+chartArea.bottom
+);
+
+gradient.addColorStop(0,"rgba(91,140,255,0.5)");
+gradient.addColorStop(1,"rgba(91,140,255,0)");
+
+return gradient;
+
+},
+borderColor:"#5b8cff",
+borderWidth:3,
+pointRadius:4
 }]
 },
 
@@ -371,6 +403,37 @@ document.getElementById("dayAI").innerText=Math.round(avg*1.2);
 document.getElementById("hourAI").innerText=Math.round(avg/8);
 
 }
+
+function saveData(){
+
+let checks=[...document.querySelectorAll("input[type=checkbox]")]
+.map(c=>c.checked);
+
+let money=[...document.querySelectorAll(".moneyInput")]
+.map(m=>m.value);
+
+localStorage.setItem("warriorChecks",JSON.stringify(checks));
+localStorage.setItem("warriorMoney",JSON.stringify(money));
+
+}
+
+function loadData(){
+
+let checks=JSON.parse(localStorage.getItem("warriorChecks")||"[]");
+let money=JSON.parse(localStorage.getItem("warriorMoney")||"[]");
+
+document.querySelectorAll("input[type=checkbox]").forEach((c,i)=>{
+if(checks[i]) c.checked=true;
+});
+
+document.querySelectorAll(".moneyInput").forEach((m,i)=>{
+if(money[i]) m.value=money[i];
+});
+
+}
+
+loadData();
+update();
 
 </script>
 
