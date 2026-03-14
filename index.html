@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>⚡ Lịch Làm Việc Demo By dth206</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -126,24 +127,30 @@ input[type="checkbox"]:checked::after {
 <div class="header-ios">
   <div class="title">Lịch Làm Việc Demo By dth206</div>
 </div>
-
 <div class="container">
+
   <div class="card">
     <h3>📊 Chỉ số AI</h3>
     <div class="stat-row"><span class="stat-label">Tiến độ tổng</span><span class="stat-value" id="progress">0%</span></div>
     <div class="stat-row"><span class="stat-label">Dự báo ngày</span><span class="stat-value" id="dayAI">0</span></div>
     <div class="stat-row"><span class="stat-label">Năng suất/giờ</span><span class="stat-value" id="hourAI">0</span></div>
   </div>
-
   <div class="card">
     <h3>🧠 Trợ lý AI</h3>
     <div id="schedule_ai" style="line-height: 1.6; font-size: 15px; color: #efeff4;">Đang phân tích...</div>
   </div>
-
-  <div class="card"><h3>📈 Doanh thu ngày</h3><canvas id="chartDay"></canvas></div>
-  <div class="card"><h3>📅 Doanh thu tuần</h3><canvas id="chartWeek"></canvas></div>
-  <div class="card"><h3>🎯 Mục tiêu tháng</h3><canvas id="chartMonth"></canvas></div>
-
+  <div class="card">
+    <h3>📈 Doanh thu ngày</h3>
+    <canvas id="chartDay"></canvas>
+  </div>
+  <div class="card">
+    <h3>📅 Doanh thu tuần</h3>
+    <canvas id="chartWeek"></canvas>
+  </div>
+  <div class="card">
+    <h3>🎯 Mục tiêu tháng</h3>
+    <canvas id="chartMonth"></canvas>
+  </div>
   <div class="card">
     <h3>🔥 Hoạt động</h3>
     <div id="heatmap" class="heatmap">
@@ -153,13 +160,11 @@ input[type="checkbox"]:checked::after {
       </div>
     </div>
   </div>
-
   <div class="card">
     <h3>📅 Lịch trình hôm nay</h3>
     <div class="grid" id="grid"></div>
   </div>
-</div>
-
+  </div>
 <script>
 /* --- DỮ LIỆU GỐC GIỮ NGUYÊN --- */
 const schedule=[
@@ -395,7 +400,7 @@ function notifyTask(el) {
 <b>Thời gian:</b> 🕒 ${time}
 <b>Trạng thái:</b> Đã hoàn thành xuất sắc!
 
-🚀 <i>Tiếp tục giữ vững phong độ nhé Warrior!</i>`;
+🚀 <i>Tiếp tục giữ vững phong độ nhé dth206!</i>`;
     sendTelegram(message);
   }
 }
@@ -407,7 +412,7 @@ function notifyMoney(el) {
     const formattedAmount = amount.toLocaleString('vi-VN');
     const message = `
 <b>────────────────</b>
-<b>💰 LÚA VỀ BẢN - WARRIOR</b>
+<b>💰 LÚA VỀ BẢN - dth206</b>
 <b>────────────────</b>
 <b>Số tiền:</b> 💵 <code>${formattedAmount} VND</code>
 <b>Ngày ghi nhận:</b> 📅 ${todayStr}
@@ -428,7 +433,7 @@ function checkShifts() {
       // Logic kiểm tra khớp giờ (ví dụ "07:00")
       if (task.includes(timeStr)) {
         const message = `
-<b>🔔 LỜI NHẮC CHIẾN BINH</b>
+<b>🔔 LỜI NHẮC dth206</b>
 <b>────────────────</b>
 <b>Đến giờ:</b> <code>${task}</code>
 <b>Hành động:</b> Triển khai ngay lập tức!
