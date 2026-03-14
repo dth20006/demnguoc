@@ -2,172 +2,150 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>⚡ Lịch làm việc demo by dth206</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>⚡ WARRIOR AI PRO</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-  background:radial-gradient(circle at top,#1a1f2b,#0f1115);
-  color:#e6e6e6;
-  margin:0;
-  padding:20px;
+/* --- GIAO DIỆN IPHONE NATIVE --- */
+:root {
+  --ios-bg: #000000;
+  --ios-card: #1c1c1e;
+  --ios-cyan: #00ffe0;
+  --text-main: #ffffff;
+  --text-secondary: #8e8e93;
+  --ios-blue: #0a84ff;
 }
-.title{
-  text-align:center;
-  font-size:36px;
-  text-shadow:0 0 20px #00ffe0;
-  margin-bottom:20px;
-}
-.container{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:20px;
-}
-.card{
-  background:rgba(255,255,255,0.03);
-  border-radius:20px;
-  padding:20px;
-  backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
-  transition:.3s;
-}
-.card:hover{
-  transform:translateY(-4px);
-}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-.day{
-  background:#182544;
-  padding:12px;
-  border-radius:8px;
-}
-.moneyInput{
-  width:80px;
-  background:#0f1115;
-  border:1px solid #333;
-  color:white;
-  border-radius:8px;
-  padding:6px;
-}
-canvas{
-  margin-top:10px;
-}
-@media(max-width:700px){
-  .grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-/* HEATMAP */
-.heatmap{
-  display:grid;
-  grid-template-columns:repeat(9,1fr);
-  gap:6px;
-  margin-top:10px;
-  position: relative; /* Thêm để định vị Corgi */
-}
-.heat{
-  width:24px;
-  height:24px;
-  border-radius:4px;
-  background:#1f2937;
-}
-.heat.low{background:#134e4a;}
-.heat.mid{background:#0ea5a5;}
-.heat.high{background:#22c55e;}
-.heat.max{background:#4ade80;}
 
-/* CORGI */
-.corgi-wrapper {
-  position: absolute;
-  transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 10;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--ios-bg);
+  color: var(--text-main);
+  margin: 0;
+  padding: 0 16px 40px 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.header-ios {
+  padding: 40px 0 20px 0;
+  position: sticky;
   top: 0;
-  left: 0;
-  transform: translate(0, 0);
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: saturate(180%) blur(20px);
+  z-index: 100;
+  margin: 0 -16px 20px -16px;
+  padding-left: 16px;
 }
-.corgi-sprite {
-  font-size: 24px;
-  animation: bounce 0.4s infinite alternate;
+
+.title {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(to right, #00ffe0, #0a84ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
+
+.container { display: flex; flex-direction: column; gap: 20px; }
+
+.card {
+  background: var(--ios-card);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.card h3 {
+  margin-top: 0; font-size: 18px; font-weight: 600; color: var(--ios-cyan);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.grid { display: flex; flex-direction: column; gap: 12px; }
+
+.day {
+  background: #2c2c2e; padding: 20px; border-radius: 16px;
+  border-left: 5px solid var(--ios-blue);
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.day b { font-size: 20px; display: block; margin-bottom: 15px; color: var(--ios-cyan); }
+
+.task-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 16px; color: #ffffff; }
+
+input[type="checkbox"] {
+  appearance: none; width: 24px; height: 24px; border: 2px solid #3a3a3c;
+  border-radius: 50%; cursor: pointer; position: relative; transition: 0.2s;
+}
+
+input[type="checkbox"]:checked { background-color: var(--ios-cyan); border-color: var(--ios-cyan); }
+
+input[type="checkbox"]:checked::after {
+  content: '✓'; position: absolute; color: black; font-size: 15px; left: 5px; top: 1px; font-weight: bold;
+}
+
+.money-action { display: flex; align-items: center; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #3a3a3c; }
+
+.moneyInput { flex: 1; background: #1c1c1e; border: 1px solid #3a3a3c; color: white; border-radius: 12px; padding: 10px 15px; font-size: 16px; outline: none; }
+.moneyInput:focus { border-color: var(--ios-cyan); }
+
+.btn-add {
+  background: var(--ios-cyan); color: #000; border: none; border-radius: 50%;
+  width: 36px; height: 36px; cursor: pointer; font-weight: bold; font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.heatmap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 15px; position: relative; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; }
+
+.heat { aspect-ratio: 1/1; border-radius: 4px; background: #3a3a3c; }
+.heat.low {background:#0e4429;}
+.heat.mid {background:#006d32;}
+.heat.high {background:#26a641;}
+.heat.max {background:#39d353;}
+
+.stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid #3a3a3c; }
+.stat-row:last-child { border: none; }
+.stat-label { color: var(--text-secondary); }
+.stat-value { font-weight: 600; color: var(--ios-cyan); }
+
+.corgi-wrapper { position: absolute; transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1); pointer-events: none; z-index: 10; }
+.corgi-sprite { font-size: 24px; animation: bounce 0.4s infinite alternate; }
 .corgi-speech {
-  background: #ffffff;
-  color: #000000;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: bold;
-  white-space: nowrap;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  margin-bottom: 4px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
+  background: white; color: black; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;
+  position: absolute; top: -35px; left: 50%; transform: translateX(-50%); opacity: 0; transition: 0.3s; white-space: nowrap;
 }
-.corgi-speech.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.corgi-speech::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 5px 5px 0;
-  border-style: solid;
-  border-color: #ffffff transparent transparent transparent;
-  display: block;
-  width: 0;
-}
-@keyframes bounce {
-  from { transform: translateY(0); }
-  to { transform: translateY(-5px); }
-}
+.corgi-speech.show { opacity: 1; }
+
+@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-5px); } }
 </style>
 </head>
 <body>
 
-<div class="title">⚡ WARRIOR AI PRO</div>
+<div class="header-ios">
+  <div class="title">Warrior Pro</div>
+</div>
 
 <div class="container">
   <div class="card">
-    <h3>📊 Thống kê</h3>
-    <div>Tiến độ: <b id="progress">0%</b></div>
-    <div>Dự đoán ngày: <b id="dayAI">0</b></div>
-    <div>Theo giờ: <b id="hourAI">0</b></div>
+    <h3>📊 Chỉ số AI</h3>
+    <div class="stat-row"><span class="stat-label">Tiến độ tổng</span><span class="stat-value" id="progress">0%</span></div>
+    <div class="stat-row"><span class="stat-label">Dự báo ngày</span><span class="stat-value" id="dayAI">0</span></div>
+    <div class="stat-row"><span class="stat-label">Năng suất/giờ</span><span class="stat-value" id="hourAI">0</span></div>
   </div>
 
   <div class="card">
-    <h3>🧠 AI gợi ý</h3>
-    <div id="schedule">Chưa có dữ liệu</div>
+    <h3>🧠 Trợ lý AI</h3>
+    <div id="schedule_ai" style="line-height: 1.6; font-size: 15px; color: #efeff4;">Đang phân tích...</div>
   </div>
 
-  <div class="card">
-    <h3>📊 Doanh thu ngày</h3>
-    <canvas id="chartDay"></canvas>
-  </div>
+  <div class="card"><h3>📈 Doanh thu ngày</h3><canvas id="chartDay"></canvas></div>
+  <div class="card"><h3>📅 Doanh thu tuần</h3><canvas id="chartWeek"></canvas></div>
+  <div class="card"><h3>🎯 Mục tiêu tháng</h3><canvas id="chartMonth"></canvas></div>
 
   <div class="card">
-    <h3>📊 Doanh thu tuần</h3>
-    <canvas id="chartWeek"></canvas>
-  </div>
-
-  <div class="card">
-    <h3>📊 Doanh thu tháng</h3>
-    <canvas id="chartMonth"></canvas>
-  </div>
-
-  <div class="card">
-    <h3>🔥 Heatmap doanh thu</h3>
+    <h3>🔥 Hoạt động</h3>
     <div id="heatmap" class="heatmap">
       <div id="corgi" class="corgi-wrapper">
         <div id="corgiText" class="corgi-speech"></div>
@@ -175,17 +153,15 @@ canvas{
       </div>
     </div>
   </div>
-</div>
 
-<br>
-
-<div class="card">
-  <h3>📅 Lịch sinh hoạt & làm việc</h3>
-  <div class="grid" id="grid"></div>
+  <div class="card">
+    <h3>📅 Lịch trình hôm nay</h3>
+    <div class="grid" id="grid"></div>
+  </div>
 </div>
 
 <script>
-// ---------- FULL LỊCH 14/03 → 12/04 ----------
+/* --- DỮ LIỆU GỐC GIỮ NGUYÊN --- */
 const schedule=[
 ["14/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: Meet","16:30-23:30: Ship"],
 ["15/03","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"],
@@ -219,209 +195,228 @@ const schedule=[
 ["12/04","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"]
 ];
 
-// ---------- GRID ----------
-const grid=document.getElementById("grid");
-schedule.forEach(day=>{
-  let card=document.createElement("div");
-  card.className="day";
-  let html=`<b>${day[0]}</b>`;
-  for(let i=1;i<day.length;i++){
-    html+=`<div><input type="checkbox" onchange="update();notifyTask(this)"> ${day[i]}</div>`;
+/* --- LOGIC HIỂN THỊ CHỈ NGÀY HÔM NAY --- */
+const grid = document.getElementById("grid");
+const now = new Date();
+const todayStr = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0');
+
+function renderSchedule() {
+  grid.innerHTML = "";
+  let foundToday = false;
+
+  schedule.forEach((day, index) => {
+    // Chỉ hiển thị nếu trùng ngày hôm nay
+    if (day[0] === todayStr) {
+      foundToday = true;
+      let card = document.createElement("div");
+      card.className = "day";
+
+      let html = `<b>📅 Hôm nay: ${day[0]}</b>`;
+      for (let i = 1; i < day.length; i++) {
+        html += `<div class="task-item">
+                  <input type="checkbox" data-index="${index}-${i}" onchange="update();notifyTask(this)"> 
+                  <span>${day[i]}</span>
+                </div>`;
+      }
+      html += `<div class="money-action">
+                 <span style="font-size:18px">💰</span> 
+                 <input class="moneyInput" type="number" data-index="${index}" placeholder="Tiền..." onchange="update();notifyMoney(this)">
+                 <button class="btn-add" onclick="quickAdd(${index})">+</button>
+               </div>`;
+      card.innerHTML = html;
+      grid.appendChild(card);
+    }
+  });
+
+  if (!foundToday) {
+    grid.innerHTML = "<div style='text-align:center; padding:20px; color:#8e8e93;'>Nghỉ ngơi thôi sếp, hôm nay không có lịch! ☕</div>";
   }
-  html+=`<br>💰 <input class="moneyInput" type="number" onchange="update();notifyMoney(this)">`;
-  card.innerHTML=html;
-  grid.appendChild(card);
-});
+}
 
-// ---------- MONEY ----------
-function getMoney(){return [...document.querySelectorAll(".moneyInput")].map(i=>Number(i.value)||0);}
+/* --- CÁC HÀM XỬ LÝ DỮ LIỆU --- */
+function quickAdd(index) {
+  let input = document.querySelector(`.moneyInput[data-index="${index}"]`);
+  let currentVal = Number(input.value) || 0;
+  let addVal = prompt("Nhập số tiền cộng thêm cho " + schedule[index][0] + ":");
+  if (addVal !== null && addVal !== "" && !isNaN(addVal)) {
+    let newVal = currentVal + Number(addVal);
+    input.value = newVal;
+    update();
+    sendTelegram(`➕ Thêm ${addVal} vào ${schedule[index][0]}. Tổng: ${newVal}`);
+  }
+}
 
-// ---------- UPDATE ----------
-function update(){
-  const done=document.querySelectorAll("input[type=checkbox]:checked").length;
-  const total=document.querySelectorAll("input[type=checkbox]").length;
-  document.getElementById("progress").innerText=Math.round(done/total*100)+"%";
-  saveData();
-  buildCharts();
-  drawHeatmap(getMoney());
+function getMoney() {
+  // Lấy toàn bộ tiền từ LocalStorage để vẽ biểu đồ (vì UI chỉ hiện 1 ngày)
+  const savedMoney = JSON.parse(localStorage.getItem("money") || "[]");
+  return schedule.map((_, i) => Number(savedMoney[i]) || 0);
+}
+
+function update() {
+  const allChecks = document.querySelectorAll("input[type=checkbox]");
+  const done = [...allChecks].filter(c => c.checked).length;
+  const total = allChecks.length || 1;
+  document.getElementById("progress").innerText = Math.round(done / total * 100) + "%";
+  
+  saveData(); 
+  buildCharts(); 
+  drawHeatmap(getMoney()); 
   AIoptimize();
 }
 
-// ---------- CHART ----------
-function buildCharts(){
-  let data=getMoney();
-  drawDay(data);
-  drawWeek(data);
+function buildCharts() {
+  let data = getMoney(); 
+  drawDay(data); 
+  drawWeek(data); 
   drawMonth(data);
 }
 
-function drawDay(data){
-  if(window.dayChart) window.dayChart.destroy();
-  const ctx=document.getElementById("chartDay").getContext("2d");
-  const gradient=ctx.createLinearGradient(0,0,0,300);
-  gradient.addColorStop(0,"rgba(0,255,200,0.5)");
-  gradient.addColorStop(1,"rgba(0,255,200,0)");
-  window.dayChart=new Chart(ctx,{
-    type:"line",
-    data:{labels:schedule.map(d=>d[0]), datasets:[{label:"Doanh thu",data:data,fill:true,backgroundColor:gradient,borderColor:"#00ffe0",tension:0.4,pointRadius:4}]}
+function drawDay(data) {
+  if (window.dayChart) window.dayChart.destroy();
+  const ctx = document.getElementById("chartDay").getContext("2d");
+  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+  gradient.addColorStop(0, "rgba(0,255,224,0.4)");
+  gradient.addColorStop(1, "rgba(0,255,224,0)");
+  window.dayChart = new Chart(ctx, {
+    type: "line",
+    data: { labels: schedule.map(d => d[0]), datasets: [{ label: "Doanh thu", data: data, fill: true, backgroundColor: gradient, borderColor: "#00ffe0", borderWidth: 2, tension: 0.4, pointRadius: 0 }] },
+    options: { scales: { y: { beginAtZero: true } } }
   });
 }
 
-function drawWeek(data){
-  let weeks=[];
-  for(let i=0;i<data.length;i+=7) weeks.push(data.slice(i,i+7).reduce((a,b)=>a+b,0));
-  if(window.weekChart) window.weekChart.destroy();
-  window.weekChart=new Chart(document.getElementById("chartWeek"),{
-    type:"bar",
-    data:{labels:["Tuần 1","Tuần 2","Tuần 3","Tuần 4", "Tuần 5"], datasets:[{label:"Doanh thu",data:weeks}]}
+function drawWeek(data) {
+  let weeks = [];
+  for (let i = 0; i < data.length; i += 7) weeks.push(data.slice(i, i + 7).reduce((a, b) => a + b, 0));
+  if (window.weekChart) window.weekChart.destroy();
+  window.weekChart = new Chart(document.getElementById("chartWeek"), {
+    type: "bar",
+    data: { labels: ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4", "Tuần 5"], datasets: [{ label: "Doanh thu", data: weeks, backgroundColor: "#0a84ff", borderRadius: 5 }] }
   });
 }
 
-function drawMonth(data){
-  let total=data.reduce((a,b)=>a+b,0);
-  if(window.monthChart) window.monthChart.destroy();
-  window.monthChart=new Chart(document.getElementById("chartMonth"),{
-    type:"doughnut",
-    data:{labels:["Đã kiếm","Mục tiêu"], datasets:[{data:[total,10000000-total]}]}
+function drawMonth(data) {
+  let total = data.reduce((a, b) => a + b, 0);
+  if (window.monthChart) window.monthChart.destroy();
+  window.monthChart = new Chart(document.getElementById("chartMonth"), {
+    type: "doughnut",
+    data: { labels: ["Kiếm được", "Cần thêm"], datasets: [{ data: [total, Math.max(0, 10000000 - total)], backgroundColor: ["#30d158", "#1c1c1e"], borderWidth: 0 }] }
   });
 }
 
-// ---------- HEATMAP THEO CA GIỜ ----------
-function drawHeatmap(data){
-  const heat=document.getElementById("heatmap");
-  // Keep the corgi, clear the rest
+function drawHeatmap(data) {
+  const heat = document.getElementById("heatmap");
   const corgiEl = document.getElementById("corgi");
-  heat.innerHTML="";
-  if(corgiEl) heat.appendChild(corgiEl);
-
-  let max=Math.max(...data,1000);
-  data.forEach(v=>{
-    let div=document.createElement("div");
-    div.className="heat";
-    let ratio=v/max;
-    if(ratio<0.3) div.classList.add("low");
-    else if(ratio<0.6) div.classList.add("mid");
-    else if(ratio<0.8) div.classList.add("high");
+  // Xóa trừ corgi
+  [...heat.children].forEach(child => { if(child.id !== 'corgi') child.remove(); });
+  
+  let max = Math.max(...data, 1000);
+  data.forEach(v => {
+    let div = document.createElement("div");
+    div.className = "heat";
+    let ratio = v / max;
+    if (ratio < 0.1) div.style.opacity = "0.3";
+    else if (ratio < 0.3) div.classList.add("low");
+    else if (ratio < 0.6) div.classList.add("mid");
+    else if (ratio < 0.8) div.classList.add("high");
     else div.classList.add("max");
     heat.appendChild(div);
   });
 }
 
-// ---------- AI DỰ ĐOÁN ----------
-function AIoptimize(){
-  let data=getMoney();
-  let avg=data.reduce((a,b)=>a+b,0)/data.length;
-  let plan="";
-  if(avg>200000) plan="🔥 Buổi tối kiếm tiền tốt nhất";
-  else if(avg>120000) plan="🚀 Trưa + tối ổn định";
-  else plan="⚠ Nên chạy thêm buổi sáng";
-  document.getElementById("schedule").innerText="Doanh thu TB: "+Math.round(avg)+"\n"+plan;
-  document.getElementById("dayAI").innerText=Math.round(avg*1.2);
-  document.getElementById("hourAI").innerText=Math.round(avg/8); 
+function AIoptimize() {
+  let data = getMoney(); 
+  let total = data.reduce((a, b) => a + b, 0);
+  let avg = total / (data.filter(v => v > 0).length || 1);
+  let plan = avg > 200000 ? "🔥 Hiệu suất rất tốt! Hãy giữ vững phong độ." : "⚠ AI khuyên: Chăm chỉ nổ đơn hơn vào khung giờ Ship nhé!";
+  document.getElementById("schedule_ai").innerText = plan;
+  document.getElementById("dayAI").innerText = Math.round(avg).toLocaleString() + "đ";
+  document.getElementById("hourAI").innerText = Math.round(avg / 8).toLocaleString() + "đ";
 }
 
-// ---------- LOCAL SAVE ----------
-function saveData(){
-  const checks=[...document.querySelectorAll("input[type=checkbox]")].map(c=>c.checked);
-  const money=[...document.querySelectorAll(".moneyInput")].map(m=>m.value);
-  localStorage.setItem("checks",JSON.stringify(checks));
-  localStorage.setItem("money",JSON.stringify(money));
-  backupCloud(checks,money);
-}
-function loadData(){
-  const checks=JSON.parse(localStorage.getItem("checks")||"[]");
-  const money=JSON.parse(localStorage.getItem("money")||"[]");
-  document.querySelectorAll("input[type=checkbox]").forEach((c,i)=>{if(checks[i]) c.checked=true;});
-  document.querySelectorAll(".moneyInput").forEach((m,i)=>{if(money[i]) m.value=money[i];});
+function saveData() {
+  // Lưu trạng thái checkbox theo ID định danh duy nhất
+  const checks = {};
+  document.querySelectorAll("input[type=checkbox]").forEach(c => {
+    checks[c.getAttribute("data-index")] = c.checked;
+  });
+  
+  // Lưu tiền: lấy từ input hiện tại trộn vào dữ liệu cũ
+  const savedMoney = JSON.parse(localStorage.getItem("money") || "[]");
+  document.querySelectorAll(".moneyInput").forEach(m => {
+    let idx = m.getAttribute("data-index");
+    savedMoney[idx] = m.value;
+  });
+
+  localStorage.setItem("checks_today", JSON.stringify(checks));
+  localStorage.setItem("money", JSON.stringify(savedMoney));
+  backupCloud(checks, savedMoney);
 }
 
-// ---------- TELEGRAM ----------
-function sendTelegram(msg){
-  const token="8506964729:AAFvC-IkiijRn98BtvUuT5aHdOVjifYVMlo"; // Điền Token
-  const chat="7114174347";    // Điền Chat ID
-  fetch(`https://api.telegram.org/bot${token}/sendMessage`,{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({chat_id:chat,text:msg})
+function loadData() {
+  const checks = JSON.parse(localStorage.getItem("checks_today") || "{}");
+  const money = JSON.parse(localStorage.getItem("money") || "[]");
+
+  document.querySelectorAll("input[type=checkbox]").forEach(c => {
+    let id = c.getAttribute("data-index");
+    if (checks[id]) c.checked = true;
+  });
+
+  document.querySelectorAll(".moneyInput").forEach(m => {
+    let idx = m.getAttribute("data-index");
+    if (money[idx]) m.value = money[idx];
   });
 }
-function notifyTask(el){if(el.checked) sendTelegram("✅ Hoàn thành nhiệm vụ");}
-function notifyMoney(el){if(Number(el.value)>0) sendTelegram(`💰 Doanh thu cập nhật: ${Number(el.value)} VND`);}
 
-// ---------- BÁO THỨC CA LÀM QUA TELEGRAM ----------
-let notifiedShifts = {};
-function checkShifts() {
-  const now = new Date();
-  const today = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0');
-  const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-
-  const todaySchedule = schedule.find(s => s[0] === today);
-  if (todaySchedule) {
-    for (let i = 1; i < todaySchedule.length; i++) {
-      let task = todaySchedule[i];
-      let startTime = "";
-      let match1 = task.match(/^(\d{2}):(\d{2})/);
-      let match2 = task.match(/^(\d{2})-(\d{2})h/);
-      
-      if (match1) startTime = `${match1[1]}:${match1[2]}`;
-      else if (match2) startTime = `${match2[1]}:00`;
-
-      if (startTime && timeString === startTime) {
-        const shiftKey = today + "_" + task;
-        if (!notifiedShifts[shiftKey]) {
-          sendTelegram(`⏰ ĐẾN GIỜ RỒI: ${task.split(': ')[1] || task}`);
-          notifiedShifts[shiftKey] = true;
-        }
-      }
-    }
-  }
+function sendTelegram(msg) {
+  const token = "8506964729:AAFvC-IkiijRn98BtvUuT5aHdOVjifYVMlo";
+  const chat = "7114174347";
+  fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chat, text: msg })
+  });
 }
-setInterval(checkShifts, 60000); // Kiểm tra mỗi phút
-checkShifts();
 
-// ---------- CORGI CHẠY TRÊN HEATMAP ----------
-const corgiQuotes = [
-  "Chạy lẹ sếp ơi! 🚀", 
-  "Đừng lười nha! 😡", 
-  "Nổ đơn rồiii! 💰", 
-  "Gâu gâu! Làm việc đi! 🐕", 
-  "Hôm nay đạt target nhé! 🔥",
-  "Tăng tốc nào! ⚡"
-];
-function moveCorgi() {
-  const heatmap = document.getElementById("heatmap");
-  const cells = heatmap.getElementsByClassName("heat");
+function notifyTask(el) { if (el.checked) sendTelegram("✅ Xong: " + el.nextElementSibling.innerText); }
+function notifyMoney(el) { if (Number(el.value) > 0) sendTelegram(`💰 Thu nhập ${todayStr}: ${Number(el.value).toLocaleString()} VND`); }
+
+// Tự động nhắc nhở theo giờ
+setInterval(() => {
+  const timeStr = String(new Date().getHours()).padStart(2, '0') + ':' + String(new Date().getMinutes()).padStart(2, '0');
+  const todayData = schedule.find(s => s[0] === todayStr);
+  if (todayData) {
+    todayData.forEach(task => {
+      if (task.includes(timeStr)) sendTelegram(`⏰ ĐẾN GIỜ: ${task}`);
+    });
+  }
+}, 60000);
+
+// Corgi vui vẻ
+const corgiQuotes = ["Chạy lẹ sếp ơi! 🚀", "Đừng lười nha! 😡", "Nổ đơn rồiii! 💰", "Làm việc đi! 🐕"];
+setInterval(() => {
+  const cells = document.querySelectorAll(".heat");
   const corgi = document.getElementById("corgi");
   const corgiText = document.getElementById("corgiText");
   if (!cells.length || !corgi) return;
-
-  const randomCell = cells[Math.floor(Math.random() * cells.length)];
-  const topPos = randomCell.offsetTop;
-  const leftPos = randomCell.offsetLeft;
-
-  // Di chuyển Corgi
-  corgi.style.transform = `translate(${leftPos - 12}px, ${topPos - 25}px)`;
-
-  // Hiện lời thoại ngẫu nhiên
-  if (Math.random() > 0.3) {
+  const rand = cells[Math.floor(Math.random() * cells.length)];
+  corgi.style.transform = `translate(${rand.offsetLeft - 5}px, ${rand.offsetTop - 15}px)`;
+  if (Math.random() > 0.6) {
     corgiText.innerText = corgiQuotes[Math.floor(Math.random() * corgiQuotes.length)];
     corgiText.classList.add("show");
-    setTimeout(() => corgiText.classList.remove("show"), 3000);
+    setTimeout(() => corgiText.classList.remove("show"), 2000);
   }
-}
-setInterval(moveCorgi, 5000);
-setTimeout(moveCorgi, 1000);
+}, 5000);
 
-// ---------- FIREBASE CLOUD ----------
-async function backupCloud(checks,money){
-  fetch("https://firestore.googleapis.com/v1/projects/firebawweb/databases/(default)/documents/warrior/data",{
-    method:"PATCH",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({fields:{checks:{stringValue:JSON.stringify(checks)},money:{stringValue:JSON.stringify(money)},time:{stringValue:new Date().toISOString()}}})
+async function backupCloud(checks, money) {
+  fetch("https://firestore.googleapis.com/v1/projects/firebawweb/databases/(default)/documents/warrior/data", {
+    method: "PATCH", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ fields: { checks: { stringValue: JSON.stringify(checks) }, money: { stringValue: JSON.stringify(money) }, time: { stringValue: new Date().toISOString() } } })
   });
 }
 
-// ---------- START ----------
-loadData(); update();
+// Khởi chạy
+renderSchedule();
+loadData();
+update();
 </script>
 </body>
 </html>
