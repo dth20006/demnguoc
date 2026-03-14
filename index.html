@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>⚡ Lịch Làm Việc Demo By dth206</title>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
 /* --- GIAO DIỆN IPHONE NATIVE --- */
@@ -25,6 +25,7 @@ body {
   margin: 0;
   padding: 0 16px 40px 16px;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 .header-ios {
@@ -98,6 +99,7 @@ input[type="checkbox"]:checked::after {
   display: flex; align-items: center; justify-content: center;
 }
 
+/* --- HEATMAP & MÈO ĐI TUẦN --- */
 .heatmap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 15px; position: relative; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; }
 
 .heat { aspect-ratio: 1/1; border-radius: 4px; background: #3a3a3c; }
@@ -111,15 +113,36 @@ input[type="checkbox"]:checked::after {
 .stat-label { color: var(--text-secondary); }
 .stat-value { font-weight: 600; color: var(--ios-cyan); }
 
-.corgi-wrapper { position: absolute; transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1); pointer-events: none; z-index: 10; }
-.corgi-sprite { font-size: 24px; animation: bounce 0.4s infinite alternate; }
-.corgi-speech {
-  background: white; color: black; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;
-  position: absolute; top: -35px; left: 50%; transform: translateX(-50%); opacity: 0; transition: 0.3s; white-space: nowrap;
+/* --- HIỆU ỨNG MÈO BƯỚC ĐI --- */
+.cat-wrapper { 
+  position: absolute; 
+  transition: all 1.5s ease-in-out; 
+  pointer-events: none; 
+  z-index: 10; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.corgi-speech.show { opacity: 1; }
+.cat-sprite { 
+  font-size: 28px; 
+  display: inline-block;
+  animation: catWalkCycle 0.8s infinite ease-in-out; 
+  transform-origin: bottom center;
+}
+.cat-speech {
+  background: white; color: black; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;
+  position: absolute; top: -38px; left: 50%; transform: translateX(-50%); opacity: 0; transition: 0.3s; white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.cat-speech.show { opacity: 1; }
 
-@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+@keyframes catWalkCycle {
+  0% { transform: translateY(0) rotate(-5deg) scale(1, 1); }
+  25% { transform: translateY(-5px) rotate(0deg) scale(0.9, 1.1); }
+  50% { transform: translateY(0) rotate(5deg) scale(1.1, 0.9); }
+  75% { transform: translateY(-5px) rotate(0deg) scale(0.9, 1.1); }
+  100% { transform: translateY(0) rotate(-5deg) scale(1, 1); }
+}
 </style>
 </head>
 <body>
@@ -127,46 +150,42 @@ input[type="checkbox"]:checked::after {
 <div class="header-ios">
   <div class="title">Lịch Làm Việc Demo By dth206</div>
 </div>
-<div class="container">
 
+<div class="container">
   <div class="card">
     <h3>📊 Chỉ số AI</h3>
     <div class="stat-row"><span class="stat-label">Tiến độ tổng</span><span class="stat-value" id="progress">0%</span></div>
     <div class="stat-row"><span class="stat-label">Dự báo ngày</span><span class="stat-value" id="dayAI">0</span></div>
     <div class="stat-row"><span class="stat-label">Năng suất/giờ</span><span class="stat-value" id="hourAI">0</span></div>
   </div>
+
   <div class="card">
     <h3>🧠 Trợ lý AI</h3>
     <div id="schedule_ai" style="line-height: 1.6; font-size: 15px; color: #efeff4;">Đang phân tích...</div>
   </div>
-  <div class="card">
-    <h3>📈 Doanh thu ngày</h3>
-    <canvas id="chartDay"></canvas>
-  </div>
-  <div class="card">
-    <h3>📅 Doanh thu tuần</h3>
-    <canvas id="chartWeek"></canvas>
-  </div>
-  <div class="card">
-    <h3>🎯 Mục tiêu tháng</h3>
-    <canvas id="chartMonth"></canvas>
-  </div>
+
+  <div class="card"><h3>📈 Doanh thu ngày</h3><canvas id="chartDay"></canvas></div>
+  <div class="card"><h3>📅 Doanh thu tuần</h3><canvas id="chartWeek"></canvas></div>
+  <div class="card"><h3>🎯 Mục tiêu tháng</h3><canvas id="chartMonth"></canvas></div>
+
   <div class="card">
     <h3>🔥 Hoạt động</h3>
     <div id="heatmap" class="heatmap">
-      <div id="corgi" class="corgi-wrapper">
-        <div id="corgiText" class="corgi-speech"></div>
-        <div class="corgi-sprite">🐕</div>
+      <div id="cat" class="cat-wrapper">
+        <div id="catText" class="cat-speech"></div>
+        <div id="catEmoji" class="cat-sprite">🐈</div>
       </div>
     </div>
   </div>
+
   <div class="card">
     <h3>📅 Lịch trình hôm nay</h3>
     <div class="grid" id="grid"></div>
   </div>
-  </div>
+</div>
+
 <script>
-/* --- DỮ LIỆU GỐC GIỮ NGUYÊN --- */
+/* --- DỮ LIỆU GỐC --- */
 const schedule=[
 ["14/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: Meet","16:30-23:30: Ship"],
 ["15/03","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"],
@@ -200,7 +219,6 @@ const schedule=[
 ["12/04","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"]
 ];
 
-/* --- LOGIC HIỂN THỊ CHỈ NGÀY HÔM NAY --- */
 const grid = document.getElementById("grid");
 const now = new Date();
 const todayStr = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0');
@@ -208,37 +226,23 @@ const todayStr = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMo
 function renderSchedule() {
   grid.innerHTML = "";
   let foundToday = false;
-
   schedule.forEach((day, index) => {
-    // Chỉ hiển thị nếu trùng ngày hôm nay
     if (day[0] === todayStr) {
       foundToday = true;
       let card = document.createElement("div");
       card.className = "day";
-
       let html = `<b>📅 Hôm nay: ${day[0]}</b>`;
       for (let i = 1; i < day.length; i++) {
-        html += `<div class="task-item">
-                  <input type="checkbox" data-index="${index}-${i}" onchange="update();notifyTask(this)"> 
-                  <span>${day[i]}</span>
-                </div>`;
+        html += `<div class="task-item"><input type="checkbox" data-index="${index}-${i}" onchange="update();notifyTask(this)"><span>${day[i]}</span></div>`;
       }
-      html += `<div class="money-action">
-                 <span style="font-size:18px">💰</span> 
-                 <input class="moneyInput" type="number" data-index="${index}" placeholder="Tiền..." onchange="update();notifyMoney(this)">
-                 <button class="btn-add" onclick="quickAdd(${index})">+</button>
-               </div>`;
+      html += `<div class="money-action"><span style="font-size:18px">💰</span><input class="moneyInput" type="number" data-index="${index}" placeholder="Tiền..." onchange="update();notifyMoney(this)"><button class="btn-add" onclick="quickAdd(${index})">+</button></div>`;
       card.innerHTML = html;
       grid.appendChild(card);
     }
   });
-
-  if (!foundToday) {
-    grid.innerHTML = "<div style='text-align:center; padding:20px; color:#8e8e93;'>Nghỉ ngơi thôi sếp, hôm nay không có lịch! ☕</div>";
-  }
+  if (!foundToday) grid.innerHTML = "<div style='text-align:center; padding:20px; color:#8e8e93;'>Nghỉ ngơi thôi sếp dth206! ☕</div>";
 }
 
-/* --- CÁC HÀM XỬ LÝ DỮ LIỆU --- */
 function quickAdd(index) {
   let input = document.querySelector(`.moneyInput[data-index="${index}"]`);
   let currentVal = Number(input.value) || 0;
@@ -252,7 +256,6 @@ function quickAdd(index) {
 }
 
 function getMoney() {
-  // Lấy toàn bộ tiền từ LocalStorage để vẽ biểu đồ (vì UI chỉ hiện 1 ngày)
   const savedMoney = JSON.parse(localStorage.getItem("money") || "[]");
   return schedule.map((_, i) => Number(savedMoney[i]) || 0);
 }
@@ -262,18 +265,11 @@ function update() {
   const done = [...allChecks].filter(c => c.checked).length;
   const total = allChecks.length || 1;
   document.getElementById("progress").innerText = Math.round(done / total * 100) + "%";
-  
-  saveData(); 
-  buildCharts(); 
-  drawHeatmap(getMoney()); 
-  AIoptimize();
+  saveData(); buildCharts(); drawHeatmap(getMoney()); AIoptimize();
 }
 
 function buildCharts() {
-  let data = getMoney(); 
-  drawDay(data); 
-  drawWeek(data); 
-  drawMonth(data);
+  let data = getMoney(); drawDay(data); drawWeek(data); drawMonth(data);
 }
 
 function drawDay(data) {
@@ -310,10 +306,7 @@ function drawMonth(data) {
 
 function drawHeatmap(data) {
   const heat = document.getElementById("heatmap");
-  const corgiEl = document.getElementById("corgi");
-  // Xóa trừ corgi
-  [...heat.children].forEach(child => { if(child.id !== 'corgi') child.remove(); });
-  
+  [...heat.children].forEach(child => { if(child.id !== 'cat') child.remove(); });
   let max = Math.max(...data, 1000);
   data.forEach(v => {
     let div = document.createElement("div");
@@ -329,29 +322,20 @@ function drawHeatmap(data) {
 }
 
 function AIoptimize() {
-  let data = getMoney(); 
+  let data = getMoney();
   let total = data.reduce((a, b) => a + b, 0);
   let avg = total / (data.filter(v => v > 0).length || 1);
-  let plan = avg > 200000 ? "🔥 Hiệu suất rất tốt! Hãy giữ vững phong độ." : "⚠ AI khuyên: Chăm chỉ nổ đơn hơn vào khung giờ Ship nhé!";
+  let plan = avg > 200000 ? "🔥 Hiệu suất rất tốt! Mèo khen sếp nhé." : "⚠ AI nhắc: Chăm chỉ nổ đơn hơn nhé dth206!";
   document.getElementById("schedule_ai").innerText = plan;
   document.getElementById("dayAI").innerText = Math.round(avg).toLocaleString() + "đ";
   document.getElementById("hourAI").innerText = Math.round(avg / 8).toLocaleString() + "đ";
 }
 
 function saveData() {
-  // Lưu trạng thái checkbox theo ID định danh duy nhất
   const checks = {};
-  document.querySelectorAll("input[type=checkbox]").forEach(c => {
-    checks[c.getAttribute("data-index")] = c.checked;
-  });
-  
-  // Lưu tiền: lấy từ input hiện tại trộn vào dữ liệu cũ
+  document.querySelectorAll("input[type=checkbox]").forEach(c => { checks[c.getAttribute("data-index")] = c.checked; });
   const savedMoney = JSON.parse(localStorage.getItem("money") || "[]");
-  document.querySelectorAll(".moneyInput").forEach(m => {
-    let idx = m.getAttribute("data-index");
-    savedMoney[idx] = m.value;
-  });
-
+  document.querySelectorAll(".moneyInput").forEach(m => { savedMoney[m.getAttribute("data-index")] = m.value; });
   localStorage.setItem("checks_today", JSON.stringify(checks));
   localStorage.setItem("money", JSON.stringify(savedMoney));
   backupCloud(checks, savedMoney);
@@ -360,106 +344,92 @@ function saveData() {
 function loadData() {
   const checks = JSON.parse(localStorage.getItem("checks_today") || "{}");
   const money = JSON.parse(localStorage.getItem("money") || "[]");
-
-  document.querySelectorAll("input[type=checkbox]").forEach(c => {
-    let id = c.getAttribute("data-index");
-    if (checks[id]) c.checked = true;
-  });
-
-  document.querySelectorAll(".moneyInput").forEach(m => {
-    let idx = m.getAttribute("data-index");
-    if (money[idx]) m.value = money[idx];
-  });
+  document.querySelectorAll("input[type=checkbox]").forEach(c => { if (checks[c.getAttribute("data-index")]) c.checked = true; });
+  document.querySelectorAll(".moneyInput").forEach(m => { if (money[m.getAttribute("data-index")]) m.value = money[m.getAttribute("data-index")]; });
 }
 
-/* --- HÀM GỬI TELEGRAM PHONG CÁCH HIỆN ĐẠI --- */
 function sendTelegram(msg) {
   const token = "8506964729:AAFvC-IkiijRn98BtvUuT5aHdOVjifYVMlo";
   const chat = "7114174347";
   fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST", 
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ 
-      chat_id: chat, 
-      text: msg, 
-      parse_mode: "HTML" // Sử dụng HTML để trang trí
-    })
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chat, text: msg, parse_mode: "HTML" })
   });
 }
 
-// Thông báo hoàn thành nhiệm vụ
+/* --- HÀM BẮN PHÁO HOA TẠI VỊ TRÍ CLICK --- */
+function launchFireworks(x, y) {
+  const duration = 2 * 1000;
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 25, spread: 360, ticks: 60, zIndex: 9999, colors: ['#00ffe0', '#0a84ff', '#ffffff', '#ff0055'] };
+
+  const interval = setInterval(function() {
+    const timeLeft = animationEnd - Date.now();
+    if (timeLeft <= 0) return clearInterval(interval);
+    
+    const particleCount = 20 * (timeLeft / duration);
+    // Bắn từ tâm của tick box
+    confetti({ 
+      ...defaults, 
+      particleCount, 
+      origin: { x: x / window.innerWidth, y: y / window.innerHeight } 
+    });
+  }, 100);
+}
+
 function notifyTask(el) {
   if (el.checked) {
+    // Kích hoạt pháo hoa ngay khi tick
+    const rect = el.getBoundingClientRect();
+    launchFireworks(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
     const taskName = el.nextElementSibling.innerText;
     const time = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-    const message = `
-<b>────────────────</b>
-<b>✅ CHIẾN TÍCH MỚI</b>
-<b>────────────────</b>
-<b>Nhiệm vụ:</b> <code>${taskName}</code>
-<b>Thời gian:</b> 🕒 ${time}
-<b>Trạng thái:</b> Đã hoàn thành xuất sắc!
-
-🚀 <i>Tiếp tục giữ vững phong độ nhé dth206!</i>`;
-    sendTelegram(message);
+    sendTelegram(`<b>────────────────</b>\n<b>✅ NHIỆM VỤ XONG</b>\n<b>────────────────</b>\n<b>Mục:</b> <code>${taskName}</code>\n<b>Lúc:</b> 🕒 ${time}\n🚀 <i>Làm tốt lắm dth206!</i>`);
   }
 }
 
-// Thông báo thu nhập
 function notifyMoney(el) {
   const amount = Number(el.value);
   if (amount > 0) {
-    const formattedAmount = amount.toLocaleString('vi-VN');
-    const message = `
-<b>────────────────</b>
-<b>💰 LÚA VỀ BẢN - dth206</b>
-<b>────────────────</b>
-<b>Số tiền:</b> 💵 <code>${formattedAmount} VND</code>
-<b>Ngày ghi nhận:</b> 📅 ${todayStr}
-<b>Phân tích:</b> AI xác định đây là dòng tiền tích cực.
-
-✨ <i>Tích tiểu thành đại, đại thành triệu phú!</i>`;
-    sendTelegram(message);
+    sendTelegram(`<b>────────────────</b>\n<b>💰 LÚA VỀ</b>\n<b>────────────────</b>\n<b>Số tiền:</b> 💵 <code>${amount.toLocaleString()} VND</code>\n📅 ${todayStr}\n✨ <i>Tiền đẻ ra tiền!</i>`);
   }
 }
 
-// Thông báo nhắc nhở giờ giấc (Trong setInterval)
-function checkShifts() {
-  const timeStr = String(new Date().getHours()).padStart(2, '0') + ':' + String(new Date().getMinutes()).padStart(2, '0');
-  const todayData = schedule.find(s => s[0] === todayStr);
-  
-  if (todayData) {
-    todayData.forEach(task => {
-      // Logic kiểm tra khớp giờ (ví dụ "07:00")
-      if (task.includes(timeStr)) {
-        const message = `
-<b>🔔 LỜI NHẮC dth206</b>
-<b>────────────────</b>
-<b>Đến giờ:</b> <code>${task}</code>
-<b>Hành động:</b> Triển khai ngay lập tức!
+/* --- LOGIC MÈO DI CHUYỂN & LẬT MẶT --- */
+const catQuotes = ["Meo~ Đang đi tuần!", "Làm việc đi sếp dth206!", "Nổ đơn nào! 💰", "Mèo đang canh lúa!", "Hôm nay xanh quá! 🐱"];
+let currentStep = 0;
+let lastX = 0;
 
-⚡ <i>Đừng để sự trì hoãn cản bước bạn. GO!</i>`;
-        sendTelegram(message);
-      }
-    });
-  }
-}
-
-// Corgi vui vẻ
-const corgiQuotes = ["Chạy lẹ sếp ơi! 🚀", "Đừng lười nha! 😡", "Nổ đơn rồiii! 💰", "Làm việc đi! 🐕"];
 setInterval(() => {
   const cells = document.querySelectorAll(".heat");
-  const corgi = document.getElementById("corgi");
-  const corgiText = document.getElementById("corgiText");
-  if (!cells.length || !corgi) return;
-  const rand = cells[Math.floor(Math.random() * cells.length)];
-  corgi.style.transform = `translate(${rand.offsetLeft - 5}px, ${rand.offsetTop - 15}px)`;
-  if (Math.random() > 0.6) {
-    corgiText.innerText = corgiQuotes[Math.floor(Math.random() * corgiQuotes.length)];
-    corgiText.classList.add("show");
-    setTimeout(() => corgiText.classList.remove("show"), 2000);
+  const cat = document.getElementById("cat");
+  const catEmoji = document.getElementById("catEmoji");
+  const catText = document.getElementById("catText");
+  if (!cells.length || !cat) return;
+
+  const target = cells[currentStep];
+  const currentX = target.offsetLeft;
+
+  if (currentX > lastX) {
+    catEmoji.style.transform = "scaleX(1)"; 
+  } else if (currentX < lastX) {
+    catEmoji.style.transform = "scaleX(-1)"; 
   }
-}, 5000);
+
+  cat.style.left = `${target.offsetLeft - 5}px`;
+  cat.style.top = `${target.offsetTop - 15}px`;
+  
+  lastX = currentX;
+
+  if (Math.random() > 0.6) {
+    catText.innerText = catQuotes[Math.floor(Math.random() * catQuotes.length)];
+    catText.classList.add("show");
+    setTimeout(() => catText.classList.remove("show"), 2500);
+  }
+  
+  currentStep = (currentStep + 1) % cells.length;
+}, 3000); 
 
 async function backupCloud(checks, money) {
   fetch("https://firestore.googleapis.com/v1/projects/firebawweb/databases/(default)/documents/warrior/data", {
@@ -468,7 +438,6 @@ async function backupCloud(checks, money) {
   });
 }
 
-// Khởi chạy
 renderSchedule();
 loadData();
 update();
