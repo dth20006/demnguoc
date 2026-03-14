@@ -337,8 +337,8 @@ function loadData(){
 
 // ---------- TELEGRAM ----------
 function sendTelegram(msg){
-  const token="YOUR_BOT_TOKEN"; // Điền Token
-  const chat="YOUR_CHAT_ID";    // Điền Chat ID
+  const token="8506964729:AAFvC-IkiijRn98BtvUuT5aHdOVjifYVMlo"; // Điền Token
+  const chat="7114174347";    // Điền Chat ID
   fetch(`https://api.telegram.org/bot${token}/sendMessage`,{
     method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({chat_id:chat,text:msg})
