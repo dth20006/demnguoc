@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>⚡ WARRIOR AI PRO</title>
+<title>⚡ Lịch Làm Việc Demo By dth206</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -124,7 +124,7 @@ input[type="checkbox"]:checked::after {
 <body>
 
 <div class="header-ios">
-  <div class="title">Warrior Pro</div>
+  <div class="title">Lịch Làm Việc Demo By dth206</div>
 </div>
 
 <div class="container">
@@ -367,28 +367,78 @@ function loadData() {
   });
 }
 
+/* --- HÀM GỬI TELEGRAM PHONG CÁCH HIỆN ĐẠI --- */
 function sendTelegram(msg) {
   const token = "8506964729:AAFvC-IkiijRn98BtvUuT5aHdOVjifYVMlo";
   const chat = "7114174347";
   fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chat, text: msg })
+    method: "POST", 
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ 
+      chat_id: chat, 
+      text: msg, 
+      parse_mode: "HTML" // Sử dụng HTML để trang trí
+    })
   });
 }
 
-function notifyTask(el) { if (el.checked) sendTelegram("✅ Xong: " + el.nextElementSibling.innerText); }
-function notifyMoney(el) { if (Number(el.value) > 0) sendTelegram(`💰 Thu nhập ${todayStr}: ${Number(el.value).toLocaleString()} VND`); }
+// Thông báo hoàn thành nhiệm vụ
+function notifyTask(el) {
+  if (el.checked) {
+    const taskName = el.nextElementSibling.innerText;
+    const time = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    const message = `
+<b>────────────────</b>
+<b>✅ CHIẾN TÍCH MỚI</b>
+<b>────────────────</b>
+<b>Nhiệm vụ:</b> <code>${taskName}</code>
+<b>Thời gian:</b> 🕒 ${time}
+<b>Trạng thái:</b> Đã hoàn thành xuất sắc!
 
-// Tự động nhắc nhở theo giờ
-setInterval(() => {
+🚀 <i>Tiếp tục giữ vững phong độ nhé Warrior!</i>`;
+    sendTelegram(message);
+  }
+}
+
+// Thông báo thu nhập
+function notifyMoney(el) {
+  const amount = Number(el.value);
+  if (amount > 0) {
+    const formattedAmount = amount.toLocaleString('vi-VN');
+    const message = `
+<b>────────────────</b>
+<b>💰 LÚA VỀ BẢN - WARRIOR</b>
+<b>────────────────</b>
+<b>Số tiền:</b> 💵 <code>${formattedAmount} VND</code>
+<b>Ngày ghi nhận:</b> 📅 ${todayStr}
+<b>Phân tích:</b> AI xác định đây là dòng tiền tích cực.
+
+✨ <i>Tích tiểu thành đại, đại thành triệu phú!</i>`;
+    sendTelegram(message);
+  }
+}
+
+// Thông báo nhắc nhở giờ giấc (Trong setInterval)
+function checkShifts() {
   const timeStr = String(new Date().getHours()).padStart(2, '0') + ':' + String(new Date().getMinutes()).padStart(2, '0');
   const todayData = schedule.find(s => s[0] === todayStr);
+  
   if (todayData) {
     todayData.forEach(task => {
-      if (task.includes(timeStr)) sendTelegram(`⏰ ĐẾN GIỜ: ${task}`);
+      // Logic kiểm tra khớp giờ (ví dụ "07:00")
+      if (task.includes(timeStr)) {
+        const message = `
+<b>🔔 LỜI NHẮC CHIẾN BINH</b>
+<b>────────────────</b>
+<b>Đến giờ:</b> <code>${task}</code>
+<b>Hành động:</b> Triển khai ngay lập tức!
+
+⚡ <i>Đừng để sự trì hoãn cản bước bạn. GO!</i>`;
+        sendTelegram(message);
+      }
     });
   }
-}, 60000);
+}
 
 // Corgi vui vẻ
 const corgiQuotes = ["Chạy lẹ sếp ơi! 🚀", "Đừng lười nha! 😡", "Nổ đơn rồiii! 💰", "Làm việc đi! 🐕"];
