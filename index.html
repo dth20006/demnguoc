@@ -151,6 +151,12 @@ input[type="checkbox"]:checked::after {
 .expense-item .amount { color: var(--neon-pink); font-weight: 800; text-shadow: 0 0 8px rgba(255, 133, 179, 0.4); font-size: 16px; background: rgba(255,133,179,0.1); padding: 6px 10px; border-radius: 12px;}
 .expense-item .time { font-size: 11px; color: var(--text-dim); }
 
+.btn-del-exp {
+  background: none; border: none; font-size: 14px; cursor: pointer; margin-left: 8px;
+  padding: 4px; opacity: 0.7; transition: 0.2s;
+}
+.btn-del-exp:hover { opacity: 1; transform: scale(1.1); }
+
 .stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.08); align-items: center;}
 .stat-value { font-weight: 800; color: var(--neon-green); text-shadow: 0 0 12px rgba(166, 227, 161, 0.4); }
 #totalAccumulated { font-size: 22px; color: var(--neon-purple); text-shadow: 0 0 15px rgba(203, 166, 247, 0.5); }
@@ -306,14 +312,14 @@ function renderIncomeTable() {
   const logEl = document.getElementById("incomeLog");
   const data = getMoney();
   let html = "";
-  let total = 0;
+  let totalIncome = 0;
   let hasIncome = false;
 
   schedule.forEach((day, index) => {
     let amount = data[index] || 0;
     if (amount > 0) {
       hasIncome = true;
-      total += amount;
+      totalIncome += amount;
       let fullDate = `${day[0]}/${currentYear}`;
       html += `<div class="stat-row">
                   <span class="stat-label" style="color: #fff;">${fullDate}</span>
@@ -328,7 +334,14 @@ function renderIncomeTable() {
     logEl.innerHTML = html;
   }
   
-  document.getElementById("totalAccumulated").innerText = total.toLocaleString() + "đ";
+  // Lấy tổng tiền chi tiêu
+  let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
+  let totalExpenses = expenses.reduce((sum, ex) => sum + Number(ex.amount), 0);
+  
+  // Trừ tiền chi tiêu khỏi ống heo
+  let finalTotal = totalIncome - totalExpenses;
+  
+  document.getElementById("totalAccumulated").innerText = finalTotal.toLocaleString() + "đ";
 }
 
 // LỌC VÀ XÓA DỮ LIỆU CHI TIÊU CŨ HƠN 3 NGÀY
@@ -430,8 +443,20 @@ function addExpense() {
   localStorage.setItem('expenses', JSON.stringify(cleaned));
 
   reasonEl.value = ""; amountEl.value = "";
-  renderExpenses(); update();
+  renderExpenses(); 
+  update(); // Gọi update() sẽ tự lưu vào Cloud và gọi renderIncomeTable() để trừ ống heo
   sendTelegram(`<b>💀 BAY MÀU:</b> ${reason}\n💸 <code>-${amount.toLocaleString()} VND</code>`);
+}
+
+function deleteExpense(index) {
+  if(confirm("Bé có chắc muốn xóa khoản chi này không? 🥺")) {
+    let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
+    expenses.splice(index, 1);
+    localStorage.setItem('expenses', JSON.stringify(expenses));
+    
+    renderExpenses();
+    update(); // Gọi update() để đồng bộ lại lên cloud và tính lại tiền ống heo
+  }
 }
 
 function renderExpenses() {
@@ -444,13 +469,16 @@ function renderExpenses() {
   }
   
   let html = "";
-  expenses.forEach(ex => {
+  expenses.forEach((ex, index) => {
     html += `<div class="expense-item">
                 <div class="reason-box">
                   <div class="reason">${ex.reason}</div>
                   <div class="time">${ex.time} • ${ex.date}</div>
                 </div>
-                <div class="amount">-${Number(ex.amount).toLocaleString()}đ</div>
+                <div style="display: flex; align-items: center;">
+                  <div class="amount">-${Number(ex.amount).toLocaleString()}đ</div>
+                  <button class="btn-del-exp" onclick="deleteExpense(${index})" title="Xóa khoản này">❌</button>
+                </div>
               </div>`;
   });
   logEl.innerHTML = html;
