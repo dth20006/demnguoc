@@ -3,189 +3,243 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>⚡ Lịch Làm Việc Demo By dth206</title>
+<title>✨ Lịch Làm Việc Cute 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
-/* --- GIAO DIỆN IPHONE NATIVE --- */
+/* --- GIAO DIỆN NEON DARK CUTE --- */
 :root {
-  --ios-bg: #000000;
-  --ios-card: #1c1c1e;
-  --ios-cyan: #00ffe0;
-  --text-main: #ffffff;
-  --text-secondary: #8e8e93;
-  --ios-blue: #0a84ff;
+  --bg-dark: #1e1e2e; /* Nền tối mềm mại hơn */
+  --card-bg: #26263b; /* Màu thẻ tối pastel */
+  --neon-pink: #ff85b3; /* Hồng baby neon */
+  --neon-blue: #89dceb; /* Xanh cyan pastel */
+  --neon-purple: #cba6f7; /* Tím pastel neon */
+  --neon-green: #a6e3a1; /* Xanh lá dễ thương */
+  --text-main: #cdd6f4;
+  --text-dim: #a6adc8;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--ios-bg);
+  font-family: 'Lexend', sans-serif;
+  background: radial-gradient(circle at top left, #26263b, var(--bg-dark));
   color: var(--text-main);
   margin: 0;
   padding: 0 16px 40px 16px;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  min-height: 100vh;
 }
 
 .header-ios {
   padding: 40px 0 20px 0;
   position: sticky;
   top: 0;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: saturate(180%) blur(20px);
+  background: rgba(30, 30, 46, 0.85);
+  backdrop-filter: blur(15px);
   z-index: 100;
   margin: 0 -16px 20px -16px;
   padding-left: 16px;
+  border-bottom: 2px solid rgba(255, 133, 179, 0.1);
 }
 
 .title {
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 800;
-  letter-spacing: -0.5px;
-  background: linear-gradient(to right, #00ffe0, #0a84ff);
+  background: linear-gradient(to right, var(--neon-pink), var(--neon-purple));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(255, 133, 179, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.container { display: flex; flex-direction: column; gap: 20px; }
+.container { display: flex; flex-direction: column; gap: 24px; }
 
 .card {
-  background: var(--ios-card);
-  border-radius: 20px;
-  padding: 18px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.05);
+  background: var(--card-bg);
+  border-radius: 30px;
+  padding: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(255,255,255,0.02);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
 }
 
 .card h3 {
-  margin-top: 0; font-size: 18px; font-weight: 600; color: var(--ios-cyan);
+  margin-top: 0; font-size: 19px; color: var(--neon-purple);
   display: flex; align-items: center; gap: 8px;
+  text-shadow: 0 0 12px rgba(203, 166, 247, 0.5);
+  font-weight: 800;
 }
 
-.grid { display: flex; flex-direction: column; gap: 12px; }
+.grid { display: flex; flex-direction: column; gap: 14px; }
 
 .day {
-  background: #2c2c2e; padding: 20px; border-radius: 16px;
-  border-left: 5px solid var(--ios-blue);
-  animation: fadeIn 0.5s ease-out;
+  background: rgba(255, 255, 255, 0.03); 
+  padding: 22px; 
+  border-radius: 24px;
+  border-left: 5px solid var(--neon-blue);
+  box-shadow: inset 0 0 15px rgba(137, 220, 235, 0.1);
+  animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-.day b { font-size: 20px; display: block; margin-bottom: 15px; color: var(--ios-cyan); }
+.day b { font-size: 18px; display: block; margin-bottom: 18px; color: var(--neon-blue); font-weight: 700;}
 
-.task-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 16px; color: #ffffff; }
+.task-item { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; font-size: 16px; font-weight: 300; }
 
+/* CHECKBOX ĐÁNG YÊU */
 input[type="checkbox"] {
-  appearance: none; width: 24px; height: 24px; border: 2px solid #3a3a3c;
-  border-radius: 50%; cursor: pointer; position: relative; transition: 0.2s;
+  appearance: none; width: 26px; height: 26px; border: 2px solid var(--neon-purple);
+  border-radius: 50%; cursor: pointer; position: relative; transition: 0.3s all cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(203, 166, 247, 0.3);
+  background-color: rgba(0,0,0,0.2);
 }
 
-input[type="checkbox"]:checked { background-color: var(--ios-cyan); border-color: var(--ios-cyan); }
+input[type="checkbox"]:checked {
+  background-color: var(--neon-pink);
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 18px var(--neon-pink);
+  transform: scale(1.1);
+}
 
 input[type="checkbox"]:checked::after {
-  content: '✓'; position: absolute; color: black; font-size: 15px; left: 5px; top: 1px; font-weight: bold;
+  content: '❤'; position: absolute; color: #fff; font-size: 15px; left: 4px; top: 1px;
 }
 
-.money-action { display: flex; align-items: center; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #3a3a3c; }
+.money-action { display: flex; align-items: center; gap: 12px; margin-top: 24px; padding-top: 18px; border-top: 2px dashed rgba(255, 255, 255, 0.08); }
 
-.moneyInput { flex: 1; background: #1c1c1e; border: 1px solid #3a3a3c; color: white; border-radius: 12px; padding: 10px 15px; font-size: 16px; outline: none; }
-.moneyInput:focus { border-color: var(--ios-cyan); }
+.moneyInput { 
+  flex: 1; background: rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.1); color: #fff; 
+  border-radius: 18px; padding: 14px 16px; font-size: 15px; outline: none;
+  font-family: 'Lexend', sans-serif; transition: 0.3s;
+}
+.moneyInput:focus { border-color: var(--neon-blue); box-shadow: 0 0 12px rgba(137, 220, 235, 0.3); background: rgba(0,0,0,0.4); }
 
 .btn-add {
-  background: var(--ios-cyan); color: #000; border: none; border-radius: 50%;
-  width: 36px; height: 36px; cursor: pointer; font-weight: bold; font-size: 20px;
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); color: #fff; border: none; border-radius: 50%;
+  width: 44px; height: 44px; cursor: pointer; font-weight: bold; font-size: 24px;
+  box-shadow: 0 0 15px rgba(137, 220, 235, 0.4);
   display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s;
 }
+.btn-add:active { transform: scale(0.9); }
 
-/* --- HEATMAP & MÈO ĐI TUẦN --- */
-.heatmap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 15px; position: relative; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; }
-
-.heat { aspect-ratio: 1/1; border-radius: 4px; background: #3a3a3c; }
-.heat.low {background:#0e4429;}
-.heat.mid {background:#006d32;}
-.heat.high {background:#26a641;}
-.heat.max {background:#39d353;}
-
-.stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid #3a3a3c; }
-.stat-row:last-child { border: none; }
-.stat-label { color: var(--text-secondary); }
-.stat-value { font-weight: 600; color: var(--ios-cyan); }
-
-/* --- HIỆU ỨNG MÈO BƯỚC ĐI --- */
-.cat-wrapper { 
-  position: absolute; 
-  transition: all 1.5s ease-in-out; 
-  pointer-events: none; 
-  z-index: 10; 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.btn-expense {
+  background: transparent; color: var(--neon-pink); border: 2px dashed var(--neon-pink); 
+  border-radius: 18px; padding: 14px; cursor: pointer; font-weight: 800; width: 100%; margin-top: 12px;
+  box-shadow: 0 0 10px rgba(255, 133, 179, 0.15);
+  font-family: 'Lexend', sans-serif; transition: 0.3s;
 }
-.cat-sprite { 
-  font-size: 28px; 
-  display: inline-block;
-  animation: catWalkCycle 0.8s infinite ease-in-out; 
-  transform-origin: bottom center;
-}
-.cat-speech {
-  background: white; color: black; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;
-  position: absolute; top: -38px; left: 50%; transform: translateX(-50%); opacity: 0; transition: 0.3s; white-space: nowrap;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-.cat-speech.show { opacity: 1; }
+.btn-expense:hover { background: rgba(255, 133, 179, 0.1); }
+.btn-expense:active { background: var(--neon-pink); color: #fff; transform: scale(0.98); }
 
-@keyframes catWalkCycle {
-  0% { transform: translateY(0) rotate(-5deg) scale(1, 1); }
-  25% { transform: translateY(-5px) rotate(0deg) scale(0.9, 1.1); }
-  50% { transform: translateY(0) rotate(5deg) scale(1.1, 0.9); }
-  75% { transform: translateY(-5px) rotate(0deg) scale(0.9, 1.1); }
-  100% { transform: translateY(0) rotate(-5deg) scale(1, 1); }
+.expense-log { margin-top: 15px; max-height: 260px; overflow-y: auto; padding-right: 5px; }
+.expense-item { 
+  display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; 
+  background: rgba(0, 0, 0, 0.2); border-radius: 20px; margin-bottom: 10px; border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: 0.2s;
 }
+.expense-item:hover { background: rgba(255,255,255,0.05); }
+.expense-item .reason { font-weight: 600; color: #fff; margin-bottom: 4px; }
+.expense-item .amount { color: var(--neon-pink); font-weight: 800; text-shadow: 0 0 8px rgba(255, 133, 179, 0.4); font-size: 16px; background: rgba(255,133,179,0.1); padding: 6px 10px; border-radius: 12px;}
+.expense-item .time { font-size: 11px; color: var(--text-dim); }
+
+.stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.08); align-items: center;}
+.stat-value { font-weight: 800; color: var(--neon-green); text-shadow: 0 0 12px rgba(166, 227, 161, 0.4); }
+#totalAccumulated { font-size: 22px; color: var(--neon-purple); text-shadow: 0 0 15px rgba(203, 166, 247, 0.5); }
+
+/* --- POPUP STYLES --- */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+  display: none; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal {
+  background: var(--card-bg); width: 90%; max-width: 320px;
+  padding: 28px; border-radius: 35px; border: 2px solid var(--neon-blue);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(137, 220, 235, 0.2);
+  transform: scale(0.9); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+}
+.modal.active { transform: scale(1); }
+.modal h2 { margin-top: 0; color: var(--neon-blue); font-size: 22px; margin-bottom: 8px;}
+.modal-btns { display: flex; gap: 12px; margin-top: 24px; }
+.btn-modal { 
+  flex: 1; padding: 14px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; 
+  font-family: 'Lexend', sans-serif; transition: 0.2s;
+}
+.btn-confirm { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px rgba(137, 220, 235, 0.4);}
+.btn-confirm:active { transform: scale(0.95); }
+.btn-cancel { background: rgba(255,255,255,0.08); color: #fff; }
+.btn-cancel:active { transform: scale(0.95); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(203, 166, 247, 0.5); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-purple); }
 </style>
 </head>
 <body>
 
 <div class="header-ios">
-  <div class="title">Lịch Làm Việc Demo By dth206</div>
+  <div class="title">✨ Lịch Làm Việc 🎀</div>
 </div>
 
 <div class="container">
+  
   <div class="card">
-    <h3>📊 Chỉ số AI</h3>
-    <div class="stat-row"><span class="stat-label">Tiến độ tổng</span><span class="stat-value" id="progress">0%</span></div>
-    <div class="stat-row"><span class="stat-label">Dự báo ngày</span><span class="stat-value" id="dayAI">0</span></div>
-    <div class="stat-row"><span class="stat-label">Năng suất/giờ</span><span class="stat-value" id="hourAI">0</span></div>
+    <h3>🧸 Lịch Trình Của Bạn</h3>
+    <div class="grid" id="grid"></div>
   </div>
 
   <div class="card">
-    <h3>🧠 Trợ lý AI</h3>
-    <div id="schedule_ai" style="line-height: 1.6; font-size: 15px; color: #efeff4;">Đang phân tích...</div>
+    <h3>💸 Nhật Ký Mua Sắm 🛍️</h3>
+    <div class="money-action" style="border: none; padding-top: 0; flex-wrap: wrap; gap: 10px;">
+      <input type="text" id="expenseReason" class="moneyInput" placeholder="Mua gì dị nà..." style="width: 100%;">
+      <input type="number" id="expenseAmount" class="moneyInput" placeholder="Tốn bao nhiêu..." style="width: 100%;">
+      <button class="btn-expense" onclick="addExpense()">🎀 XÁC NHẬN TIÊU TIỀN (TIẾC QUÁ) 💔</button>
+    </div>
+    <div id="expenseLog" class="expense-log"></div>
   </div>
 
-  <div class="card"><h3>📈 Doanh thu ngày</h3><canvas id="chartDay"></canvas></div>
-  <div class="card"><h3>📅 Doanh thu tuần</h3><canvas id="chartWeek"></canvas></div>
-  <div class="card"><h3>🎯 Mục tiêu tháng</h3><canvas id="chartMonth"></canvas></div>
-
   <div class="card">
-    <h3>🔥 Hoạt động</h3>
-    <div id="heatmap" class="heatmap">
-      <div id="cat" class="cat-wrapper">
-        <div id="catText" class="cat-speech"></div>
-        <div id="catEmoji" class="cat-sprite">🐈</div>
-      </div>
+    <h3>💖 Quỹ Heo Đất 🐖</h3>
+    <div class="stat-row" style="border-bottom: 2px solid rgba(255,255,255,0.05); margin-bottom: 10px;">
+        <span class="stat-label" style="color: var(--neon-purple); font-weight: bold;">Ngày tháng nè 🌷</span>
+        <span class="stat-value" style="color: var(--neon-purple); font-weight: bold; text-shadow: none;">Tiền vô 💰</span>
+    </div>
+    
+    <div id="incomeLog" class="expense-log" style="max-height: 250px; overflow-y: auto;">
+        </div>
+
+    <div class="stat-row" style="margin-top: 15px; border-top: 2px solid rgba(255,255,255,0.05); padding-top: 20px; border-bottom: none;">
+        <span class="stat-label" style="font-weight: 800; color: #fff; font-size: 16px;">TỔNG BỎ ỐNG HEO 🎀</span>
+        <span class="stat-value" id="totalAccumulated">0đ</span>
     </div>
   </div>
 
-  <div class="card">
-    <h3>📅 Lịch trình hôm nay</h3>
-    <div class="grid" id="grid"></div>
+</div>
+
+<div id="modalOverlay" class="modal-overlay">
+  <div class="modal" id="moneyModal">
+    <h2>🎉 Ting Ting!</h2>
+    <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 20px;">Nay kiếm được nhiêu lúa nà?</p>
+    <input type="number" id="popupMoneyInput" class="moneyInput" style="width: 100%; box-sizing: border-box; text-align: center;" placeholder="VD: 50000">
+    <div class="modal-btns">
+      <button class="btn-modal btn-cancel" onclick="closeModal()">HỦY</button>
+      <button class="btn-modal btn-confirm" onclick="confirmQuickAdd()">LƯU LẠI</button>
+    </div>
   </div>
 </div>
 
 <script>
-/* --- DỮ LIỆU GỐC --- */
 const schedule=[
 ["14/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: Meet","16:30-23:30: Ship"],
 ["15/03","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"],
@@ -222,6 +276,11 @@ const schedule=[
 const grid = document.getElementById("grid");
 const now = new Date();
 const todayStr = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0');
+const currentYear = now.getFullYear();
+let currentAddIndex = null;
+
+// URL Firestore API
+const FIREBASE_API_URL = "https://firestore.googleapis.com/v1/projects/deas-75de8/databases/(default)/documents/warrior/data";
 
 function renderSchedule() {
   grid.innerHTML = "";
@@ -231,27 +290,113 @@ function renderSchedule() {
       foundToday = true;
       let card = document.createElement("div");
       card.className = "day";
-      let html = `<b>📅 Hôm nay: ${day[0]}</b>`;
+      let html = `<b>📅 Hôm nay: ${day[0]}/${currentYear}</b>`;
       for (let i = 1; i < day.length; i++) {
         html += `<div class="task-item"><input type="checkbox" data-index="${index}-${i}" onchange="update();notifyTask(this)"><span>${day[i]}</span></div>`;
       }
-      html += `<div class="money-action"><span style="font-size:18px">💰</span><input class="moneyInput" type="number" data-index="${index}" placeholder="Tiền..." onchange="update();notifyMoney(this)"><button class="btn-add" onclick="quickAdd(${index})">+</button></div>`;
+      html += `<div class="money-action"><span style="font-size:20px">💰</span><input class="moneyInput" type="number" data-index="${index}" placeholder="Nhập lúa thu được..." onchange="update();notifyMoney(this)"><button class="btn-add" onclick="openModal(${index})">+</button></div>`;
       card.innerHTML = html;
       grid.appendChild(card);
     }
   });
-  if (!foundToday) grid.innerHTML = "<div style='text-align:center; padding:20px; color:#8e8e93;'>Nghỉ ngơi thôi sếp dth206! ☕</div>";
+  if (!foundToday) grid.innerHTML = "<div style='text-align:center; padding:20px; color:var(--text-dim);'>Đang offline rùi bé ơi 🌸</div>";
 }
 
-function quickAdd(index) {
-  let input = document.querySelector(`.moneyInput[data-index="${index}"]`);
-  let currentVal = Number(input.value) || 0;
-  let addVal = prompt("Nhập số tiền cộng thêm cho " + schedule[index][0] + ":");
-  if (addVal !== null && addVal !== "" && !isNaN(addVal)) {
+function renderIncomeTable() {
+  const logEl = document.getElementById("incomeLog");
+  const data = getMoney();
+  let html = "";
+  let total = 0;
+  let hasIncome = false;
+
+  schedule.forEach((day, index) => {
+    let amount = data[index] || 0;
+    if (amount > 0) {
+      hasIncome = true;
+      total += amount;
+      let fullDate = `${day[0]}/${currentYear}`;
+      html += `<div class="stat-row">
+                  <span class="stat-label" style="color: #fff;">${fullDate}</span>
+                  <span class="stat-value">+${amount.toLocaleString()}đ</span>
+               </div>`;
+    }
+  });
+
+  if (!hasIncome) {
+    logEl.innerHTML = "<div style='text-align:center; padding:15px; color:var(--text-dim);'>Heo đất đang đói... 🐷</div>";
+  } else {
+    logEl.innerHTML = html;
+  }
+  
+  document.getElementById("totalAccumulated").innerText = total.toLocaleString() + "đ";
+}
+
+// LỌC VÀ XÓA DỮ LIỆU CHI TIÊU CŨ HƠN 3 NGÀY
+function cleanOldExpenses(expensesArray) {
+  const currentDate = new Date();
+  currentDate.setHours(0,0,0,0);
+  let isChanged = false;
+
+  const filtered = expensesArray.filter(ex => {
+    if (!ex.date) return false;
+    // Format đang lưu là DD/MM/YYYY
+    let dateParts = ex.date.split('/');
+    let d, m, y;
+    if (dateParts.length === 3) {
+      [d, m, y] = dateParts;
+    } else {
+      [d, m] = dateParts;
+      y = currentYear;
+    }
+    
+    const exDate = new Date(y, m - 1, d);
+    const diffTime = currentDate - exDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+    
+    if (diffDays > 3) {
+      isChanged = true;
+      return false; // Bỏ qua data cũ
+    }
+    return true; // Giữ lại
+  });
+
+  return { filtered, isChanged };
+}
+
+// POPUP LOGIC
+function openModal(index) {
+  currentAddIndex = index;
+  document.getElementById("modalOverlay").style.display = "flex";
+  setTimeout(() => {
+    document.getElementById("moneyModal").classList.add("active");
+    document.getElementById("popupMoneyInput").focus();
+  }, 10);
+}
+
+function closeModal() {
+  document.getElementById("moneyModal").classList.remove("active");
+  setTimeout(() => {
+    document.getElementById("modalOverlay").style.display = "none";
+    document.getElementById("popupMoneyInput").value = "";
+  }, 300);
+}
+
+function confirmQuickAdd() {
+  const inputPopup = document.getElementById("popupMoneyInput");
+  const addVal = inputPopup.value;
+  
+  if (addVal !== "" && !isNaN(addVal) && Number(addVal) > 0) {
+    let inputMain = document.querySelector(`.moneyInput[data-index="${currentAddIndex}"]`);
+    let currentVal = Number(inputMain.value) || 0;
     let newVal = currentVal + Number(addVal);
-    input.value = newVal;
+    
+    inputMain.value = newVal;
     update();
-    sendTelegram(`➕ Thêm ${addVal} vào ${schedule[index][0]}. Tổng: ${newVal}`);
+    sendTelegram(`🎀 <b>+ HÚP LÚA:</b> ${Number(addVal).toLocaleString()}đ\n👉 <b>Tổng ngày:</b> ${newVal.toLocaleString()}đ`);
+    closeModal();
+    launchConfetti(true); // Hiệu ứng tưng bừng khi có tiền
+  } else {
+    alert("Nhập số tiền vô bé ơi!");
   }
 }
 
@@ -261,91 +406,118 @@ function getMoney() {
 }
 
 function update() {
-  const allChecks = document.querySelectorAll("input[type=checkbox]");
-  const done = [...allChecks].filter(c => c.checked).length;
-  const total = allChecks.length || 1;
-  document.getElementById("progress").innerText = Math.round(done / total * 100) + "%";
-  saveData(); buildCharts(); drawHeatmap(getMoney()); AIoptimize();
+  saveData();
+  renderIncomeTable();
 }
 
-function buildCharts() {
-  let data = getMoney(); drawDay(data); drawWeek(data); drawMonth(data);
+function addExpense() {
+  const reasonEl = document.getElementById("expenseReason");
+  const amountEl = document.getElementById("expenseAmount");
+  const reason = reasonEl.value.trim();
+  const amount = Number(amountEl.value);
+
+  if (!reason || amount <= 0) return;
+
+  const timeStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+  const fullDateStr = todayStr + '/' + currentYear;
+  const newExpense = { date: fullDateStr, time: timeStr, reason: reason, amount: amount };
+
+  let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
+  expenses.unshift(newExpense);
+  
+  // Clean luôn lúc thêm cho chắc chắn
+  const cleaned = cleanOldExpenses(expenses).filtered;
+  localStorage.setItem('expenses', JSON.stringify(cleaned));
+
+  reasonEl.value = ""; amountEl.value = "";
+  renderExpenses(); update();
+  sendTelegram(`<b>💀 BAY MÀU:</b> ${reason}\n💸 <code>-${amount.toLocaleString()} VND</code>`);
 }
 
-function drawDay(data) {
-  if (window.dayChart) window.dayChart.destroy();
-  const ctx = document.getElementById("chartDay").getContext("2d");
-  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-  gradient.addColorStop(0, "rgba(0,255,224,0.4)");
-  gradient.addColorStop(1, "rgba(0,255,224,0)");
-  window.dayChart = new Chart(ctx, {
-    type: "line",
-    data: { labels: schedule.map(d => d[0]), datasets: [{ label: "Doanh thu", data: data, fill: true, backgroundColor: gradient, borderColor: "#00ffe0", borderWidth: 2, tension: 0.4, pointRadius: 0 }] },
-    options: { scales: { y: { beginAtZero: true } } }
+function renderExpenses() {
+  const logEl = document.getElementById("expenseLog");
+  let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
+  
+  if (expenses.length === 0) { 
+    logEl.innerHTML = "<div style='text-align:center; padding:15px; color:#a6adc8;'>Chưa xài đồng nào, giỏi quóa! 🎀</div>"; 
+    return; 
+  }
+  
+  let html = "";
+  expenses.forEach(ex => {
+    html += `<div class="expense-item">
+                <div class="reason-box">
+                  <div class="reason">${ex.reason}</div>
+                  <div class="time">${ex.time} • ${ex.date}</div>
+                </div>
+                <div class="amount">-${Number(ex.amount).toLocaleString()}đ</div>
+              </div>`;
   });
-}
-
-function drawWeek(data) {
-  let weeks = [];
-  for (let i = 0; i < data.length; i += 7) weeks.push(data.slice(i, i + 7).reduce((a, b) => a + b, 0));
-  if (window.weekChart) window.weekChart.destroy();
-  window.weekChart = new Chart(document.getElementById("chartWeek"), {
-    type: "bar",
-    data: { labels: ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4", "Tuần 5"], datasets: [{ label: "Doanh thu", data: weeks, backgroundColor: "#0a84ff", borderRadius: 5 }] }
-  });
-}
-
-function drawMonth(data) {
-  let total = data.reduce((a, b) => a + b, 0);
-  if (window.monthChart) window.monthChart.destroy();
-  window.monthChart = new Chart(document.getElementById("chartMonth"), {
-    type: "doughnut",
-    data: { labels: ["Kiếm được", "Cần thêm"], datasets: [{ data: [total, Math.max(0, 10000000 - total)], backgroundColor: ["#30d158", "#1c1c1e"], borderWidth: 0 }] }
-  });
-}
-
-function drawHeatmap(data) {
-  const heat = document.getElementById("heatmap");
-  [...heat.children].forEach(child => { if(child.id !== 'cat') child.remove(); });
-  let max = Math.max(...data, 1000);
-  data.forEach(v => {
-    let div = document.createElement("div");
-    div.className = "heat";
-    let ratio = v / max;
-    if (ratio < 0.1) div.style.opacity = "0.3";
-    else if (ratio < 0.3) div.classList.add("low");
-    else if (ratio < 0.6) div.classList.add("mid");
-    else if (ratio < 0.8) div.classList.add("high");
-    else div.classList.add("max");
-    heat.appendChild(div);
-  });
-}
-
-function AIoptimize() {
-  let data = getMoney();
-  let total = data.reduce((a, b) => a + b, 0);
-  let avg = total / (data.filter(v => v > 0).length || 1);
-  let plan = avg > 200000 ? "🔥 Hiệu suất rất tốt! Mèo khen sếp nhé." : "⚠ AI nhắc: Chăm chỉ nổ đơn hơn nhé dth206!";
-  document.getElementById("schedule_ai").innerText = plan;
-  document.getElementById("dayAI").innerText = Math.round(avg).toLocaleString() + "đ";
-  document.getElementById("hourAI").innerText = Math.round(avg / 8).toLocaleString() + "đ";
+  logEl.innerHTML = html;
 }
 
 function saveData() {
   const checks = {};
   document.querySelectorAll("input[type=checkbox]").forEach(c => { checks[c.getAttribute("data-index")] = c.checked; });
   const savedMoney = JSON.parse(localStorage.getItem("money") || "[]");
-  document.querySelectorAll(".moneyInput").forEach(m => { savedMoney[m.getAttribute("data-index")] = m.value; });
+  document.querySelectorAll(".moneyInput[data-index]").forEach(m => { savedMoney[m.getAttribute("data-index")] = m.value; });
+  
   localStorage.setItem("checks_today", JSON.stringify(checks));
   localStorage.setItem("money", JSON.stringify(savedMoney));
-  backupCloud(checks, savedMoney);
+  const expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
+  
+  backupCloud(checks, savedMoney, expenses);
 }
 
-function loadData() {
-  const checks = JSON.parse(localStorage.getItem("checks_today") || "{}");
-  const money = JSON.parse(localStorage.getItem("money") || "[]");
-  document.querySelectorAll("input[type=checkbox]").forEach(c => { if (checks[c.getAttribute("data-index")]) c.checked = true; });
-  document.querySelectorAll(".moneyInput").forEach(m => { if (money[m.getAttribute("data-index")]) m.value = money[m.getAttribute("data-index")]; });
+async function loadDataFromCloud() {
+  try {
+    const response = await fetch(FIREBASE_API_URL);
+    if (!response.ok) throw new Error("Cloud Fetch Failed");
+    const data = await response.json();
+    
+    if (data.fields) {
+      const checks = JSON.parse(data.fields.checks.stringValue || "{}");
+      const money = JSON.parse(data.fields.money.stringValue || "[]");
+      let expenses = JSON.parse(data.fields.expenses.stringValue || "[]");
+
+      // TỰ ĐỘNG LỌC VÀ XÓA DATA TRỪ TIỀN > 3 NGÀY KHI LOAD
+      const cleanResult = cleanOldExpenses(expenses);
+      expenses = cleanResult.filtered;
+
+      localStorage.setItem("checks_today", JSON.stringify(checks));
+      localStorage.setItem("money", JSON.stringify(money));
+      localStorage.setItem("expenses", JSON.stringify(expenses));
+
+      document.querySelectorAll("input[type=checkbox]").forEach(c => { 
+        if (checks[c.getAttribute("data-index")]) c.checked = true; 
+      });
+      document.querySelectorAll(".moneyInput[data-index]").forEach(m => { 
+        if (money[m.getAttribute("data-index")]) m.value = money[m.getAttribute("data-index")]; 
+      });
+
+      renderExpenses();
+      renderIncomeTable();
+      
+      // Nếu có xóa dữ liệu cũ thì đồng bộ ngược lại lên Cloud
+      if(cleanResult.isChanged) {
+        backupCloud(checks, money, expenses);
+      }
+    }
+  } catch (e) {
+    // Chế độ Offline
+    const checks = JSON.parse(localStorage.getItem("checks_today") || "{}");
+    const money = JSON.parse(localStorage.getItem("money") || "[]");
+    let expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
+    
+    expenses = cleanOldExpenses(expenses).filtered;
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+
+    document.querySelectorAll("input[type=checkbox]").forEach(c => { if (checks[c.getAttribute("data-index")]) c.checked = true; });
+    document.querySelectorAll(".moneyInput[data-index]").forEach(m => { if (money[m.getAttribute("data-index")]) m.value = money[m.getAttribute("data-index")]; });
+    
+    renderExpenses();
+    renderIncomeTable();
+  }
 }
 
 function sendTelegram(msg) {
@@ -357,90 +529,45 @@ function sendTelegram(msg) {
   });
 }
 
-/* --- HÀM BẮN PHÁO HOA TẠI VỊ TRÍ CLICK --- */
-function launchFireworks(x, y) {
-  const duration = 2 * 1000;
-  const animationEnd = Date.now() + duration;
-  const defaults = { startVelocity: 25, spread: 360, ticks: 60, zIndex: 9999, colors: ['#00ffe0', '#0a84ff', '#ffffff', '#ff0055'] };
-
-  const interval = setInterval(function() {
-    const timeLeft = animationEnd - Date.now();
-    if (timeLeft <= 0) return clearInterval(interval);
-    
-    const particleCount = 20 * (timeLeft / duration);
-    // Bắn từ tâm của tick box
-    confetti({ 
-      ...defaults, 
-      particleCount, 
-      origin: { x: x / window.innerWidth, y: y / window.innerHeight } 
-    });
-  }, 100);
+function launchConfetti(isMoney = false) {
+  if (isMoney) {
+    confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#ffd700', '#ff85b3', '#a6e3a1'] });
+  } else {
+    confetti({ particleCount: 80, spread: 60, origin: { y: 0.8 }, colors: ['#ff85b3', '#89dceb', '#cba6f7'] });
+  }
 }
 
 function notifyTask(el) {
   if (el.checked) {
-    // Kích hoạt pháo hoa ngay khi tick
-    const rect = el.getBoundingClientRect();
-    launchFireworks(rect.left + rect.width / 2, rect.top + rect.height / 2);
-
-    const taskName = el.nextElementSibling.innerText;
-    const time = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-    sendTelegram(`<b>────────────────</b>\n<b>✅ NHIỆM VỤ XONG</b>\n<b>────────────────</b>\n<b>Mục:</b> <code>${taskName}</code>\n<b>Lúc:</b> 🕒 ${time}\n🚀 <i>Làm tốt lắm dth206!</i>`);
+    launchConfetti(false);
+    sendTelegram(`<b>✅ XONG VIỆC NÈ:</b> ${el.nextElementSibling.innerText}`);
   }
 }
 
 function notifyMoney(el) {
   const amount = Number(el.value);
-  if (amount > 0) {
-    sendTelegram(`<b>────────────────</b>\n<b>💰 LÚA VỀ</b>\n<b>────────────────</b>\n<b>Số tiền:</b> 💵 <code>${amount.toLocaleString()} VND</code>\n📅 ${todayStr}\n✨ <i>Tiền đẻ ra tiền!</i>`);
-  }
+  if (amount > 0) sendTelegram(`<b>💖 LÚA VỀ:</b> ${amount.toLocaleString()} VND`);
 }
 
-/* --- LOGIC MÈO DI CHUYỂN & LẬT MẶT --- */
-const catQuotes = ["Meo~ Đang đi tuần!", "Làm việc đi sếp dth206!", "Nổ đơn nào! 💰", "Mèo đang canh lúa!", "Hôm nay xanh quá! 🐱"];
-let currentStep = 0;
-let lastX = 0;
-
-setInterval(() => {
-  const cells = document.querySelectorAll(".heat");
-  const cat = document.getElementById("cat");
-  const catEmoji = document.getElementById("catEmoji");
-  const catText = document.getElementById("catText");
-  if (!cells.length || !cat) return;
-
-  const target = cells[currentStep];
-  const currentX = target.offsetLeft;
-
-  if (currentX > lastX) {
-    catEmoji.style.transform = "scaleX(1)"; 
-  } else if (currentX < lastX) {
-    catEmoji.style.transform = "scaleX(-1)"; 
-  }
-
-  cat.style.left = `${target.offsetLeft - 5}px`;
-  cat.style.top = `${target.offsetTop - 15}px`;
-  
-  lastX = currentX;
-
-  if (Math.random() > 0.6) {
-    catText.innerText = catQuotes[Math.floor(Math.random() * catQuotes.length)];
-    catText.classList.add("show");
-    setTimeout(() => catText.classList.remove("show"), 2500);
-  }
-  
-  currentStep = (currentStep + 1) % cells.length;
-}, 3000); 
-
-async function backupCloud(checks, money) {
-  fetch("https://firestore.googleapis.com/v1/projects/firebawweb/databases/(default)/documents/warrior/data", {
+async function backupCloud(checks, money, expenses) {
+  fetch(FIREBASE_API_URL, {
     method: "PATCH", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fields: { checks: { stringValue: JSON.stringify(checks) }, money: { stringValue: JSON.stringify(money) }, time: { stringValue: new Date().toISOString() } } })
+    body: JSON.stringify({ fields: { 
+      checks: { stringValue: JSON.stringify(checks) }, 
+      money: { stringValue: JSON.stringify(money) }, 
+      expenses: { stringValue: JSON.stringify(expenses) }, 
+      time: { stringValue: new Date().toISOString() } 
+    } })
   });
 }
 
+// Enter key to confirm popup
+document.getElementById("popupMoneyInput").addEventListener("keypress", (e) => {
+  if (e.key === "Enter") confirmQuickAdd();
+});
+
 renderSchedule();
-loadData();
-update();
+loadDataFromCloud();
 </script>
 </body>
 </html>
