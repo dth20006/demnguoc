@@ -11,12 +11,12 @@
 <style>
 /* --- GIAO DIỆN NEON DARK CUTE --- */
 :root {
-  --bg-dark: #1e1e2e; /* Nền tối mềm mại hơn */
-  --card-bg: #26263b; /* Màu thẻ tối pastel */
-  --neon-pink: #ff85b3; /* Hồng baby neon */
-  --neon-blue: #89dceb; /* Xanh cyan pastel */
-  --neon-purple: #cba6f7; /* Tím pastel neon */
-  --neon-green: #a6e3a1; /* Xanh lá dễ thương */
+  --bg-dark: #1e1e2e;
+  --card-bg: #26263b;
+  --neon-pink: #ff85b3;
+  --neon-blue: #89dceb;
+  --neon-purple: #cba6f7;
+  --neon-green: #a6e3a1;
   --text-main: #cdd6f4;
   --text-dim: #a6adc8;
 }
@@ -50,9 +50,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 20px rgba(255, 133, 179, 0.4);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: flex; align-items: center; gap: 8px;
 }
 
 .container { display: flex; flex-direction: column; gap: 24px; }
@@ -66,24 +64,19 @@ body {
   transition: transform 0.3s ease;
 }
 
-.card:hover {
-  transform: translateY(-2px);
-}
+.card:hover { transform: translateY(-2px); }
 
 .card h3 {
   margin-top: 0; font-size: 19px; color: var(--neon-purple);
   display: flex; align-items: center; gap: 8px;
-  text-shadow: 0 0 12px rgba(203, 166, 247, 0.5);
-  font-weight: 800;
+  text-shadow: 0 0 12px rgba(203, 166, 247, 0.5); font-weight: 800;
 }
 
 .grid { display: flex; flex-direction: column; gap: 14px; }
 
 .day {
   background: rgba(255, 255, 255, 0.03); 
-  padding: 22px; 
-  border-radius: 24px;
-  border-left: 5px solid var(--neon-blue);
+  padding: 22px; border-radius: 24px; border-left: 5px solid var(--neon-blue);
   box-shadow: inset 0 0 15px rgba(137, 220, 235, 0.1);
   animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -94,24 +87,19 @@ body {
 
 .task-item { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; font-size: 16px; font-weight: 300; }
 
-/* CHECKBOX ĐÁNG YÊU */
+/* CHECKBOX */
 input[type="checkbox"] {
   appearance: none; width: 26px; height: 26px; border: 2px solid var(--neon-purple);
   border-radius: 50%; cursor: pointer; position: relative; transition: 0.3s all cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 8px rgba(203, 166, 247, 0.3);
-  background-color: rgba(0,0,0,0.2);
+  box-shadow: 0 0 8px rgba(203, 166, 247, 0.3); background-color: rgba(0,0,0,0.2);
 }
 
 input[type="checkbox"]:checked {
-  background-color: var(--neon-pink);
-  border-color: var(--neon-pink);
-  box-shadow: 0 0 18px var(--neon-pink);
-  transform: scale(1.1);
+  background-color: var(--neon-pink); border-color: var(--neon-pink);
+  box-shadow: 0 0 18px var(--neon-pink); transform: scale(1.1);
 }
 
-input[type="checkbox"]:checked::after {
-  content: '❤'; position: absolute; color: #fff; font-size: 15px; left: 4px; top: 1px;
-}
+input[type="checkbox"]:checked::after { content: '❤'; position: absolute; color: #fff; font-size: 15px; left: 4px; top: 1px; }
 
 .money-action { display: flex; align-items: center; gap: 12px; margin-top: 24px; padding-top: 18px; border-top: 2px dashed rgba(255, 255, 255, 0.08); }
 
@@ -125,8 +113,7 @@ input[type="checkbox"]:checked::after {
 .btn-add {
   background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); color: #fff; border: none; border-radius: 50%;
   width: 44px; height: 44px; cursor: pointer; font-weight: bold; font-size: 24px;
-  box-shadow: 0 0 15px rgba(137, 220, 235, 0.4);
-  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 15px rgba(137, 220, 235, 0.4); display: flex; align-items: center; justify-content: center;
   transition: transform 0.2s;
 }
 .btn-add:active { transform: scale(0.9); }
@@ -134,8 +121,7 @@ input[type="checkbox"]:checked::after {
 .btn-expense {
   background: transparent; color: var(--neon-pink); border: 2px dashed var(--neon-pink); 
   border-radius: 18px; padding: 14px; cursor: pointer; font-weight: 800; width: 100%; margin-top: 12px;
-  box-shadow: 0 0 10px rgba(255, 133, 179, 0.15);
-  font-family: 'Lexend', sans-serif; transition: 0.3s;
+  box-shadow: 0 0 10px rgba(255, 133, 179, 0.15); font-family: 'Lexend', sans-serif; transition: 0.3s;
 }
 .btn-expense:hover { background: rgba(255, 133, 179, 0.1); }
 .btn-expense:active { background: var(--neon-pink); color: #fff; transform: scale(0.98); }
@@ -151,45 +137,57 @@ input[type="checkbox"]:checked::after {
 .expense-item .amount { color: var(--neon-pink); font-weight: 800; text-shadow: 0 0 8px rgba(255, 133, 179, 0.4); font-size: 16px; background: rgba(255,133,179,0.1); padding: 6px 10px; border-radius: 12px;}
 .expense-item .time { font-size: 11px; color: var(--text-dim); }
 
-.btn-del-exp {
-  background: none; border: none; font-size: 14px; cursor: pointer; margin-left: 8px;
-  padding: 4px; opacity: 0.7; transition: 0.2s;
-}
+.btn-del-exp { background: none; border: none; font-size: 14px; cursor: pointer; margin-left: 8px; padding: 4px; opacity: 0.7; transition: 0.2s; }
 .btn-del-exp:hover { opacity: 1; transform: scale(1.1); }
 
 .stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.08); align-items: center;}
 .stat-value { font-weight: 800; color: var(--neon-green); text-shadow: 0 0 12px rgba(166, 227, 161, 0.4); }
 #totalAccumulated { font-size: 22px; color: var(--neon-purple); text-shadow: 0 0 15px rgba(203, 166, 247, 0.5); }
 
-/* --- POPUP STYLES --- */
+/* --- GOAL STYLES --- */
+.goal-container {
+  margin-top: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 20px; padding: 16px; border: 1px dashed rgba(137, 220, 235, 0.3);
+}
+.goal-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: 700; color: #fff; }
+.progress-bar-bg { width: 100%; height: 14px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; position: relative; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); }
+.progress-bar-fill {
+  height: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+  border-radius: 10px; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 10px rgba(203, 166, 247, 0.6);
+}
+
+/* POPUP */
 .modal-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
   display: none; align-items: center; justify-content: center; z-index: 1000;
 }
 .modal {
-  background: var(--card-bg); width: 90%; max-width: 320px;
-  padding: 28px; border-radius: 35px; border: 2px solid var(--neon-blue);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(137, 220, 235, 0.2);
-  transform: scale(0.9); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  text-align: center;
+  background: var(--card-bg); width: 90%; max-width: 320px; padding: 28px; border-radius: 35px; border: 2px solid var(--neon-blue);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(137, 220, 235, 0.2); transform: scale(0.9); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); text-align: center;
 }
 .modal.active { transform: scale(1); }
 .modal h2 { margin-top: 0; color: var(--neon-blue); font-size: 22px; margin-bottom: 8px;}
 .modal-btns { display: flex; gap: 12px; margin-top: 24px; }
-.btn-modal { 
-  flex: 1; padding: 14px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; 
-  font-family: 'Lexend', sans-serif; transition: 0.2s;
-}
+.btn-modal { flex: 1; padding: 14px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; font-family: 'Lexend', sans-serif; transition: 0.2s; }
 .btn-confirm { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px rgba(137, 220, 235, 0.4);}
 .btn-confirm:active { transform: scale(0.95); }
 .btn-cancel { background: rgba(255,255,255,0.08); color: #fff; }
 .btn-cancel:active { transform: scale(0.95); }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(203, 166, 247, 0.5); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--neon-purple); }
+/* WIDGET MÈO CHẠY */
+.cat-widget {
+  position: fixed; bottom: 20px; right: 20px; background: rgba(30, 30, 46, 0.95);
+  border: 2px dashed var(--neon-pink); border-radius: 20px; padding: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 133, 179, 0.3);
+  backdrop-filter: blur(10px); z-index: 1000; animation: floatWidget 3s ease-in-out infinite;
+  cursor: pointer; min-width: 220px;
+}
+@keyframes floatWidget { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.cat-run { font-size: 22px; display: inline-block; animation: bounceCat 0.4s ease-in-out infinite alternate; }
+@keyframes bounceCat { 0% { transform: translateY(0) scaleX(1); } 100% { transform: translateY(-6px) scaleX(1.1); } }
+.widget-title { font-weight: 800; color: var(--neon-blue); margin-bottom: 8px; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+.widget-stats { font-size: 14px; color: #fff; line-height: 1.6; }
+.widget-stats .highlight-money { color: var(--neon-green); font-weight: 800; }
+.widget-stats .highlight-energy { color: var(--neon-purple); font-weight: 800; }
 </style>
 </head>
 <body>
@@ -221,14 +219,21 @@ input[type="checkbox"]:checked::after {
         <span class="stat-label" style="color: var(--neon-purple); font-weight: bold;">Ngày tháng nè 🌷</span>
         <span class="stat-value" style="color: var(--neon-purple); font-weight: bold; text-shadow: none;">Tiền vô 💰</span>
     </div>
-    
-    <div id="incomeLog" class="expense-log" style="max-height: 250px; overflow-y: auto;">
-        </div>
-
+    <div id="incomeLog" class="expense-log" style="max-height: 250px; overflow-y: auto;"></div>
     <div class="stat-row" style="margin-top: 15px; border-top: 2px solid rgba(255,255,255,0.05); padding-top: 20px; border-bottom: none;">
         <span class="stat-label" style="font-weight: 800; color: #fff; font-size: 16px;">TỔNG BỎ ỐNG HEO 🎀</span>
         <span class="stat-value" id="totalAccumulated">0đ</span>
     </div>
+
+    <div class="goal-container">
+      <div class="goal-header">
+        <span>🎯 Mục Tiêu: 10.000.000đ</span>
+        <span id="percentLabel" style="color: var(--neon-green);">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="goalFill" style="width: 0%;"></div>
+      </div>
+      </div>
   </div>
 
 </div>
@@ -242,6 +247,17 @@ input[type="checkbox"]:checked::after {
       <button class="btn-modal btn-cancel" onclick="closeModal()">HỦY</button>
       <button class="btn-modal btn-confirm" onclick="confirmQuickAdd()">LƯU LẠI</button>
     </div>
+  </div>
+</div>
+
+<div class="cat-widget" id="catWidget" onclick="this.style.opacity='0'; setTimeout(()=>this.style.display='none', 300)" style="transition: 0.3s;" title="Nhấn để ẩn">
+  <div class="widget-title">
+    <span class="cat-run">🐱</span> ⏱ HÔM NAY
+  </div>
+  <div class="widget-stats">
+    Đã làm: <b id="catWorked">0h</b><br>
+    được 💰 <span class="highlight-money" id="catEarned">0 đ</span><br>
+    <span class="highlight-energy">⚡ Nếu làm thêm <span id="catRemaining">0</span>h → <span id="catTotal">0</span> đ</span>
   </div>
 </div>
 
@@ -284,8 +300,8 @@ const now = new Date();
 const todayStr = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0');
 const currentYear = now.getFullYear();
 let currentAddIndex = null;
+const WAGE_RATE = 80000; // Tiền kiếm được mỗi giờ (80k/h)
 
-// URL Firestore API
 const FIREBASE_API_URL = "https://firestore.googleapis.com/v1/projects/deas-75de8/databases/(default)/documents/warrior/data";
 
 function renderSchedule() {
@@ -311,190 +327,154 @@ function renderSchedule() {
 function renderIncomeTable() {
   const logEl = document.getElementById("incomeLog");
   const data = getMoney();
-  let html = "";
-  let totalIncome = 0;
-  let hasIncome = false;
+  let html = ""; let totalIncome = 0; let hasIncome = false;
 
   schedule.forEach((day, index) => {
     let amount = data[index] || 0;
     if (amount > 0) {
-      hasIncome = true;
-      totalIncome += amount;
-      let fullDate = `${day[0]}/${currentYear}`;
-      html += `<div class="stat-row">
-                  <span class="stat-label" style="color: #fff;">${fullDate}</span>
-                  <span class="stat-value">+${amount.toLocaleString()}đ</span>
-               </div>`;
+      hasIncome = true; totalIncome += amount;
+      html += `<div class="stat-row"><span class="stat-label" style="color: #fff;">${day[0]}/${currentYear}</span><span class="stat-value">+${amount.toLocaleString()}đ</span></div>`;
     }
   });
 
-  if (!hasIncome) {
-    logEl.innerHTML = "<div style='text-align:center; padding:15px; color:var(--text-dim);'>Heo đất đang đói... 🐷</div>";
-  } else {
-    logEl.innerHTML = html;
-  }
+  if (!hasIncome) logEl.innerHTML = "<div style='text-align:center; padding:15px; color:var(--text-dim);'>Heo đất đang đói... 🐷</div>";
+  else logEl.innerHTML = html;
   
-  // Lấy tổng tiền chi tiêu
   let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
   let totalExpenses = expenses.reduce((sum, ex) => sum + Number(ex.amount), 0);
   
-  // Trừ tiền chi tiêu khỏi ống heo
   let finalTotal = totalIncome - totalExpenses;
-  
+  if (finalTotal < 0) finalTotal = 0; 
   document.getElementById("totalAccumulated").innerText = finalTotal.toLocaleString() + "đ";
+
+  // --- CẬP NHẬT MỤC TIÊU ---
+  const GOAL = 10000000; 
+  let percent = (finalTotal / GOAL) * 100;
+  if (percent < 0) percent = 0;
+  let displayPercent = Math.floor(percent);
+  document.getElementById("goalFill").style.width = Math.min(percent, 100) + "%";
+  document.getElementById("percentLabel").innerText = `${displayPercent}%`;
 }
 
-// LỌC VÀ XÓA DỮ LIỆU CHI TIÊU CŨ HƠN 3 NGÀY
-function cleanOldExpenses(expensesArray) {
-  const currentDate = new Date();
-  currentDate.setHours(0,0,0,0);
-  let isChanged = false;
+// --- THUẬT TOÁN MÈO TIÊN TRI DỰ ĐOÁN GIỜ / LÚA ---
+function updateCatPredictor() {
+  let workedHours = 0;
+  let remainingHours = 0;
+  
+  let todayIdx = schedule.findIndex(day => day[0] === todayStr);
+  if (todayIdx === -1) return;
+  
+  let dayData = schedule[todayIdx];
+  
+  for (let i = 1; i < dayData.length; i++) {
+    let taskStr = dayData[i];
+    // Bé Mèo không tính giờ ngủ và giờ ăn vào giờ làm việc nha
+    if (taskStr.includes("Ngủ") || taskStr.includes("Ăn")) continue;
+    
+    // Tự động phân tích giờ bắt đầu - kết thúc
+    let regex = /(\d{1,2})(?::(\d{2}))?\s*-\s*(\d{1,2})(?::(\d{2}))?/;
+    let m = taskStr.match(regex);
+    let duration = 0;
+    if (m) {
+      let h1 = parseInt(m[1]||0); let m1 = parseInt(m[2]||0);
+      let h2 = parseInt(m[3]||0); let m2 = parseInt(m[4]||0);
+      duration = (h2 + m2/60) - (h1 + m1/60);
+    }
+    
+    let cb = document.querySelector(`input[data-index="${todayIdx}-${i}"]`);
+    if (cb && cb.checked) {
+      workedHours += duration;
+    } else {
+      remainingHours += duration;
+    }
+  }
+  
+  // Làm tròn cho đẹp (VD: 2.5h)
+  workedHours = Math.round(workedHours * 10) / 10;
+  remainingHours = Math.round(remainingHours * 10) / 10;
+  
+  let earned = Math.round(workedHours * WAGE_RATE);
+  let totalPredicted = Math.round(earned + (remainingHours * WAGE_RATE));
+  
+  // Đổ data lên giao diện
+  let elWorked = document.getElementById("catWorked");
+  let elEarned = document.getElementById("catEarned");
+  let elRemaining = document.getElementById("catRemaining");
+  let elTotal = document.getElementById("catTotal");
+  
+  if(elWorked) elWorked.innerText = workedHours + "h";
+  if(elEarned) elEarned.innerText = earned.toLocaleString() + " đ";
+  if(elRemaining) elRemaining.innerText = remainingHours;
+  if(elTotal) elTotal.innerText = totalPredicted.toLocaleString();
+}
 
+function cleanOldExpenses(expensesArray) {
+  const currentDate = new Date(); currentDate.setHours(0,0,0,0);
+  let isChanged = false;
   const filtered = expensesArray.filter(ex => {
     if (!ex.date) return false;
-    // Format đang lưu là DD/MM/YYYY
-    let dateParts = ex.date.split('/');
-    let d, m, y;
-    if (dateParts.length === 3) {
-      [d, m, y] = dateParts;
-    } else {
-      [d, m] = dateParts;
-      y = currentYear;
-    }
-    
+    let dateParts = ex.date.split('/'); let d, m, y;
+    if (dateParts.length === 3) { [d, m, y] = dateParts; } 
+    else { [d, m] = dateParts; y = currentYear; }
     const exDate = new Date(y, m - 1, d);
-    const diffTime = currentDate - exDate;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
-    
-    if (diffDays > 3) {
-      isChanged = true;
-      return false; // Bỏ qua data cũ
-    }
-    return true; // Giữ lại
+    const diffDays = Math.floor((currentDate - exDate) / (1000 * 60 * 60 * 24)); 
+    if (diffDays > 3) { isChanged = true; return false; }
+    return true; 
   });
-
   return { filtered, isChanged };
 }
 
-// POPUP LOGIC
-function openModal(index) {
-  currentAddIndex = index;
-  document.getElementById("modalOverlay").style.display = "flex";
-  setTimeout(() => {
-    document.getElementById("moneyModal").classList.add("active");
-    document.getElementById("popupMoneyInput").focus();
-  }, 10);
-}
-
-function closeModal() {
-  document.getElementById("moneyModal").classList.remove("active");
-  setTimeout(() => {
-    document.getElementById("modalOverlay").style.display = "none";
-    document.getElementById("popupMoneyInput").value = "";
-  }, 300);
-}
+function openModal(index) { currentAddIndex = index; document.getElementById("modalOverlay").style.display = "flex"; setTimeout(() => { document.getElementById("moneyModal").classList.add("active"); document.getElementById("popupMoneyInput").focus(); }, 10); }
+function closeModal() { document.getElementById("moneyModal").classList.remove("active"); setTimeout(() => { document.getElementById("modalOverlay").style.display = "none"; document.getElementById("popupMoneyInput").value = ""; }, 300); }
 
 function confirmQuickAdd() {
-  const inputPopup = document.getElementById("popupMoneyInput");
-  const addVal = inputPopup.value;
-  
+  const addVal = document.getElementById("popupMoneyInput").value;
   if (addVal !== "" && !isNaN(addVal) && Number(addVal) > 0) {
     let inputMain = document.querySelector(`.moneyInput[data-index="${currentAddIndex}"]`);
-    let currentVal = Number(inputMain.value) || 0;
-    let newVal = currentVal + Number(addVal);
-    
-    inputMain.value = newVal;
-    update();
+    let newVal = (Number(inputMain.value) || 0) + Number(addVal);
+    inputMain.value = newVal; update();
     sendTelegram(`🎀 <b>+ HÚP LÚA:</b> ${Number(addVal).toLocaleString()}đ\n👉 <b>Tổng ngày:</b> ${newVal.toLocaleString()}đ`);
-    closeModal();
-    launchConfetti(true); // Hiệu ứng tưng bừng khi có tiền
-  } else {
-    alert("Nhập số tiền vô bé ơi!");
-  }
+    closeModal(); launchConfetti(true);
+  } else { alert("Nhập số tiền vô bé ơi!"); }
 }
 
-function getMoney() {
-  const savedMoney = JSON.parse(localStorage.getItem("money") || "[]");
-  return schedule.map((_, i) => Number(savedMoney[i]) || 0);
-}
+function getMoney() { const savedMoney = JSON.parse(localStorage.getItem("money") || "[]"); return schedule.map((_, i) => Number(savedMoney[i]) || 0); }
 
-function update() {
-  saveData();
-  renderIncomeTable();
-}
+function update() { saveData(); renderIncomeTable(); updateCatPredictor(); }
 
 function addExpense() {
-  const reasonEl = document.getElementById("expenseReason");
-  const amountEl = document.getElementById("expenseAmount");
-  const reason = reasonEl.value.trim();
-  const amount = Number(amountEl.value);
-
+  const reasonEl = document.getElementById("expenseReason"); const amountEl = document.getElementById("expenseAmount");
+  const reason = reasonEl.value.trim(); const amount = Number(amountEl.value);
   if (!reason || amount <= 0) return;
-
-  const timeStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-  const fullDateStr = todayStr + '/' + currentYear;
-  const newExpense = { date: fullDateStr, time: timeStr, reason: reason, amount: amount };
-
-  let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
-  expenses.unshift(newExpense);
-  
-  // Clean luôn lúc thêm cho chắc chắn
-  const cleaned = cleanOldExpenses(expenses).filtered;
-  localStorage.setItem('expenses', JSON.stringify(cleaned));
-
-  reasonEl.value = ""; amountEl.value = "";
-  renderExpenses(); 
-  update(); // Gọi update() sẽ tự lưu vào Cloud và gọi renderIncomeTable() để trừ ống heo
+  const newExpense = { date: todayStr + '/' + currentYear, time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }), reason: reason, amount: amount };
+  let expenses = JSON.parse(localStorage.getItem('expenses') || "[]"); expenses.unshift(newExpense);
+  localStorage.setItem('expenses', JSON.stringify(cleanOldExpenses(expenses).filtered));
+  reasonEl.value = ""; amountEl.value = ""; renderExpenses(); update();
   sendTelegram(`<b>💀 BAY MÀU:</b> ${reason}\n💸 <code>-${amount.toLocaleString()} VND</code>`);
 }
 
 function deleteExpense(index) {
   if(confirm("Bé có chắc muốn xóa khoản chi này không? 🥺")) {
-    let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
-    expenses.splice(index, 1);
-    localStorage.setItem('expenses', JSON.stringify(expenses));
-    
-    renderExpenses();
-    update(); // Gọi update() để đồng bộ lại lên cloud và tính lại tiền ống heo
+    let expenses = JSON.parse(localStorage.getItem('expenses') || "[]"); expenses.splice(index, 1);
+    localStorage.setItem('expenses', JSON.stringify(expenses)); renderExpenses(); update();
   }
 }
 
 function renderExpenses() {
-  const logEl = document.getElementById("expenseLog");
-  let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
-  
-  if (expenses.length === 0) { 
-    logEl.innerHTML = "<div style='text-align:center; padding:15px; color:#a6adc8;'>Chưa xài đồng nào, giỏi quóa! 🎀</div>"; 
-    return; 
-  }
-  
+  const logEl = document.getElementById("expenseLog"); let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
+  if (expenses.length === 0) { logEl.innerHTML = "<div style='text-align:center; padding:15px; color:#a6adc8;'>Chưa xài đồng nào, giỏi quóa! 🎀</div>"; return; }
   let html = "";
   expenses.forEach((ex, index) => {
-    html += `<div class="expense-item">
-                <div class="reason-box">
-                  <div class="reason">${ex.reason}</div>
-                  <div class="time">${ex.time} • ${ex.date}</div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                  <div class="amount">-${Number(ex.amount).toLocaleString()}đ</div>
-                  <button class="btn-del-exp" onclick="deleteExpense(${index})" title="Xóa khoản này">❌</button>
-                </div>
-              </div>`;
+    html += `<div class="expense-item"><div class="reason-box"><div class="reason">${ex.reason}</div><div class="time">${ex.time} • ${ex.date}</div></div><div style="display: flex; align-items: center;"><div class="amount">-${Number(ex.amount).toLocaleString()}đ</div><button class="btn-del-exp" onclick="deleteExpense(${index})" title="Xóa khoản này">❌</button></div></div>`;
   });
   logEl.innerHTML = html;
 }
 
 function saveData() {
-  const checks = {};
-  document.querySelectorAll("input[type=checkbox]").forEach(c => { checks[c.getAttribute("data-index")] = c.checked; });
-  const savedMoney = JSON.parse(localStorage.getItem("money") || "[]");
-  document.querySelectorAll(".moneyInput[data-index]").forEach(m => { savedMoney[m.getAttribute("data-index")] = m.value; });
-  
-  localStorage.setItem("checks_today", JSON.stringify(checks));
-  localStorage.setItem("money", JSON.stringify(savedMoney));
-  const expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
-  
-  backupCloud(checks, savedMoney, expenses);
+  const checks = {}; document.querySelectorAll("input[type=checkbox]").forEach(c => { checks[c.getAttribute("data-index")] = c.checked; });
+  const savedMoney = JSON.parse(localStorage.getItem("money") || "[]"); document.querySelectorAll(".moneyInput[data-index]").forEach(m => { savedMoney[m.getAttribute("data-index")] = m.value; });
+  localStorage.setItem("checks_today", JSON.stringify(checks)); localStorage.setItem("money", JSON.stringify(savedMoney));
+  backupCloud(checks, savedMoney, JSON.parse(localStorage.getItem('expenses') || "[]"));
 }
 
 async function loadDataFromCloud() {
@@ -502,97 +482,43 @@ async function loadDataFromCloud() {
     const response = await fetch(FIREBASE_API_URL);
     if (!response.ok) throw new Error("Cloud Fetch Failed");
     const data = await response.json();
-    
     if (data.fields) {
-      const checks = JSON.parse(data.fields.checks.stringValue || "{}");
-      const money = JSON.parse(data.fields.money.stringValue || "[]");
-      let expenses = JSON.parse(data.fields.expenses.stringValue || "[]");
-
-      // TỰ ĐỘNG LỌC VÀ XÓA DATA TRỪ TIỀN > 3 NGÀY KHI LOAD
-      const cleanResult = cleanOldExpenses(expenses);
-      expenses = cleanResult.filtered;
-
-      localStorage.setItem("checks_today", JSON.stringify(checks));
-      localStorage.setItem("money", JSON.stringify(money));
-      localStorage.setItem("expenses", JSON.stringify(expenses));
-
-      document.querySelectorAll("input[type=checkbox]").forEach(c => { 
-        if (checks[c.getAttribute("data-index")]) c.checked = true; 
-      });
-      document.querySelectorAll(".moneyInput[data-index]").forEach(m => { 
-        if (money[m.getAttribute("data-index")]) m.value = money[m.getAttribute("data-index")]; 
-      });
-
-      renderExpenses();
-      renderIncomeTable();
-      
-      // Nếu có xóa dữ liệu cũ thì đồng bộ ngược lại lên Cloud
-      if(cleanResult.isChanged) {
-        backupCloud(checks, money, expenses);
-      }
+      const checks = JSON.parse(data.fields.checks.stringValue || "{}"); const money = JSON.parse(data.fields.money.stringValue || "[]");
+      const cleanResult = cleanOldExpenses(JSON.parse(data.fields.expenses.stringValue || "[]"));
+      localStorage.setItem("checks_today", JSON.stringify(checks)); localStorage.setItem("money", JSON.stringify(money)); localStorage.setItem("expenses", JSON.stringify(cleanResult.filtered));
+      document.querySelectorAll("input[type=checkbox]").forEach(c => { if (checks[c.getAttribute("data-index")]) c.checked = true; });
+      document.querySelectorAll(".moneyInput[data-index]").forEach(m => { if (money[m.getAttribute("data-index")]) m.value = money[m.getAttribute("data-index")]; });
+      renderExpenses(); renderIncomeTable(); updateCatPredictor();
+      if(cleanResult.isChanged) backupCloud(checks, money, cleanResult.filtered);
     }
   } catch (e) {
-    // Chế độ Offline
-    const checks = JSON.parse(localStorage.getItem("checks_today") || "{}");
-    const money = JSON.parse(localStorage.getItem("money") || "[]");
-    let expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
-    
-    expenses = cleanOldExpenses(expenses).filtered;
-    localStorage.setItem("expenses", JSON.stringify(expenses));
-
+    const checks = JSON.parse(localStorage.getItem("checks_today") || "{}"); const money = JSON.parse(localStorage.getItem("money") || "[]");
+    localStorage.setItem("expenses", JSON.stringify(cleanOldExpenses(JSON.parse(localStorage.getItem("expenses") || "[]")).filtered));
     document.querySelectorAll("input[type=checkbox]").forEach(c => { if (checks[c.getAttribute("data-index")]) c.checked = true; });
     document.querySelectorAll(".moneyInput[data-index]").forEach(m => { if (money[m.getAttribute("data-index")]) m.value = money[m.getAttribute("data-index")]; });
-    
-    renderExpenses();
-    renderIncomeTable();
+    renderExpenses(); renderIncomeTable(); updateCatPredictor();
   }
 }
 
 function sendTelegram(msg) {
-  const token = "8506964729:AAFvC-IkiijRn98BtvUuT5aHdOVjifYVMlo";
-  const chat = "7114174347";
-  fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chat, text: msg, parse_mode: "HTML" })
+  fetch(`https://api.telegram.org/bot8506964729:AAFvC-IkiijRn98BtvUuT5aHdOVjifYVMlo/sendMessage`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chat_id: "7114174347", text: msg, parse_mode: "HTML" })
   });
 }
 
 function launchConfetti(isMoney = false) {
-  if (isMoney) {
-    confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#ffd700', '#ff85b3', '#a6e3a1'] });
-  } else {
-    confetti({ particleCount: 80, spread: 60, origin: { y: 0.8 }, colors: ['#ff85b3', '#89dceb', '#cba6f7'] });
-  }
+  if (isMoney) confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#ffd700', '#ff85b3', '#a6e3a1'] });
+  else confetti({ particleCount: 80, spread: 60, origin: { y: 0.8 }, colors: ['#ff85b3', '#89dceb', '#cba6f7'] });
 }
 
-function notifyTask(el) {
-  if (el.checked) {
-    launchConfetti(false);
-    sendTelegram(`<b>✅ XONG VIỆC NÈ:</b> ${el.nextElementSibling.innerText}`);
-  }
-}
-
-function notifyMoney(el) {
-  const amount = Number(el.value);
-  if (amount > 0) sendTelegram(`<b>💖 LÚA VỀ:</b> ${amount.toLocaleString()} VND`);
-}
+function notifyTask(el) { if (el.checked) { launchConfetti(false); sendTelegram(`<b>✅ XONG VIỆC NÈ:</b> ${el.nextElementSibling.innerText}`); } }
+function notifyMoney(el) { if (Number(el.value) > 0) sendTelegram(`<b>💖 LÚA VỀ:</b> ${Number(el.value).toLocaleString()} VND`); }
 
 async function backupCloud(checks, money, expenses) {
-  fetch(FIREBASE_API_URL, {
-    method: "PATCH", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fields: { 
-      checks: { stringValue: JSON.stringify(checks) }, 
-      money: { stringValue: JSON.stringify(money) }, 
-      expenses: { stringValue: JSON.stringify(expenses) }, 
-      time: { stringValue: new Date().toISOString() } 
-    } })
-  });
+  fetch(FIREBASE_API_URL, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fields: { checks: { stringValue: JSON.stringify(checks) }, money: { stringValue: JSON.stringify(money) }, expenses: { stringValue: JSON.stringify(expenses) }, time: { stringValue: new Date().toISOString() } } }) });
 }
 
-// Enter key to confirm popup
-document.getElementById("popupMoneyInput").addEventListener("keypress", (e) => {
-  if (e.key === "Enter") confirmQuickAdd();
-});
+document.getElementById("popupMoneyInput").addEventListener("keypress", (e) => { if (e.key === "Enter") confirmQuickAdd(); });
 
 renderSchedule();
 loadDataFromCloud();
