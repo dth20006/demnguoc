@@ -1,1 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin AI Scheduler - FPT Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+    :root { --purple: #cba6f7; --bg: #1e1e2e; --card: #2a2a40; --text: #fff; --green: #a6e3a1; --red: #f38ba8; }
+    body { font-family: 'Lexend', sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { text-align: center; color: var(--purple); margin-bottom: 20px; }
+    .card { background: var(--card); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    textarea { width: 100%; height: 180px; padding: 12px; border-radius: 10px; border: none; background: rgba(0,0,0,0.3); color: #fff; font-family: inherit; resize: vertical; box-sizing: border-box; }
+    button { padding: 15px; border: none; border-radius: 10px; background: var(--purple); color: #1e1e2e; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; margin-top: 10px; }
+    button:hover { opacity: 0.9; transform: translateY(-2px); }
+    .day-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+    .day-item { padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; font-size: 13px; transition: 0.2s; }
+    .day-item.active { background: var(--purple); color: #000; font-weight: bold; }
+    #editor { display: none; border-top: 2px solid var(--purple); padding-top: 20px; }
+    .status { text-align: center; color: var(--green); font-weight: bold; margin: 15px 0; }
+    .info-tag { font-size: 12px; color: #89dceb; margin-bottom: 10px; display: block; }
+</style>
+</head>
+<body>
 
+<div class="container">
+    <h1>🤖 Admin AI Scheduler</h1>
+
+    <div class="card">
+        <h3>1. Dán bảng Lịch học FPT</h3>
+        <span class="info-tag">💡 AI sẽ tự bỏ GDTC, Câu chuyện dữ liệu & fix giờ học 14:10-16:10</span>
+        <textarea id="tkbInput" placeholder="Dán bảng TKB tại đây..."></textarea>
+        <button onclick="processTKB()">🪄 PHÂN TÍCH & TẠO LỊCH</button>
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <div class="card" id="listArea" style="display:none;">
+        <h3>2. Danh sách ngày</h3>
+        <div class="day-grid" id="dayGrid"></div>
+    </div>
+
+    <div class="card" id="editor">
+        <h3 id="editLabel">Chỉnh sửa ngày</h3>
+        <input type="text" id="editDate" style="width:100%; padding:10px; border-radius:8px; border:none; background:rgba(0,0,0,0.2); color:#fff; margin-bottom:10px;">
+        <textarea id="editTasks" style="height: 250px;"></textarea>
+        <div style="display:flex; gap:10px;">
+            <button onclick="saveEdit()" style="background: var(--green); flex:2;">Lưu thay đổi</button>
+            <button onclick="deleteDay()" style="background: var(--red); color:white; flex:1;">Xóa ngày</button>
+        </div>
+    </div>
+
+    <button onclick="syncToCloud()" id="btnSync" style="display:none; background: #89dceb; font-size: 18px; margin-top: 20px; color:#1e1e2e">
+        🚀 ĐỒNG BỘ LÊN CLOUD
+    </button>
+</div>
+
+<script>
+let finalSchedule = [];
+let currentIndex = -1;
+const FIREBASE_URL = "https://firestore.googleapis.com/v1/projects/deas-75de8/databases/(default)/documents/warrior/data";
+
+function processTKB() {
+    const rawText = document.getElementById('tkbInput').value.trim();
+    if (!rawText) return alert("Bé chưa dán gì cả!");
+
+    const lines = rawText.split('\n');
+    const classesByDate = {};
+
+    lines.forEach(line => {
+        // Kiểm tra loại bỏ môn không muốn
+        if (line.includes("VIE111") || line.includes("DAT1071") || 
+            line.includes("Giáo dục thể chất") || line.includes("Câu chuyện dữ liệu")) {
+            return; // Bỏ qua dòng này
+        }
+
+        const dateMatch = line.match(/(\d{2})\/(\d{2})\/\d{4}/);
+        if (dateMatch) {
+            const dateStr = `${dateMatch[1]}/${dateMatch[2]}`;
+            
+            // Tìm mã môn
+            const subjectMatch = line.match(/[A-Z]{3,4}\d{3,4}/);
+            const subject = subjectMatch ? subjectMatch[0] : "Học tập";
+
+            if (!classesByDate[dateStr]) classesByDate[dateStr] = [];
+            
+            // Ép giờ cố định 14:10 - 16:10 như yêu cầu
+            classesByDate[dateStr].push(`14:10-16:10 ${subject}`);
+        }
+    });
+
+    const dates = Object.keys(classesByDate).sort((a, b) => {
+        const [d1, m1] = a.split('/').map(Number);
+        const [d2, m2] = b.split('/').map(Number);
+        return m1 === m2 ? d1 - d2 : m1 - m2;
+    });
+
+    if (dates.length === 0) return alert("Không tìm thấy môn học nào (hoặc các môn đã bị lọc bỏ)!");
+
+    finalSchedule = dates.map(date => {
+        let tasks = [date];
+        // Lịch mặc định của bạn
+        tasks.push("00:00-06:00 Ngủ");
+        tasks.push("06:00-09:00 Ship");
+        
+        // Chèn môn học đã fix giờ
+        classesByDate[date].forEach(c => tasks.push(c));
+
+        tasks.push("11:30-12:00 Ăn trưa");
+        tasks.push("12:00-13:30 Ship");
+        tasks.push("16:30-20:00 Ship");
+        tasks.push("20:00-20:30 Ăn tối");
+        tasks.push("21:00-23:30 Ship");
+
+        const header = tasks.shift();
+        tasks.sort(); // Sắp xếp theo giờ cho khoa học
+        return [header, ...tasks];
+    });
+
+    renderGrid();
+    document.getElementById('listArea').style.display = 'block';
+    document.getElementById('btnSync').style.display = 'block';
+    document.getElementById('status').innerText = `✅ Đã tạo lịch cho ${finalSchedule.length} ngày!`;
+}
+
+function renderGrid() {
+    const grid = document.getElementById('dayGrid');
+    grid.innerHTML = "";
+    finalSchedule.forEach((d, i) => {
+        const item = document.createElement('div');
+        item.className = `day-item ${currentIndex === i ? 'active' : ''}`;
+        item.innerText = d[0];
+        item.onclick = () => openEdit(i);
+        grid.appendChild(item);
+    });
+}
+
+function openEdit(i) {
+    currentIndex = i;
+    renderGrid();
+    document.getElementById('editor').style.display = 'block';
+    document.getElementById('editDate').value = finalSchedule[i][0];
+    document.getElementById('editTasks').value = finalSchedule[i].slice(1).join('\n');
+    document.getElementById('editLabel').innerText = "Ngày " + finalSchedule[i][0];
+}
+
+function saveEdit() {
+    const date = document.getElementById('editDate').value;
+    const tasks = document.getElementById('editTasks').value.split('\n').filter(t => t.trim() !== "");
+    finalSchedule[currentIndex] = [date, ...tasks];
+    renderGrid();
+}
+
+function deleteDay() {
+    if(confirm("Xóa ngày này?")) {
+        finalSchedule.splice(currentIndex, 1);
+        document.getElementById('editor').style.display = 'none';
+        renderGrid();
+    }
+}
+
+async function syncToCloud() {
+    document.getElementById('status').innerText = "⏳ Đang gửi lên Cloud...";
+    try {
+        const res = await fetch(FIREBASE_URL + "?updateMask.fieldPaths=scheduleData", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                fields: { scheduleData: { stringValue: JSON.stringify(finalSchedule) } }
+            })
+        });
+        if (res.ok) {
+            document.getElementById('status').innerText = "🚀 ĐỒNG BỘ THÀNH CÔNG!";
+            alert("Đã cập nhật lịch mới lên điện thoại!");
+        }
+    } catch (e) { alert("Lỗi Firebase!"); }
+}
+</script>
+</body>
+</html>
