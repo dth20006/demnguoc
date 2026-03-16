@@ -29,9 +29,10 @@
 
     <div class="card">
         <h3>1. Dán bảng Lịch học FPT</h3>
-        <span class="info-tag">💡 AI sẽ tự bỏ GDTC, Câu chuyện dữ liệu & fix giờ học 14:10-16:10</span>
+        <span class="info-tag">💡 AI sẽ tự bỏ DAT103, VIE111; giữ ENT123, DAT1071; môn online fix 14:10-16:10; ngày trống sẽ tự thêm ship + ăn 2 bữa + ngủ 6 tiếng</span>
         <textarea id="tkbInput" placeholder="Dán bảng TKB tại đây..."></textarea>
         <button onclick="processTKB()">🪄 PHÂN TÍCH & TẠO LỊCH</button>
+        <button onclick="loadScheduleFromCloud()" style="background:#89dceb;">☁️ TẢI LỊCH TỪ CLOUD</button>
     </div>
 
     <div id="status" class="status"></div>
@@ -59,68 +60,119 @@
 <script>
 let finalSchedule = [];
 let currentIndex = -1;
-const FIREBASE_URL = "https://firestore.googleapis.com/v1/projects/deas-75de8/databases/(default)/documents/warrior/data";
+
+const FIREBASE_PROJECT_ID = "deas-75de8";
+const FIREBASE_BASE_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents`;
+const FIREBASE_SCHEDULE_URL = `${FIREBASE_BASE_URL}/warrior/root/schedule/main`;
+const FIREBASE_DAYS_URL = `${FIREBASE_BASE_URL}/warrior/root/days`;
+
+function formatDateKey(dateObj) {
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    return `${day}/${month}`;
+}
+
+function buildStudyDaySchedule(date, classList) {
+    let tasks = [date];
+    tasks.push("00:00-06:00 Ngủ");
+    tasks.push("06:00-09:00 Ship");
+    tasks.push("11:30-12:00 Ăn trưa");
+    tasks.push("12:00-13:30 Ship");
+
+    classList.forEach(c => tasks.push(c));
+
+    tasks.push("16:30-20:00 Ship");
+    tasks.push("20:00-20:30 Ăn tối");
+    tasks.push("21:00-23:30 Ship");
+
+    const header = tasks.shift();
+    tasks.sort();
+    return [header, ...tasks];
+}
+
+function buildFreeDaySchedule(date) {
+    let tasks = [date];
+    tasks.push("00:00-06:00 Ngủ");
+    tasks.push("06:00-11:30 Ship");
+    tasks.push("11:30-12:00 Ăn trưa");
+    tasks.push("12:00-20:00 Ship");
+    tasks.push("20:00-20:30 Ăn tối");
+    tasks.push("20:30-23:59 Ship");
+    return tasks;
+}
 
 function processTKB() {
     const rawText = document.getElementById('tkbInput').value.trim();
     if (!rawText) return alert("Bé chưa dán gì cả!");
 
-    const lines = rawText.split('\n');
+    const lines = rawText.split('\n').filter(line => line.trim() !== "");
     const classesByDate = {};
+    let minDate = null;
+    let maxDate = null;
 
     lines.forEach(line => {
-        // Kiểm tra loại bỏ môn không muốn
-        if (line.includes("VIE111") || line.includes("DAT1071") || 
-            line.includes("Giáo dục thể chất") || line.includes("Câu chuyện dữ liệu")) {
-            return; // Bỏ qua dòng này
+        const dateMatch = line.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+        if (!dateMatch) return;
+
+        const day = parseInt(dateMatch[1], 10);
+        const month = parseInt(dateMatch[2], 10) - 1;
+        const year = parseInt(dateMatch[3], 10);
+        const dateObj = new Date(year, month, day);
+        const dateStr = formatDateKey(dateObj);
+
+        if (!minDate || dateObj < minDate) minDate = new Date(dateObj);
+        if (!maxDate || dateObj > maxDate) maxDate = new Date(dateObj);
+
+        if (line.includes("DAT103") || line.includes("VIE111") || line.includes("Giáo dục thể chất")) {
+            return;
         }
 
-        const dateMatch = line.match(/(\d{2})\/(\d{2})\/\d{4}/);
-        if (dateMatch) {
-            const dateStr = `${dateMatch[1]}/${dateMatch[2]}`;
-            
-            // Tìm mã môn
-            const subjectMatch = line.match(/[A-Z]{3,4}\d{3,4}/);
-            const subject = subjectMatch ? subjectMatch[0] : "Học tập";
+        const subjectMatch = line.match(/[A-Z]{3,4}\d{3,4}/);
+        const subject = subjectMatch ? subjectMatch[0] : "Học tập";
 
-            if (!classesByDate[dateStr]) classesByDate[dateStr] = [];
-            
-            // Ép giờ cố định 14:10 - 16:10 như yêu cầu
-            classesByDate[dateStr].push(`14:10-16:10 ${subject}`);
+        const isOnlineClass =
+            line.includes("Google Meet") ||
+            line.includes("Học Online") ||
+            line.includes("Meet");
+
+        let timeStr = "14:10-16:10";
+        if (!isOnlineClass) {
+            const timeMatch = line.match(/(\d{2}:\d{2}):\d{2}\s*-\s*(\d{2}:\d{2}):\d{2}/);
+            if (timeMatch) {
+                timeStr = `${timeMatch[1]}-${timeMatch[2]}`;
+            }
         }
+
+        if (!classesByDate[dateStr]) classesByDate[dateStr] = [];
+        classesByDate[dateStr].push(`${timeStr} ${subject}`);
     });
 
-    const dates = Object.keys(classesByDate).sort((a, b) => {
-        const [d1, m1] = a.split('/').map(Number);
-        const [d2, m2] = b.split('/').map(Number);
-        return m1 === m2 ? d1 - d2 : m1 - m2;
-    });
+    if (!minDate || !maxDate) {
+        return alert("Không đọc được ngày từ bảng lịch!");
+    }
 
-    if (dates.length === 0) return alert("Không tìm thấy môn học nào (hoặc các môn đã bị lọc bỏ)!");
+    finalSchedule = [];
+    const currentDate = new Date(minDate);
 
-    finalSchedule = dates.map(date => {
-        let tasks = [date];
-        // Lịch mặc định của bạn
-        tasks.push("00:00-06:00 Ngủ");
-        tasks.push("06:00-09:00 Ship");
-        
-        // Chèn môn học đã fix giờ
-        classesByDate[date].forEach(c => tasks.push(c));
+    while (currentDate <= maxDate) {
+        const dateStr = formatDateKey(currentDate);
+        const classList = classesByDate[dateStr] || [];
 
-        tasks.push("11:30-12:00 Ăn trưa");
-        tasks.push("12:00-13:30 Ship");
-        tasks.push("16:30-20:00 Ship");
-        tasks.push("20:00-20:30 Ăn tối");
-        tasks.push("21:00-23:30 Ship");
+        if (classList.length > 0) {
+            classList.sort();
+            finalSchedule.push(buildStudyDaySchedule(dateStr, classList));
+        } else {
+            finalSchedule.push(buildFreeDaySchedule(dateStr));
+        }
 
-        const header = tasks.shift();
-        tasks.sort(); // Sắp xếp theo giờ cho khoa học
-        return [header, ...tasks];
-    });
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
 
+    currentIndex = -1;
     renderGrid();
     document.getElementById('listArea').style.display = 'block';
     document.getElementById('btnSync').style.display = 'block';
+    document.getElementById('editor').style.display = 'none';
     document.getElementById('status').innerText = `✅ Đã tạo lịch cho ${finalSchedule.length} ngày!`;
 }
 
@@ -146,35 +198,102 @@ function openEdit(i) {
 }
 
 function saveEdit() {
-    const date = document.getElementById('editDate').value;
-    const tasks = document.getElementById('editTasks').value.split('\n').filter(t => t.trim() !== "");
+    if (currentIndex < 0) return;
+    const date = document.getElementById('editDate').value.trim();
+    const tasks = document.getElementById('editTasks').value.split('\n').map(t => t.trim()).filter(t => t !== "");
+    if (!date) return alert("Ngày không được để trống.");
     finalSchedule[currentIndex] = [date, ...tasks];
     renderGrid();
+    document.getElementById('status').innerText = `💾 Đã cập nhật ngày ${date}`;
 }
 
 function deleteDay() {
+    if (currentIndex < 0) return;
     if(confirm("Xóa ngày này?")) {
         finalSchedule.splice(currentIndex, 1);
+        currentIndex = -1;
         document.getElementById('editor').style.display = 'none';
         renderGrid();
+        document.getElementById('status').innerText = "🗑️ Đã xóa ngày khỏi lịch hiện tại.";
+    }
+}
+
+function safeJsonParse(text, fallback) {
+    try {
+        return JSON.parse(text);
+    } catch (e) {
+        return fallback;
+    }
+}
+
+function parseFirestoreString(fieldObj, fallback = "") {
+    if (!fieldObj) return fallback;
+    if (fieldObj.stringValue !== undefined) return fieldObj.stringValue;
+    return fallback;
+}
+
+async function loadScheduleFromCloud() {
+    document.getElementById('status').innerText = "⏳ Đang tải lịch từ Cloud...";
+    try {
+        const res = await fetch(FIREBASE_SCHEDULE_URL);
+        if (!res.ok) throw new Error("Không tải được schedule");
+
+        const data = await res.json();
+        const scheduleStr = parseFirestoreString(data?.fields?.scheduleData, "[]");
+        const parsed = safeJsonParse(scheduleStr, []);
+
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+            finalSchedule = [];
+            renderGrid();
+            document.getElementById('listArea').style.display = 'block';
+            document.getElementById('btnSync').style.display = 'block';
+            document.getElementById('editor').style.display = 'none';
+            document.getElementById('status').innerText = "📭 Cloud chưa có schedule.";
+            return;
+        }
+
+        finalSchedule = parsed;
+        currentIndex = -1;
+        renderGrid();
+        document.getElementById('listArea').style.display = 'block';
+        document.getElementById('btnSync').style.display = 'block';
+        document.getElementById('editor').style.display = 'none';
+        document.getElementById('status').innerText = `☁️ Đã tải ${finalSchedule.length} ngày từ Cloud.`;
+    } catch (e) {
+        document.getElementById('status').innerText = "❌ Lỗi tải Cloud!";
+        alert("Không tải được schedule từ Firebase.");
     }
 }
 
 async function syncToCloud() {
+    if (!Array.isArray(finalSchedule) || finalSchedule.length === 0) {
+        return alert("Chưa có lịch để đồng bộ.");
+    }
+
     document.getElementById('status').innerText = "⏳ Đang gửi lên Cloud...";
     try {
-        const res = await fetch(FIREBASE_URL + "?updateMask.fieldPaths=scheduleData", {
+        const res = await fetch(FIREBASE_SCHEDULE_URL, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                fields: { scheduleData: { stringValue: JSON.stringify(finalSchedule) } }
+                fields: {
+                    scheduleData: { stringValue: JSON.stringify(finalSchedule) },
+                    updatedAt: { stringValue: new Date().toISOString() }
+                }
             })
         });
+
         if (res.ok) {
             document.getElementById('status').innerText = "🚀 ĐỒNG BỘ THÀNH CÔNG!";
-            alert("Đã cập nhật lịch mới lên điện thoại!");
+            alert("Đã cập nhật lịch mới lên cloud!");
+        } else {
+            document.getElementById('status').innerText = "❌ Đồng bộ thất bại!";
+            alert("Lỗi khi đồng bộ Firebase!");
         }
-    } catch (e) { alert("Lỗi Firebase!"); }
+    } catch (e) {
+        document.getElementById('status').innerText = "❌ Lỗi Firebase!";
+        alert("Lỗi Firebase!");
+    }
 }
 </script>
 </body>
