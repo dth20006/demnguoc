@@ -415,7 +415,17 @@ function confirmQuickAdd() {
     let inputMain = document.querySelector(`.moneyInput[data-index="${currentAddIndex}"]`);
     let newVal = (Number(inputMain.value) || 0) + Number(addVal);
     inputMain.value = newVal; update();
-    sendTelegram(`🎀 <b>+ HÚP LÚA:</b> ${Number(addVal).toLocaleString()}đ\n👉 <b>Tổng ngày:</b> ${newVal.toLocaleString()}đ`);
+    sendTelegram(
+`<b>◈──────────────◈</b>
+<b>💳 CASH INFLOW [SUCCESS]</b>
+<b>◈──────────────◈</b>
+
+<b>💰 Số tiền mới:</b> <code>+${Number(addVal).toLocaleString()}đ</code>
+<b>📊 Tổng ngày:</b> <code>${newVal.toLocaleString()}đ</code>
+<b>📅 Ngày:</b> <code>${todayStr}/${currentYear}</code>
+
+<b>#WarriorCapital #Income</b>`
+    );
     closeModal(); launchConfetti(true);
   } else { alert("Nhập số tiền vô bé ơi!"); }
 }
@@ -432,7 +442,17 @@ function addExpense() {
   let expenses = JSON.parse(localStorage.getItem('expenses') || "[]"); expenses.unshift(newExpense);
   localStorage.setItem('expenses', JSON.stringify(cleanOldExpenses(expenses).filtered));
   reasonEl.value = ""; amountEl.value = ""; renderExpenses(); update();
-  sendTelegram(`<b>💀 BAY MÀU:</b> ${reason}\n💸 <code>-${amount.toLocaleString()} VND</code>`);
+  sendTelegram(
+`<b>◈──────────────◈</b>
+<b>⚠️ TRANSACTION ALERT</b>
+<b>◈──────────────◈</b>
+
+<b>🛍️ Nội dung:</b> <code>${reason}</code>
+<b>💸 Số tiền:</b> <code>-${amount.toLocaleString()} VND</code>
+<b>🕒 Lúc:</b> <code>${new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</code>
+
+<b><i>"Kiểm soát chi tiêu là bước đầu của sự giàu có! 🌸"</i></b>`
+  );
 }
 
 function deleteExpense(index) {
@@ -514,8 +534,39 @@ function launchConfetti(isMoney = false) {
   else confetti({ particleCount: 80, spread: 60, origin: { y: 0.8 }, colors: ['#ff85b3', '#89dceb', '#cba6f7'] });
 }
 
-function notifyTask(el) { if (el.checked) { launchConfetti(false); sendTelegram(`<b>✅ XONG VIỆC NÈ:</b> ${el.nextElementSibling.innerText}`); } }
-function notifyMoney(el) { if (Number(el.value) > 0) sendTelegram(`<b>💖 LÚA VỀ:</b> ${Number(el.value).toLocaleString()} VND`); }
+function notifyTask(el) { 
+  if (el.checked) { 
+    launchConfetti(false); 
+    const taskName = el.nextElementSibling.innerText;
+    const timeNow = new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+    sendTelegram(
+`<b>◈──────────────◈</b>
+<b>🚀 MISSION COMPLETED</b>
+<b>◈──────────────◈</b>
+
+<b>📌 Công việc:</b> <code>${taskName}</code>
+<b>🕒 Thời gian:</b> <code>${timeNow}</code>
+<b>✨ Status:</b> <i>Đã hoàn thành xuất sắc!</i>
+
+<b>#WarriorAI #Productivity</b>`
+    ); 
+  } 
+}
+
+function notifyMoney(el) { 
+  if (Number(el.value) > 0) {
+    sendTelegram(
+`<b>◈──────────────◈</b>
+<b>💖 LÚA VỀ [SUCCESS]</b>
+<b>◈──────────────◈</b>
+
+<b>💰 Thu nhập:</b> <code>+${Number(el.value).toLocaleString()} VND</code>
+<b>📅 Ngày:</b> <code>${todayStr}/${currentYear}</code>
+
+<b>#Income #WarriorAI</b>`
+    );
+  }
+}
 
 async function backupCloud(checks, money, expenses) {
   const url = FIREBASE_API_URL + "?updateMask.fieldPaths=checks&updateMask.fieldPaths=money&updateMask.fieldPaths=expenses&updateMask.fieldPaths=time";
