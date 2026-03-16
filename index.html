@@ -85,13 +85,27 @@ body {
 
 .day b { font-size: 18px; display: block; margin-bottom: 18px; color: var(--neon-blue); font-weight: 700;}
 
-.task-item { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; font-size: 16px; font-weight: 300; }
+/* --- NÂNG CẤP GIAO DIỆN TASK MỚI CHO IPHONE --- */
+.task-item { 
+  display: flex; align-items: center; gap: 14px; margin-bottom: 12px; 
+  font-size: 16px; font-weight: 400; 
+  background: rgba(0, 0, 0, 0.15); 
+  padding: 12px 16px; 
+  border-radius: 20px; 
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.task-item:active { transform: scale(0.98); background: rgba(0, 0, 0, 0.25); }
 
-/* CHECKBOX */
+.task-item.completed { opacity: 0.5; }
+.task-item.completed span { text-decoration: line-through; color: var(--text-dim); }
+
+/* CHECKBOX CHUẨN IOS */
 input[type="checkbox"] {
-  appearance: none; width: 26px; height: 26px; border: 2px solid var(--neon-purple);
-  border-radius: 50%; cursor: pointer; position: relative; transition: 0.3s all cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 8px rgba(203, 166, 247, 0.3); background-color: rgba(0,0,0,0.2);
+  appearance: none; flex-shrink: 0; width: 28px; height: 28px; border: 2.5px solid var(--neon-purple);
+  border-radius: 50%; cursor: pointer; transition: 0.3s all cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(203, 166, 247, 0.3); background-color: rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center;
 }
 
 input[type="checkbox"]:checked {
@@ -99,7 +113,7 @@ input[type="checkbox"]:checked {
   box-shadow: 0 0 18px var(--neon-pink); transform: scale(1.1);
 }
 
-input[type="checkbox"]:checked::after { content: '❤'; position: absolute; color: #fff; font-size: 15px; left: 4px; top: 1px; }
+input[type="checkbox"]:checked::after { content: '❤'; color: #fff; font-size: 15px; }
 
 .money-action { display: flex; align-items: center; gap: 12px; margin-top: 24px; padding-top: 18px; border-top: 2px dashed rgba(255, 255, 255, 0.08); }
 
@@ -145,9 +159,7 @@ input[type="checkbox"]:checked::after { content: '❤'; position: absolute; colo
 #totalAccumulated { font-size: 22px; color: var(--neon-purple); text-shadow: 0 0 15px rgba(203, 166, 247, 0.5); }
 
 /* --- GOAL STYLES --- */
-.goal-container {
-  margin-top: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 20px; padding: 16px; border: 1px dashed rgba(137, 220, 235, 0.3);
-}
+.goal-container { margin-top: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 20px; padding: 16px; border: 1px dashed rgba(137, 220, 235, 0.3); }
 .goal-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: 700; color: #fff; }
 .progress-bar-bg { width: 100%; height: 14px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; position: relative; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); }
 .progress-bar-fill {
@@ -262,37 +274,8 @@ input[type="checkbox"]:checked::after { content: '❤'; position: absolute; colo
 </div>
 
 <script>
-const schedule=[
+let schedule=[
 ["14/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: Meet","16:30-23:30: Ship"],
-["15/03","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"],
-["16/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["17/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: LMS","16:30-23:30: Ship"],
-["18/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["19/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: LMS","16:30-23:30: Ship"],
-["20/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["21/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: Meet","16:30-23:30: Ship"],
-["22/03","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"],
-["23/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["24/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: LMS","16:30-23:30: Ship"],
-["25/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["26/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: LMS","16:30-23:30: Ship"],
-["27/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["28/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: Meet","16:30-23:30: Ship"],
-["29/03","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"],
-["30/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["31/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: LMS","16:30-23:30: Ship"],
-["01/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["02/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: LMS","16:30-23:30: Ship"],
-["03/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["04/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: Meet","16:30-23:30: Ship"],
-["05/04","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"],
-["06/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["07/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: LMS","16:30-23:30: Ship"],
-["08/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["09/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: LMS","16:30-23:30: Ship"],
-["10/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ship","11:25-14:00: Ship","14:10-16:10: Dữ liệu","16:30-23:30: Ship"],
-["11/04","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: Meet","16:30-23:30: Ship"],
-["12/04","00-06h: Ngủ","07-09h: Full","09:25-11:25: Full","11:25-14:00: Full","14:10-16:10: Full","16:30-23:30: Full"]
 ];
 
 const grid = document.getElementById("grid");
@@ -300,9 +283,14 @@ const now = new Date();
 const todayStr = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0');
 const currentYear = now.getFullYear();
 let currentAddIndex = null;
-const WAGE_RATE = 80000; // Tiền kiếm được mỗi giờ (80k/h)
+const WAGE_RATE = 80000; 
 
 const FIREBASE_API_URL = "https://firestore.googleapis.com/v1/projects/deas-75de8/databases/(default)/documents/warrior/data";
+
+function toggleTaskStyle(el) {
+  if (el.checked) el.parentElement.classList.add('completed');
+  else el.parentElement.classList.remove('completed');
+}
 
 function renderSchedule() {
   grid.innerHTML = "";
@@ -314,7 +302,7 @@ function renderSchedule() {
       card.className = "day";
       let html = `<b>📅 Hôm nay: ${day[0]}/${currentYear}</b>`;
       for (let i = 1; i < day.length; i++) {
-        html += `<div class="task-item"><input type="checkbox" data-index="${index}-${i}" onchange="update();notifyTask(this)"><span>${day[i]}</span></div>`;
+        html += `<div class="task-item"><input type="checkbox" data-index="${index}-${i}" onchange="toggleTaskStyle(this);update();notifyTask(this)"><span>${day[i]}</span></div>`;
       }
       html += `<div class="money-action"><span style="font-size:20px">💰</span><input class="moneyInput" type="number" data-index="${index}" placeholder="Nhập lúa thu được..." onchange="update();notifyMoney(this)"><button class="btn-add" onclick="openModal(${index})">+</button></div>`;
       card.innerHTML = html;
@@ -347,7 +335,6 @@ function renderIncomeTable() {
   if (finalTotal < 0) finalTotal = 0; 
   document.getElementById("totalAccumulated").innerText = finalTotal.toLocaleString() + "đ";
 
-  // --- CẬP NHẬT MỤC TIÊU ---
   const GOAL = 10000000; 
   let percent = (finalTotal / GOAL) * 100;
   if (percent < 0) percent = 0;
@@ -356,7 +343,6 @@ function renderIncomeTable() {
   document.getElementById("percentLabel").innerText = `${displayPercent}%`;
 }
 
-// --- THUẬT TOÁN MÈO TIÊN TRI DỰ ĐOÁN GIỜ / LÚA ---
 function updateCatPredictor() {
   let workedHours = 0;
   let remainingHours = 0;
@@ -368,10 +354,8 @@ function updateCatPredictor() {
   
   for (let i = 1; i < dayData.length; i++) {
     let taskStr = dayData[i];
-    // Bé Mèo không tính giờ ngủ và giờ ăn vào giờ làm việc nha
     if (taskStr.includes("Ngủ") || taskStr.includes("Ăn")) continue;
     
-    // Tự động phân tích giờ bắt đầu - kết thúc
     let regex = /(\d{1,2})(?::(\d{2}))?\s*-\s*(\d{1,2})(?::(\d{2}))?/;
     let m = taskStr.match(regex);
     let duration = 0;
@@ -389,14 +373,12 @@ function updateCatPredictor() {
     }
   }
   
-  // Làm tròn cho đẹp (VD: 2.5h)
   workedHours = Math.round(workedHours * 10) / 10;
   remainingHours = Math.round(remainingHours * 10) / 10;
   
   let earned = Math.round(workedHours * WAGE_RATE);
   let totalPredicted = Math.round(earned + (remainingHours * WAGE_RATE));
   
-  // Đổ data lên giao diện
   let elWorked = document.getElementById("catWorked");
   let elEarned = document.getElementById("catEarned");
   let elRemaining = document.getElementById("catRemaining");
@@ -483,18 +465,39 @@ async function loadDataFromCloud() {
     if (!response.ok) throw new Error("Cloud Fetch Failed");
     const data = await response.json();
     if (data.fields) {
-      const checks = JSON.parse(data.fields.checks.stringValue || "{}"); const money = JSON.parse(data.fields.money.stringValue || "[]");
-      const cleanResult = cleanOldExpenses(JSON.parse(data.fields.expenses.stringValue || "[]"));
-      localStorage.setItem("checks_today", JSON.stringify(checks)); localStorage.setItem("money", JSON.stringify(money)); localStorage.setItem("expenses", JSON.stringify(cleanResult.filtered));
-      document.querySelectorAll("input[type=checkbox]").forEach(c => { if (checks[c.getAttribute("data-index")]) c.checked = true; });
+      if (data.fields.scheduleData && data.fields.scheduleData.stringValue) {
+          schedule = JSON.parse(data.fields.scheduleData.stringValue);
+          renderSchedule(); 
+      }
+
+      const checks = JSON.parse(data.fields.checks ? data.fields.checks.stringValue : "{}"); 
+      const money = JSON.parse(data.fields.money ? data.fields.money.stringValue : "[]");
+      const cleanResult = cleanOldExpenses(JSON.parse(data.fields.expenses ? data.fields.expenses.stringValue : "[]"));
+      
+      localStorage.setItem("checks_today", JSON.stringify(checks)); 
+      localStorage.setItem("money", JSON.stringify(money)); 
+      localStorage.setItem("expenses", JSON.stringify(cleanResult.filtered));
+      
+      document.querySelectorAll("input[type=checkbox]").forEach(c => { 
+        if (checks[c.getAttribute("data-index")]) {
+          c.checked = true; 
+          c.parentElement.classList.add("completed");
+        }
+      });
       document.querySelectorAll(".moneyInput[data-index]").forEach(m => { if (money[m.getAttribute("data-index")]) m.value = money[m.getAttribute("data-index")]; });
+      
       renderExpenses(); renderIncomeTable(); updateCatPredictor();
       if(cleanResult.isChanged) backupCloud(checks, money, cleanResult.filtered);
     }
   } catch (e) {
     const checks = JSON.parse(localStorage.getItem("checks_today") || "{}"); const money = JSON.parse(localStorage.getItem("money") || "[]");
     localStorage.setItem("expenses", JSON.stringify(cleanOldExpenses(JSON.parse(localStorage.getItem("expenses") || "[]")).filtered));
-    document.querySelectorAll("input[type=checkbox]").forEach(c => { if (checks[c.getAttribute("data-index")]) c.checked = true; });
+    document.querySelectorAll("input[type=checkbox]").forEach(c => { 
+      if (checks[c.getAttribute("data-index")]) {
+        c.checked = true;
+        c.parentElement.classList.add("completed");
+      }
+    });
     document.querySelectorAll(".moneyInput[data-index]").forEach(m => { if (money[m.getAttribute("data-index")]) m.value = money[m.getAttribute("data-index")]; });
     renderExpenses(); renderIncomeTable(); updateCatPredictor();
   }
@@ -515,7 +518,8 @@ function notifyTask(el) { if (el.checked) { launchConfetti(false); sendTelegram(
 function notifyMoney(el) { if (Number(el.value) > 0) sendTelegram(`<b>💖 LÚA VỀ:</b> ${Number(el.value).toLocaleString()} VND`); }
 
 async function backupCloud(checks, money, expenses) {
-  fetch(FIREBASE_API_URL, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fields: { checks: { stringValue: JSON.stringify(checks) }, money: { stringValue: JSON.stringify(money) }, expenses: { stringValue: JSON.stringify(expenses) }, time: { stringValue: new Date().toISOString() } } }) });
+  const url = FIREBASE_API_URL + "?updateMask.fieldPaths=checks&updateMask.fieldPaths=money&updateMask.fieldPaths=expenses&updateMask.fieldPaths=time";
+  fetch(url, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fields: { checks: { stringValue: JSON.stringify(checks) }, money: { stringValue: JSON.stringify(money) }, expenses: { stringValue: JSON.stringify(expenses) }, time: { stringValue: new Date().toISOString() } } }) });
 }
 
 document.getElementById("popupMoneyInput").addEventListener("keypress", (e) => { if (e.key === "Enter") confirmQuickAdd(); });
