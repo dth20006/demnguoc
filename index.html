@@ -9,6 +9,9 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
+/* =========================================================
+   1) BIẾN GỐC / GIAO DIỆN MÀU
+========================================================= */
 :root {
   --bg-dark: #13131f;
   --bg-dark-2: #1a1a2c;
@@ -61,6 +64,9 @@ body::before {
   z-index: 0;
 }
 
+/* =========================================================
+   2) PHẦN ĐẦU TRANG
+========================================================= */
 .header-ios {
   padding: 40px 0 20px 0;
   position: sticky;
@@ -88,6 +94,9 @@ body::before {
   gap: 8px;
 }
 
+/* =========================================================
+   3) THANH TRẠNG THÁI / TÂM TRẠNG
+========================================================= */
 .top-status-bar {
   position: relative;
   z-index: 2;
@@ -144,6 +153,9 @@ body::before {
   border: 1px solid rgba(255,255,255,0.1);
 }
 
+/* =========================================================
+   4) KHUNG CHỨA CHÍNH + CARD DÙNG CHUNG
+========================================================= */
 .container {
   display: flex;
   flex-direction: column;
@@ -198,7 +210,14 @@ body::before {
   z-index: 1;
 }
 
-.grid { display: flex; flex-direction: column; gap: 14px; }
+/* =========================================================
+   5) CARD 1 - LỊCH TRÌNH / CÔNG VIỆC
+========================================================= */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 
 .day {
   background: rgba(255, 255, 255, 0.05);
@@ -243,10 +262,17 @@ body::before {
     -4px -4px 12px rgba(255,255,255,0.02);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.task-item:active { transform: scale(0.98); background: rgba(0, 0, 0, 0.25); }
+
+.task-item:active {
+  transform: scale(0.98);
+  background: rgba(0, 0, 0, 0.25);
+}
 
 .task-item.completed { opacity: 0.5; }
-.task-item.completed span { text-decoration: line-through; color: var(--text-dim); }
+.task-item.completed span {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
 
 input[type="checkbox"] {
   appearance: none;
@@ -279,6 +305,9 @@ input[type="checkbox"]:checked::after {
   font-size: 15px;
 }
 
+/* =========================================================
+   6) Ô NHẬP / NÚT DÙNG CHUNG
+========================================================= */
 .money-action {
   display: flex;
   align-items: center;
@@ -303,6 +332,7 @@ input[type="checkbox"]:checked::after {
     inset 4px 4px 10px rgba(0,0,0,0.18),
     inset -2px -2px 6px rgba(255,255,255,0.02);
 }
+
 .moneyInput:focus {
   border-color: var(--neon-blue);
   box-shadow:
@@ -328,6 +358,7 @@ input[type="checkbox"]:checked::after {
   justify-content: center;
   transition: transform 0.2s;
 }
+
 .btn-add:active { transform: scale(0.9); }
 
 .btn-expense {
@@ -344,9 +375,17 @@ input[type="checkbox"]:checked::after {
   font-family: 'Lexend', sans-serif;
   transition: 0.3s;
 }
-.btn-expense:hover { background: rgba(255, 133, 179, 0.08); }
-.btn-expense:active { background: var(--neon-pink); color: #fff; transform: scale(0.98); }
 
+.btn-expense:hover { background: rgba(255, 133, 179, 0.08); }
+.btn-expense:active {
+  background: var(--neon-pink);
+  color: #fff;
+  transform: scale(0.98);
+}
+
+/* =========================================================
+   7) CARD 2 - NHẬT KÝ CHI TIÊU
+========================================================= */
 .expense-log {
   margin-top: 15px;
   max-height: 260px;
@@ -365,8 +404,15 @@ input[type="checkbox"]:checked::after {
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: 0.2s;
 }
+
 .expense-item:hover { background: rgba(255,255,255,0.05); }
-.expense-item .reason { font-weight: 600; color: #fff; margin-bottom: 4px; }
+
+.expense-item .reason {
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
 .expense-item .amount {
   color: var(--neon-pink);
   font-weight: 800;
@@ -376,7 +422,11 @@ input[type="checkbox"]:checked::after {
   padding: 6px 10px;
   border-radius: 12px;
 }
-.expense-item .time { font-size: 11px; color: var(--text-dim); }
+
+.expense-item .time {
+  font-size: 11px;
+  color: var(--text-dim);
+}
 
 .btn-del-exp {
   background: none;
@@ -388,8 +438,15 @@ input[type="checkbox"]:checked::after {
   opacity: 0.7;
   transition: 0.2s;
 }
-.btn-del-exp:hover { opacity: 1; transform: scale(1.1); }
 
+.btn-del-exp:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* =========================================================
+   8) CARD 3 - QUỸ TIẾT KIỆM / MỤC TIÊU / DỰ BÁO
+========================================================= */
 .stat-row {
   display: flex;
   justify-content: space-between;
@@ -397,11 +454,13 @@ input[type="checkbox"]:checked::after {
   border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
   align-items: center;
 }
+
 .stat-value {
   font-weight: 800;
   color: var(--neon-green);
   text-shadow: 0 0 12px rgba(166, 227, 161, 0.28);
 }
+
 #totalAccumulated {
   font-size: 22px;
   color: var(--neon-purple);
@@ -415,6 +474,7 @@ input[type="checkbox"]:checked::after {
   padding: 16px;
   border: 1px dashed rgba(137, 220, 235, 0.22);
 }
+
 .goal-header {
   display: flex;
   justify-content: space-between;
@@ -423,6 +483,7 @@ input[type="checkbox"]:checked::after {
   font-weight: 700;
   color: #fff;
 }
+
 .progress-bar-bg {
   width: 100%;
   height: 14px;
@@ -432,6 +493,7 @@ input[type="checkbox"]:checked::after {
   position: relative;
   box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
 }
+
 .progress-bar-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
@@ -481,6 +543,7 @@ input[type="checkbox"]:checked::after {
   font-weight: 800;
   color: #fff;
 }
+
 .predictor-value.green { color: var(--neon-green); }
 .predictor-value.pink { color: var(--neon-pink); }
 .predictor-value.blue { color: var(--neon-blue); }
@@ -496,6 +559,9 @@ input[type="checkbox"]:checked::after {
   font-size: 14px;
 }
 
+/* =========================================================
+   9) CỬA SỔ POPUP
+========================================================= */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -509,6 +575,7 @@ input[type="checkbox"]:checked::after {
   justify-content: center;
   z-index: 1000;
 }
+
 .modal {
   background: rgba(28, 28, 42, 0.9);
   width: 90%;
@@ -523,9 +590,22 @@ input[type="checkbox"]:checked::after {
   transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   text-align: center;
 }
+
 .modal.active { transform: scale(1); }
-.modal h2 { margin-top: 0; color: var(--neon-blue); font-size: 22px; margin-bottom: 8px; }
-.modal-btns { display: flex; gap: 12px; margin-top: 24px; }
+
+.modal h2 {
+  margin-top: 0;
+  color: var(--neon-blue);
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.modal-btns {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
 .btn-modal {
   flex: 1;
   padding: 14px;
@@ -536,15 +616,25 @@ input[type="checkbox"]:checked::after {
   font-family: 'Lexend', sans-serif;
   transition: 0.2s;
 }
+
 .btn-confirm {
   background: var(--neon-blue);
   color: #000;
   box-shadow: 0 0 15px rgba(137, 220, 235, 0.28);
 }
+
 .btn-confirm:active { transform: scale(0.95); }
-.btn-cancel { background: rgba(255,255,255,0.08); color: #fff; }
+
+.btn-cancel {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
 .btn-cancel:active { transform: scale(0.95); }
 
+/* =========================================================
+   10) WIDGET MÈO NỔI
+========================================================= */
 .cat-widget {
   position: fixed;
   bottom: 20px;
@@ -563,19 +653,23 @@ input[type="checkbox"]:checked::after {
   cursor: pointer;
   min-width: 240px;
 }
+
 @keyframes floatWidget {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
+
 .cat-run {
   font-size: 22px;
   display: inline-block;
   animation: bounceCat 0.4s ease-in-out infinite alternate;
 }
+
 @keyframes bounceCat {
   0% { transform: translateY(0) scaleX(1); }
   100% { transform: translateY(-6px) scaleX(1.1); }
 }
+
 .widget-title {
   font-weight: 800;
   color: var(--neon-blue);
@@ -585,9 +679,22 @@ input[type="checkbox"]:checked::after {
   align-items: center;
   gap: 6px;
 }
-.widget-stats { font-size: 14px; color: #fff; line-height: 1.6; }
-.widget-stats .highlight-money { color: var(--neon-green); font-weight: 800; }
-.widget-stats .highlight-energy { color: var(--neon-purple); font-weight: 800; }
+
+.widget-stats {
+  font-size: 14px;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.widget-stats .highlight-money {
+  color: var(--neon-green);
+  font-weight: 800;
+}
+
+.widget-stats .highlight-energy {
+  color: var(--neon-purple);
+  font-weight: 800;
+}
 
 .ai-status-mini {
   margin-top: 10px;
@@ -595,6 +702,9 @@ input[type="checkbox"]:checked::after {
   color: var(--neon-yellow);
 }
 
+/* =========================================================
+   11) GIAO DIỆN TRÊN MÀN HÌNH NHỎ
+========================================================= */
 @media (max-width: 480px) {
   .cat-widget {
     right: 12px;
@@ -607,105 +717,171 @@ input[type="checkbox"]:checked::after {
 </head>
 <body>
 
-<div class="header-ios">
-  <div class="title">✨ Lịch Làm Việc 🎀</div>
-</div>
-
-<div class="top-status-bar">
-  <div class="glass-chip mood-banner">
-    <div class="mood-info">
-      <div class="mood-title">🐱 Tâm trạng của Mèo</div>
-      <div class="mood-desc" id="moodDescription">Mèo đang quan sát bạn rất chăm chú nè.</div>
-    </div>
-    <div class="mood-pill" id="moodPill">Đang phân tích...</div>
-  </div>
-</div>
-
-<div class="container">
-  <div class="card">
-    <h3>🧸 Lịch Trình Của Bạn</h3>
-    <div class="grid" id="grid"></div>
+  <!-- =====================================================
+       PHẦN ĐẦU TRANG
+  ====================================================== -->
+  <div class="header-ios">
+    <div class="title">✨ Lịch Làm Việc 🎀</div>
   </div>
 
-  <div class="card">
-    <h3>💸 Nhật Ký Mua Sắm 🛍️</h3>
-    <div class="money-action" style="border: none; padding-top: 0; flex-wrap: wrap; gap: 10px;">
-      <input type="text" id="expenseReason" class="moneyInput" placeholder="Mua gì dị nà..." style="width: 100%;">
-      <input type="number" id="expenseAmount" class="moneyInput" placeholder="Tốn bao nhiêu..." style="width: 100%;">
-      <button class="btn-expense" onclick="addExpense()">🎀 XÁC NHẬN TIÊU TIỀN (TIẾC QUÁ) 💔</button>
-    </div>
-    <div id="expenseLog" class="expense-log"></div>
-  </div>
-
-  <div class="card">
-    <h3>💖 Quỹ Heo Đất 🐖</h3>
-    <div class="stat-row" style="border-bottom: 2px solid rgba(255,255,255,0.05); margin-bottom: 10px;">
-      <span class="stat-label" style="color: var(--neon-purple); font-weight: bold;">Ngày tháng nè 🌷</span>
-      <span class="stat-value" style="color: var(--neon-purple); font-weight: bold; text-shadow: none;">Tiền vô 💰</span>
-    </div>
-    <div id="incomeLog" class="expense-log" style="max-height: 250px; overflow-y: auto;"></div>
-    <div class="stat-row" style="margin-top: 15px; border-top: 2px solid rgba(255,255,255,0.05); padding-top: 20px; border-bottom: none;">
-      <span class="stat-label" style="font-weight: 800; color: #fff; font-size: 16px;">TỔNG BỎ ỐNG HEO 🎀</span>
-      <span class="stat-value" id="totalAccumulated">0đ</span>
-    </div>
-
-    <div class="goal-container">
-      <div class="goal-header">
-        <span>🎯 Mục Tiêu: 10.000.000đ</span>
-        <span id="percentLabel" style="color: var(--neon-green);">0%</span>
+  <!-- =====================================================
+       THANH TRẠNG THÁI / CARD TÂM TRẠNG
+       - Card hiển thị trạng thái nhanh của mèo
+       - Muốn sửa text mặc định: chỉnh #moodDescription / #moodPill trong JS
+  ====================================================== -->
+  <div class="top-status-bar">
+    <div class="glass-chip mood-banner" id="moodCard">
+      <div class="mood-info">
+        <div class="mood-title">🐱 Tâm trạng của Mèo</div>
+        <div class="mood-desc" id="moodDescription">Mèo đang quan sát bạn rất chăm chú nè.</div>
       </div>
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" id="goalFill" style="width: 0%;"></div>
+      <div class="mood-pill" id="moodPill">Đang phân tích...</div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       KHUNG CHỨA CHÍNH
+       THỨ TỰ CARD:
+       1. Lịch trình
+       2. Nhật ký mua sắm
+       3. Quỹ heo đất + dự báo
+  ====================================================== -->
+  <div class="container">
+
+    <!-- ===================================================
+         BẮT ĐẦU CARD 1: LỊCH TRÌNH CỦA BẠN
+         - Nơi render lịch hôm nay
+         - JS sẽ đổ dữ liệu vào #grid
+         - Muốn sửa giao diện card lịch: chỉnh .day / .task-item
+    ==================================================== -->
+    <div class="card" id="scheduleCard">
+      <h3>🧸 Lịch Trình Của Bạn</h3>
+      <div class="grid" id="grid"></div>
+    </div>
+    <!-- KẾT THÚC CARD 1: LỊCH TRÌNH CỦA BẠN -->
+
+    <!-- ===================================================
+         BẮT ĐẦU CARD 2: NHẬT KÝ MUA SẮM
+         - Nhập lý do + số tiền chi
+         - Lịch sử chi tiêu render vào #expenseLog
+         - Muốn sửa text nút / placeholder: chỉnh ngay HTML trong card này
+    ==================================================== -->
+    <div class="card" id="expenseCard">
+      <h3>💸 Nhật Ký Mua Sắm 🛍️</h3>
+
+      <div class="money-action" style="border: none; padding-top: 0; flex-wrap: wrap; gap: 10px;">
+        <input type="text" id="expenseReason" class="moneyInput" placeholder="Mua gì dị nà..." style="width: 100%;">
+        <input type="number" id="expenseAmount" class="moneyInput" placeholder="Tốn bao nhiêu..." style="width: 100%;">
+        <button class="btn-expense" onclick="addExpense()">🎀 XÁC NHẬN TIÊU TIỀN (TIẾC QUÁ) 💔</button>
+      </div>
+
+      <div id="expenseLog" class="expense-log"></div>
+    </div>
+    <!-- KẾT THÚC CARD 2: NHẬT KÝ MUA SẮM -->
+
+    <!-- ===================================================
+         BẮT ĐẦU CARD 3: QUỸ HEO ĐẤT / THU NHẬP / MỤC TIÊU
+         Gồm 3 phần:
+         A. Bảng thu nhập theo ngày (#incomeLog)
+         B. Thanh tiến độ mục tiêu (#goalFill)
+         C. Dự báo thu nhập (predictor)
+    ==================================================== -->
+    <div class="card" id="savingCard">
+      <h3>💖 Quỹ Heo Đất 🐖</h3>
+
+      <!-- ===== A) DANH SÁCH THU NHẬP ===== -->
+      <div class="stat-row" style="border-bottom: 2px solid rgba(255,255,255,0.05); margin-bottom: 10px;">
+        <span class="stat-label" style="color: var(--neon-purple); font-weight: bold;">Ngày tháng nè 🌷</span>
+        <span class="stat-value" style="color: var(--neon-purple); font-weight: bold; text-shadow: none;">Tiền vô 💰</span>
+      </div>
+
+      <div id="incomeLog" class="expense-log" style="max-height: 250px; overflow-y: auto;"></div>
+
+      <div class="stat-row" style="margin-top: 15px; border-top: 2px solid rgba(255,255,255,0.05); padding-top: 20px; border-bottom: none;">
+        <span class="stat-label" style="font-weight: 800; color: #fff; font-size: 16px;">TỔNG BỎ ỐNG HEO 🎀</span>
+        <span class="stat-value" id="totalAccumulated">0đ</span>
+      </div>
+
+      <!-- ===== B) MỤC TIÊU TÍCH LŨY ===== -->
+      <div class="goal-container">
+        <div class="goal-header">
+          <span>🎯 Mục Tiêu: 10.000.000đ</span>
+          <span id="percentLabel" style="color: var(--neon-green);">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="goalFill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- ===== C) DỰ BÁO THU NHẬP ===== -->
+      <div class="predictor-box">
+        <div class="predictor-title">🎯 Dự Báo Thu Nhập (Income Predictor)</div>
+
+        <div class="predictor-grid">
+          <div class="predictor-item">
+            <div class="predictor-label">Tốc độ kiếm trung bình / ngày</div>
+            <div class="predictor-value blue" id="predictAvgDaily">0đ</div>
+          </div>
+
+          <div class="predictor-item">
+            <div class="predictor-label">Ngày dự kiến chạm mục tiêu</div>
+            <div class="predictor-value green" id="predictGoalDate">--/--</div>
+          </div>
+
+          <div class="predictor-item">
+            <div class="predictor-label">Trạng thái tháng này</div>
+            <div class="predictor-value pink" id="predictStatus">Đang tính...</div>
+          </div>
+        </div>
+
+        <div class="predictor-message" id="predictMessage">
+          Với tốc độ này, bé sẽ sớm chạm mục tiêu. Mèo đang tính kỹ hơn cho bạn nè.
+        </div>
       </div>
     </div>
+    <!-- KẾT THÚC CARD 3: QUỸ HEO ĐẤT / THU NHẬP / MỤC TIÊU -->
+  </div>
 
-    <div class="predictor-box">
-      <div class="predictor-title">🎯 Dự Báo Thu Nhập (Income Predictor)</div>
-      <div class="predictor-grid">
-        <div class="predictor-item">
-          <div class="predictor-label">Tốc độ kiếm trung bình / ngày</div>
-          <div class="predictor-value blue" id="predictAvgDaily">0đ</div>
-        </div>
-        <div class="predictor-item">
-          <div class="predictor-label">Ngày dự kiến chạm mục tiêu</div>
-          <div class="predictor-value green" id="predictGoalDate">--/--</div>
-        </div>
-        <div class="predictor-item">
-          <div class="predictor-label">Trạng thái tháng này</div>
-          <div class="predictor-value pink" id="predictStatus">Đang tính...</div>
-        </div>
+  <!-- =====================================================
+       CỬA SỔ POPUP CỘNG NHANH TIỀN
+       - Popup để cộng nhanh tiền vào ngày hiện tại
+  ====================================================== -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal" id="moneyModal">
+      <h2>🎉 Ting Ting!</h2>
+      <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 20px;">Nay kiếm được nhiêu lúa nà?</p>
+      <input type="number" id="popupMoneyInput" class="moneyInput" style="width: 100%; text-align: center;" placeholder="VD: 50000">
+      <div class="modal-btns">
+        <button class="btn-modal btn-cancel" onclick="closeModal()">HỦY</button>
+        <button class="btn-modal btn-confirm" onclick="confirmQuickAdd()">LƯU LẠI</button>
       </div>
-      <div class="predictor-message" id="predictMessage">Với tốc độ này, bé sẽ sớm chạm mục tiêu. Mèo đang tính kỹ hơn cho bạn nè.</div>
     </div>
   </div>
-</div>
 
-<div id="modalOverlay" class="modal-overlay">
-  <div class="modal" id="moneyModal">
-    <h2>🎉 Ting Ting!</h2>
-    <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 20px;">Nay kiếm được nhiêu lúa nà?</p>
-    <input type="number" id="popupMoneyInput" class="moneyInput" style="width: 100%; text-align: center;" placeholder="VD: 50000">
-    <div class="modal-btns">
-      <button class="btn-modal btn-cancel" onclick="closeModal()">HỦY</button>
-      <button class="btn-modal btn-confirm" onclick="confirmQuickAdd()">LƯU LẠI</button>
+  <!-- =====================================================
+       WIDGET MÈO NỔI
+       - Widget tóm tắt nhanh hôm nay
+       - Nhấn để ẩn
+  ====================================================== -->
+  <div class="cat-widget" id="catWidget" onclick="this.style.opacity='0'; setTimeout(()=>this.style.display='none', 300)" style="transition: 0.3s;" title="Nhấn để ẩn">
+    <div class="widget-title">
+      <span class="cat-run">🐱</span> ⏱ HÔM NAY
+    </div>
+    <div class="widget-stats">
+      Đã làm: <b id="catWorked">0h</b><br>
+      được 💰 <span class="highlight-money" id="catEarned">0 đ</span><br>
+      <span class="highlight-energy">⚡ Nếu làm thêm <span id="catRemaining">0</span>h → thêm <span id="catExtra">0</span> đ</span><br>
+      <span class="highlight-energy">💎 Cả ngày: <span id="catTotal">0</span> đ</span>
+      <div class="ai-status-mini" id="catMoodMini">Mood: Đang phân tích...</div>
     </div>
   </div>
-</div>
-
-<div class="cat-widget" id="catWidget" onclick="this.style.opacity='0'; setTimeout(()=>this.style.display='none', 300)" style="transition: 0.3s;" title="Nhấn để ẩn">
-  <div class="widget-title">
-    <span class="cat-run">🐱</span> ⏱ HÔM NAY
-  </div>
-  <div class="widget-stats">
-    Đã làm: <b id="catWorked">0h</b><br>
-    được 💰 <span class="highlight-money" id="catEarned">0 đ</span><br>
-    <span class="highlight-energy">⚡ Nếu làm thêm <span id="catRemaining">0</span>h → thêm <span id="catExtra">0</span> đ</span><br>
-    <span class="highlight-energy">💎 Cả ngày: <span id="catTotal">0</span> đ</span>
-    <div class="ai-status-mini" id="catMoodMini">Mood: Đang phân tích...</div>
-  </div>
-</div>
 
 <script>
+/* =========================================================
+   1) DỮ LIỆU KHỞI TẠO / CẤU HÌNH
+   - schedule: lịch làm việc
+   - FIREBASE / TELEGRAM / GOAL
+========================================================= */
 let schedule = [
   ["14/03","00-06h: Ngủ","07-09h: Ship","09:25-11:25: Ăn","11:25-14:00: Ship","14:10-16:10: Meet","16:30-23:30: Ship"],
 ];
@@ -731,8 +907,15 @@ const SCHEDULE_ALERT_KEY = "schedule_alerted_today";
 const GOAL_AMOUNT = 10000000;
 
 let incomePredictionData = null;
-let currentMood = { key: "idle", label: "Đang phân tích...", desc: "Mèo đang quan sát bạn rất chăm chú nè." };
+let currentMood = {
+  key: "idle",
+  label: "Đang phân tích...",
+  desc: "Mèo đang quan sát bạn rất chăm chú nè."
+};
 
+/* =========================================================
+   2) GIAO DIỆN TASK / HIỂN THỊ LỊCH
+========================================================= */
 function toggleTaskStyle(el) {
   if (el.checked) el.parentElement.classList.add('completed');
   else el.parentElement.classList.remove('completed');
@@ -741,26 +924,50 @@ function toggleTaskStyle(el) {
 function renderSchedule() {
   grid.innerHTML = "";
   let foundToday = false;
+
   schedule.forEach((day, index) => {
     if (day[0] === todayStr) {
       foundToday = true;
+
       let card = document.createElement("div");
       card.className = "day";
+
       let html = `<b>📅 Hôm nay: ${day[0]}/${currentYear}</b>`;
+
       for (let i = 1; i < day.length; i++) {
-        html += `<div class="task-item"><input type="checkbox" data-index="${index}-${i}" onchange="toggleTaskStyle(this);update();notifyTask(this)"><span>${day[i]}</span></div>`;
+        html += `
+          <div class="task-item">
+            <input type="checkbox" data-index="${index}-${i}" onchange="toggleTaskStyle(this);update();notifyTask(this)">
+            <span>${day[i]}</span>
+          </div>
+        `;
       }
-      html += `<div class="money-action"><span style="font-size:20px">💰</span><input class="moneyInput" type="number" data-index="${index}" placeholder="Nhập lúa thu được..." onchange="update();notifyMoney(this)"><button class="btn-add" onclick="openModal(${index})">+</button></div>`;
+
+      html += `
+        <div class="money-action">
+          <span style="font-size:20px">💰</span>
+          <input class="moneyInput" type="number" data-index="${index}" placeholder="Nhập lúa thu được..." onchange="update();notifyMoney(this)">
+          <button class="btn-add" onclick="openModal(${index})">+</button>
+        </div>
+      `;
+
       card.innerHTML = html;
       grid.appendChild(card);
     }
   });
-  if (!foundToday) grid.innerHTML = "<div style='text-align:center; padding:20px; color:var(--text-dim);'>Đang offline rùi bé ơi 🌸</div>";
+
+  if (!foundToday) {
+    grid.innerHTML = "<div style='text-align:center; padding:20px; color:var(--text-dim);'>Đang offline rùi bé ơi 🌸</div>";
+  }
 }
 
+/* =========================================================
+   3) HIỂN THỊ THU NHẬP / TIẾT KIỆM / MỤC TIÊU
+========================================================= */
 function renderIncomeTable() {
   const logEl = document.getElementById("incomeLog");
   const data = getMoney();
+
   let html = "";
   let totalIncome = 0;
   let hasIncome = false;
@@ -774,8 +981,11 @@ function renderIncomeTable() {
     }
   });
 
-  if (!hasIncome) logEl.innerHTML = "<div style='text-align:center; padding:15px; color:var(--text-dim);'>Heo đất đang đói... 🐷</div>";
-  else logEl.innerHTML = html;
+  if (!hasIncome) {
+    logEl.innerHTML = "<div style='text-align:center; padding:15px; color:var(--text-dim);'>Heo đất đang đói... 🐷</div>";
+  } else {
+    logEl.innerHTML = html;
+  }
 
   let expenses = JSON.parse(localStorage.getItem('expenses') || "[]");
   let totalExpenses = expenses.reduce((sum, ex) => sum + Number(ex.amount || 0), 0);
@@ -787,6 +997,7 @@ function renderIncomeTable() {
   let percent = (finalTotal / GOAL_AMOUNT) * 100;
   if (percent < 0) percent = 0;
   let displayPercent = Math.floor(percent);
+
   document.getElementById("goalFill").style.width = Math.min(percent, 100) + "%";
   document.getElementById("percentLabel").innerText = `${displayPercent}%`;
 
@@ -794,6 +1005,9 @@ function renderIncomeTable() {
   updateCatMood();
 }
 
+/* =========================================================
+   4) HÀM PHỤ CHO TASK / THỜI GIAN / DỰ BÁO
+========================================================= */
 function parseTaskDuration(taskStr) {
   let regex = /(\d{1,2})(?::(\d{2}))?\s*-\s*(\d{1,2})(?::(\d{2}))?/;
   let m = taskStr.match(regex);
@@ -817,6 +1031,9 @@ function isPaidTask(taskStr) {
   return text.includes("ship");
 }
 
+/* =========================================================
+   5) DỰ BÁO CHO WIDGET MÈO NỔI
+========================================================= */
 function updateCatPredictor() {
   let workedHours = 0;
   let paidWorkedHours = 0;
@@ -871,6 +1088,9 @@ function updateCatPredictor() {
   if (elTotal) elTotal.innerText = totalPredicted.toLocaleString();
 }
 
+/* =========================================================
+   6) HÀM XỬ LÝ CHI TIÊU
+========================================================= */
 function cleanOldExpenses(expensesArray) {
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
@@ -878,6 +1098,7 @@ function cleanOldExpenses(expensesArray) {
 
   const filtered = expensesArray.filter(ex => {
     if (!ex.date) return false;
+
     let dateParts = ex.date.split('/');
     let d, m, y;
 
@@ -900,65 +1121,10 @@ function cleanOldExpenses(expensesArray) {
   return { filtered, isChanged };
 }
 
-function openModal(index) {
-  currentAddIndex = index;
-  document.getElementById("modalOverlay").style.display = "flex";
-  setTimeout(() => {
-    document.getElementById("moneyModal").classList.add("active");
-    document.getElementById("popupMoneyInput").focus();
-  }, 10);
-}
-
-function closeModal() {
-  document.getElementById("moneyModal").classList.remove("active");
-  setTimeout(() => {
-    document.getElementById("modalOverlay").style.display = "none";
-    document.getElementById("popupMoneyInput").value = "";
-  }, 300);
-}
-
-function confirmQuickAdd() {
-  const addVal = document.getElementById("popupMoneyInput").value;
-  if (addVal !== "" && !isNaN(addVal) && Number(addVal) > 0) {
-    let inputMain = document.querySelector(`.moneyInput[data-index="${currentAddIndex}"]`);
-    let newVal = (Number(inputMain.value) || 0) + Number(addVal);
-    inputMain.value = newVal;
-    update();
-
-    sendTelegram(
-      buildTelegramBlock(
-        "💳 CASH INFLOW",
-        "SUCCESS",
-        [
-          ["💰 Số tiền mới", `+${Number(addVal).toLocaleString()}đ`],
-          ["📊 Tổng ngày", `${newVal.toLocaleString()}đ`],
-          ["📅 Ngày", `${todayFullStr}`]
-        ],
-        "#WarriorCapital #Income"
-      )
-    );
-
-    closeModal();
-    launchConfetti(true);
-  } else {
-    alert("Nhập số tiền vô bé ơi!");
-  }
-}
-
-function getMoney() {
-  const savedMoney = JSON.parse(localStorage.getItem("money") || "[]");
-  return schedule.map((_, i) => Number(savedMoney[i]) || 0);
-}
-
-function update() {
-  saveData();
-  renderIncomeTable();
-  updateCatPredictor();
-}
-
 function addExpense(customReason = null, customAmount = null) {
   const reasonEl = document.getElementById("expenseReason");
   const amountEl = document.getElementById("expenseAmount");
+
   const reason = customReason !== null ? String(customReason).trim() : reasonEl.value.trim();
   const amount = customAmount !== null ? Number(customAmount) : Number(amountEl.value);
 
@@ -1019,10 +1185,86 @@ function renderExpenses() {
 
   let html = "";
   expenses.forEach((ex, index) => {
-    html += `<div class="expense-item"><div class="reason-box"><div class="reason">${ex.reason}</div><div class="time">${ex.time} • ${ex.date}</div></div><div style="display: flex; align-items: center;"><div class="amount">-${Number(ex.amount).toLocaleString()}đ</div><button class="btn-del-exp" onclick="deleteExpense(${index})" title="Xóa khoản này">❌</button></div></div>`;
+    html += `
+      <div class="expense-item">
+        <div class="reason-box">
+          <div class="reason">${ex.reason}</div>
+          <div class="time">${ex.time} • ${ex.date}</div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <div class="amount">-${Number(ex.amount).toLocaleString()}đ</div>
+          <button class="btn-del-exp" onclick="deleteExpense(${index})" title="Xóa khoản này">❌</button>
+        </div>
+      </div>
+    `;
   });
 
   logEl.innerHTML = html;
+}
+
+/* =========================================================
+   7) HÀM XỬ LÝ POPUP
+========================================================= */
+function openModal(index) {
+  currentAddIndex = index;
+  document.getElementById("modalOverlay").style.display = "flex";
+
+  setTimeout(() => {
+    document.getElementById("moneyModal").classList.add("active");
+    document.getElementById("popupMoneyInput").focus();
+  }, 10);
+}
+
+function closeModal() {
+  document.getElementById("moneyModal").classList.remove("active");
+
+  setTimeout(() => {
+    document.getElementById("modalOverlay").style.display = "none";
+    document.getElementById("popupMoneyInput").value = "";
+  }, 300);
+}
+
+function confirmQuickAdd() {
+  const addVal = document.getElementById("popupMoneyInput").value;
+
+  if (addVal !== "" && !isNaN(addVal) && Number(addVal) > 0) {
+    let inputMain = document.querySelector(`.moneyInput[data-index="${currentAddIndex}"]`);
+    let newVal = (Number(inputMain.value) || 0) + Number(addVal);
+    inputMain.value = newVal;
+    update();
+
+    sendTelegram(
+      buildTelegramBlock(
+        "💳 CASH INFLOW",
+        "SUCCESS",
+        [
+          ["💰 Số tiền mới", `+${Number(addVal).toLocaleString()}đ`],
+          ["📊 Tổng ngày", `${newVal.toLocaleString()}đ`],
+          ["📅 Ngày", `${todayFullStr}`]
+        ],
+        "#WarriorCapital #Income"
+      )
+    );
+
+    closeModal();
+    launchConfetti(true);
+  } else {
+    alert("Nhập số tiền vô bé ơi!");
+  }
+}
+
+/* =========================================================
+   8) LƯU / ĐỌC DỮ LIỆU LOCAL STORAGE
+========================================================= */
+function getMoney() {
+  const savedMoney = JSON.parse(localStorage.getItem("money") || "[]");
+  return schedule.map((_, i) => Number(savedMoney[i]) || 0);
+}
+
+function update() {
+  saveData();
+  renderIncomeTable();
+  updateCatPredictor();
 }
 
 function saveData() {
@@ -1043,6 +1285,9 @@ function saveData() {
   backupCloud(checks, savedMoney, expenses);
 }
 
+/* =========================================================
+   9) HÀM PHỤ FIRESTORE / CLOUD
+========================================================= */
 function parseFirestoreNumber(fieldObj) {
   if (!fieldObj) return 0;
   if (fieldObj.integerValue !== undefined) return Number(fieldObj.integerValue) || 0;
@@ -1171,6 +1416,35 @@ async function loadDataFromCloud() {
   }
 }
 
+async function backupCloud(checks, money, expenses) {
+  try {
+    const todayIdx = schedule.findIndex(day => day[0] === todayStr);
+    const todayIncome = todayIdx !== -1 ? Number(money[todayIdx]) || 0 : 0;
+    const todayExpenses = (expenses || []).filter(ex => ex.date === todayFullStr);
+
+    const todayDocUrl = `${FIREBASE_DAYS_URL}/${todayDocId}`;
+
+    await fetch(todayDocUrl, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fields: {
+          dateDisplay: { stringValue: todayFullStr },
+          income: { integerValue: String(todayIncome) },
+          checks: { stringValue: JSON.stringify(checks || {}) },
+          expenses: { stringValue: JSON.stringify(todayExpenses || []) },
+          updatedAt: { stringValue: new Date().toISOString() }
+        }
+      })
+    });
+  } catch (e) {
+    console.log("Backup cloud lỗi:", e);
+  }
+}
+
+/* =========================================================
+   10) TELEGRAM / THÔNG BÁO / PHÁO HOA
+========================================================= */
 function escapeHtml(text) {
   return String(text)
     .replace(/&/g, "&amp;")
@@ -1181,6 +1455,7 @@ function escapeHtml(text) {
 function buildTelegramBlock(title, status, rows = [], footer = "") {
   const line = "◈════════════════════◈";
   const bodyRows = rows.map(([label, value]) => `<b>${label}:</b> <code>${escapeHtml(value)}</code>`).join("\n");
+
   return `<b>${line}</b>
 <b>${escapeHtml(title)} [${escapeHtml(status)}]</b>
 <b>${line}</b>
@@ -1203,15 +1478,30 @@ function sendTelegram(msg) {
 }
 
 function launchConfetti(isMoney = false) {
-  if (isMoney) confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#ffd700', '#ff85b3', '#a6e3a1'] });
-  else confetti({ particleCount: 80, spread: 60, origin: { y: 0.8 }, colors: ['#ff85b3', '#89dceb', '#cba6f7'] });
+  if (isMoney) {
+    confetti({
+      particleCount: 150,
+      spread: 100,
+      origin: { y: 0.6 },
+      colors: ['#ffd700', '#ff85b3', '#a6e3a1']
+    });
+  } else {
+    confetti({
+      particleCount: 80,
+      spread: 60,
+      origin: { y: 0.8 },
+      colors: ['#ff85b3', '#89dceb', '#cba6f7']
+    });
+  }
 }
 
 function notifyTask(el) {
   if (el.checked) {
     launchConfetti(false);
+
     const taskName = el.nextElementSibling.innerText;
     const timeNow = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+
     sendTelegram(
       buildTelegramBlock(
         "🚀 MISSION COMPLETED",
@@ -1243,12 +1533,18 @@ function notifyMoney(el) {
   }
 }
 
+/* =========================================================
+   11) CẢNH BÁO THEO LỊCH
+========================================================= */
 function parseTaskStartTime(taskStr) {
   const match = taskStr.match(/^(\d{1,2})(?::(\d{2}))?\s*-/);
   if (!match) return null;
+
   const hour = parseInt(match[1], 10);
   const minute = parseInt(match[2] || "0", 10);
+
   if (Number.isNaN(hour) || Number.isNaN(minute)) return null;
+
   return {
     hour,
     minute,
@@ -1259,6 +1555,7 @@ function parseTaskStartTime(taskStr) {
 function getAlertedScheduleMap() {
   const raw = localStorage.getItem(SCHEDULE_ALERT_KEY);
   if (!raw) return {};
+
   try {
     const parsed = JSON.parse(raw);
     return parsed.date === todayFullStr ? (parsed.items || {}) : {};
@@ -1274,6 +1571,53 @@ function setAlertedScheduleMap(items) {
   }));
 }
 
+function checkScheduleAlerts() {
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  const todayIdx = schedule.findIndex(day => day[0] === todayStr);
+
+  if (todayIdx === -1) return;
+
+  const alertedMap = getAlertedScheduleMap();
+  const todaySchedule = schedule[todayIdx];
+
+  for (let i = 1; i < todaySchedule.length; i++) {
+    const taskStr = todaySchedule[i];
+    const startInfo = parseTaskStartTime(taskStr);
+    if (!startInfo) continue;
+
+    const alertKey = `${todayStr}-${i}-${startInfo.hhmm}`;
+    if (alertedMap[alertKey]) continue;
+
+    if (startInfo.hour === currentHour && startInfo.minute === currentMinute) {
+      launchConfetti(false);
+
+      sendTelegram(
+        buildTelegramBlock(
+          "⏰ SCHEDULE ALERT",
+          "LIVE",
+          [
+            ["🕒 Giờ bắt đầu", startInfo.hhmm],
+            ["📌 Công việc", taskStr],
+            ["📅 Ngày", `${todayFullStr}`],
+            ["🎯 Dự báo", incomePredictionData ? incomePredictionData.statusText : "Đang cập nhật"],
+            ["🐱 Tâm trạng Mèo", currentMood.label],
+            ["🐱 Mèo nhắc", "Tới giờ làm việc, vào guồng ngay thôi!"]
+          ],
+          "#Schedule #Reminder #WarriorAI"
+        )
+      );
+
+      alertedMap[alertKey] = true;
+      setAlertedScheduleMap(alertedMap);
+    }
+  }
+}
+
+/* =========================================================
+   12) DỰ BÁO THU NHẬP
+========================================================= */
 function formatDateShort(dateObj) {
   return `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
 }
@@ -1339,6 +1683,9 @@ function updateIncomePredictor(totalIncome, totalExpenses, finalTotal) {
   };
 }
 
+/* =========================================================
+   13) TÂM TRẠNG MÈO
+========================================================= */
 function getCompletedTaskCount() {
   return document.querySelectorAll('.task-item input[type="checkbox"]:checked').length;
 }
@@ -1398,75 +1745,9 @@ function updateCatMood() {
   if (mini) mini.innerText = `Mood: ${mood.label}`;
 }
 
-function checkScheduleAlerts() {
-  const now = new Date();
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
-  const todayIdx = schedule.findIndex(day => day[0] === todayStr);
-  if (todayIdx === -1) return;
-
-  const alertedMap = getAlertedScheduleMap();
-  const todaySchedule = schedule[todayIdx];
-
-  for (let i = 1; i < todaySchedule.length; i++) {
-    const taskStr = todaySchedule[i];
-    const startInfo = parseTaskStartTime(taskStr);
-    if (!startInfo) continue;
-
-    const alertKey = `${todayStr}-${i}-${startInfo.hhmm}`;
-    if (alertedMap[alertKey]) continue;
-
-    if (startInfo.hour === currentHour && startInfo.minute === currentMinute) {
-      launchConfetti(false);
-
-      sendTelegram(
-        buildTelegramBlock(
-          "⏰ SCHEDULE ALERT",
-          "LIVE",
-          [
-            ["🕒 Giờ bắt đầu", startInfo.hhmm],
-            ["📌 Công việc", taskStr],
-            ["📅 Ngày", `${todayFullStr}`],
-            ["🎯 Dự báo", incomePredictionData ? incomePredictionData.statusText : "Đang cập nhật"],
-            ["🐱 Tâm trạng Mèo", currentMood.label],
-            ["🐱 Mèo nhắc", "Tới giờ làm việc, vào guồng ngay thôi!"]
-          ],
-          "#Schedule #Reminder #WarriorAI"
-        )
-      );
-
-      alertedMap[alertKey] = true;
-      setAlertedScheduleMap(alertedMap);
-    }
-  }
-}
-
-async function backupCloud(checks, money, expenses) {
-  try {
-    const todayIdx = schedule.findIndex(day => day[0] === todayStr);
-    const todayIncome = todayIdx !== -1 ? Number(money[todayIdx]) || 0 : 0;
-    const todayExpenses = (expenses || []).filter(ex => ex.date === todayFullStr);
-
-    const todayDocUrl = `${FIREBASE_DAYS_URL}/${todayDocId}`;
-
-    await fetch(todayDocUrl, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fields: {
-          dateDisplay: { stringValue: todayFullStr },
-          income: { integerValue: String(todayIncome) },
-          checks: { stringValue: JSON.stringify(checks || {}) },
-          expenses: { stringValue: JSON.stringify(todayExpenses || []) },
-          updatedAt: { stringValue: new Date().toISOString() }
-        }
-      })
-    });
-  } catch (e) {
-    console.log("Backup cloud lỗi:", e);
-  }
-}
-
+/* =========================================================
+   14) HIỆU ỨNG NGHIÊNG THEO CHUYỂN ĐỘNG
+========================================================= */
 function initParallaxGlass() {
   const handleMove = (xRatio, yRatio) => {
     const tiltY = (xRatio - 0.5) * 6;
@@ -1490,6 +1771,9 @@ function initParallaxGlass() {
   });
 }
 
+/* =========================================================
+   15) KHỞI TẠO ỨNG DỤNG
+========================================================= */
 document.getElementById("popupMoneyInput").addEventListener("keypress", (e) => {
   if (e.key === "Enter") confirmQuickAdd();
 });
@@ -1499,6 +1783,7 @@ loadDataFromCloud();
 initParallaxGlass();
 checkScheduleAlerts();
 updateCatMood();
+
 setInterval(checkScheduleAlerts, 15000);
 setInterval(updateCatMood, 30000);
 </script>
