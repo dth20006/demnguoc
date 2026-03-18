@@ -1,117 +1,453 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>✨ Lịch Làm Việc Cute 🎀</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/main.css">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>✨ Lịch Làm Việc 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+:root {
+  --bg-dark: #13131f;
+  --bg-dark-2: #1a1a2c;
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-stroke: rgba(255, 255, 255, 0.14);
+  --glass-highlight: rgba(255, 255, 255, 0.15);
+  --neon-pink: #ff85b3;
+  --neon-blue: #89dceb;
+  --neon-purple: #cba6f7;
+  --neon-green: #a6e3a1;
+  --neon-yellow: #f9e2af;
+  --text-main: #eef1ff;
+  --text-dim: #a6adc8;
+  --shadow-dark: rgba(0, 0, 0, 0.35);
+  --shadow-soft: rgba(255, 255, 255, 0.05);
+  --tiltX: 0deg;
+  --tiltY: 0deg;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Lexend', sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(137,220,235,0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(255,133,179,0.18), transparent 24%),
+    radial-gradient(circle at bottom center, rgba(203,166,247,0.14), transparent 26%),
+    linear-gradient(145deg, var(--bg-dark), var(--bg-dark-2));
+  color: var(--text-main);
+  margin: 0;
+  padding: 0 16px 40px 16px;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  perspective: 1200px;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(255,255,255,0.03), transparent 35%),
+    linear-gradient(300deg, rgba(255,255,255,0.02), transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+.header-ios {
+  padding: 40px 0 20px 0;
+  position: sticky;
+  top: 0;
+  background: rgba(15, 15, 24, 0.42);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  z-index: 100;
+  margin: 0 -16px 20px -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+.title {
+  font-size: 30px;
+  font-weight: 800;
+  background: linear-gradient(to right, var(--neon-pink), var(--neon-purple), var(--neon-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(255, 133, 179, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.top-status-bar { position: relative; z-index: 2; margin-bottom: 20px; display: grid; gap: 14px; }
+.glass-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border-radius: 22px;
+  padding: 14px 16px;
+  box-shadow: 10px 10px 25px var(--shadow-dark), -8px -8px 18px var(--shadow-soft), inset 1px 1px 0 rgba(255,255,255,0.12);
+}
+.mood-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.mood-info { display: flex; flex-direction: column; gap: 4px; }
+.mood-title { font-size: 15px; font-weight: 800; color: var(--neon-pink); }
+.mood-desc { font-size: 13px; color: #fff; }
+.mood-pill {
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.container { display: flex; flex-direction: column; gap: 24px; position: relative; z-index: 1; }
+.card {
+  position: relative;
+  overflow: hidden;
+  background: var(--card-bg);
+  border-radius: 32px;
+  padding: 22px;
+  border: 1px solid var(--card-stroke);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  box-shadow: 18px 18px 32px rgba(0, 0, 0, 0.28), -10px -10px 24px rgba(255,255,255,0.035), inset 1px 1px 0 rgba(255,255,255,0.12);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--tiltX)) rotateY(var(--tiltY));
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(140deg, rgba(255,255,255,0.10), transparent 30%, transparent 70%, rgba(255,255,255,0.03));
+  pointer-events: none;
+}
+.card h3 {
+  margin-top: 0;
+  font-size: 19px;
+  color: var(--neon-purple);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 0 12px rgba(203, 166, 247, 0.5);
+  font-weight: 800;
+  position: relative;
+  z-index: 1;
+}
+.grid { display: flex; flex-direction: column; gap: 14px; }
+.day {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 22px;
+  border-radius: 24px;
+  border-left: 5px solid var(--neon-blue);
+  box-shadow: inset 0 0 20px rgba(137, 220, 235, 0.08), 10px 10px 25px rgba(0,0,0,0.18), -6px -6px 14px rgba(255,255,255,0.03);
+  animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  z-index: 1;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+.day b { font-size: 18px; display: block; margin-bottom: 18px; color: var(--neon-blue); font-weight: 700; }
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 400;
+  background: rgba(0, 0, 0, 0.14);
+  padding: 12px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.task-item.completed { opacity: 0.5; }
+.task-item.completed span { text-decoration: line-through; color: var(--text-dim); }
+input[type="checkbox"] {
+  appearance: none;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid var(--neon-purple);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s all cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(203, 166, 247, 0.25), inset 1px 1px 0 rgba(255,255,255,0.08);
+  background-color: rgba(0,0,0,0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+input[type="checkbox"]:checked {
+  background-color: var(--neon-pink);
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 18px var(--neon-pink);
+  transform: scale(1.1);
+}
+input[type="checkbox"]:checked::after { content: '❤'; color: #fff; font-size: 15px; }
+.money-action { display: flex; align-items: center; gap: 12px; margin-top: 24px; padding-top: 18px; border-top: 2px dashed rgba(255,255,255,0.08); }
+.moneyInput, .selectInput {
+  flex: 1;
+  background: rgba(0,0,0,0.16);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  border-radius: 18px;
+  padding: 14px 16px;
+  font-size: 15px;
+  outline: none;
+  font-family: 'Lexend', sans-serif;
+}
+.selectInput option { background: #1a1a2c; color: #fff; }
+.btn-add {
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 24px;
+  box-shadow: 0 0 15px rgba(137, 220, 235, 0.35);
+}
+.btn-expense, .btn-income-quick {
+  background: rgba(255,255,255,0.02);
+  color: var(--neon-pink);
+  border: 2px dashed var(--neon-pink);
+  border-radius: 18px;
+  padding: 14px;
+  cursor: pointer;
+  font-weight: 800;
+  width: 100%;
+  margin-top: 12px;
+  box-shadow: 0 0 10px rgba(255, 133, 179, 0.12);
+  font-family: 'Lexend', sans-serif;
+}
+.btn-income-quick { color: var(--neon-blue); border-color: var(--neon-blue); }
+.expense-log { margin-top: 15px; max-height: 260px; overflow-y: auto; padding-right: 5px; }
+.expense-toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.expense-item .reason { font-weight: 600; color: #fff; margin-bottom: 4px; }
+.expense-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.category-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(137,220,235,0.12);
+  color: var(--neon-blue);
+  border: 1px solid rgba(137,220,235,0.16);
+}
+.expense-item .amount {
+  color: var(--neon-pink);
+  font-weight: 800;
+  font-size: 16px;
+  background: rgba(255,133,179,0.1);
+  padding: 6px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.expense-item .time { font-size: 11px; color: var(--text-dim); }
+.btn-del-exp { background: none; border: none; font-size: 14px; cursor: pointer; margin-left: 8px; padding: 4px; opacity: 0.7; }
+.empty-state {
+  text-align: center;
+  padding: 16px;
+  color: var(--text-dim);
+  background: rgba(255,255,255,0.03);
+  border-radius: 18px;
+  border: 1px dashed rgba(255,255,255,0.08);
+}
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+.summary-box { background: rgba(0,0,0,0.16); border-radius: 20px; padding: 16px; border: 1px solid rgba(255,255,255,0.06); }
+.summary-box-label { font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
+.summary-box-value { font-size: 20px; font-weight: 800; }
+.summary-box-value.green { color: var(--neon-green); }
+.summary-box-value.purple { color: var(--neon-purple); }
+.summary-box-value.blue { color: var(--neon-blue); }
+.section-title-mini { margin-top: 18px; margin-bottom: 10px; font-weight: 800; color: #fff; }
+.stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.08); align-items: center; }
+.stat-value { font-weight: 800; color: var(--neon-green); }
+#totalAccumulated { font-size: 22px; color: var(--neon-purple); }
+.goal-container {
+  margin-top: 15px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 20px;
+  padding: 16px;
+  border: 1px dashed rgba(137, 220, 235, 0.22);
+}
+.goal-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: 700; color: #fff; }
+.progress-bar-bg { width: 100%; height: 14px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; position: relative; }
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+  border-radius: 10px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.predictor-box { margin-top: 16px; background: rgba(0, 0, 0, 0.18); border-radius: 22px; padding: 16px; border: 1px dashed rgba(255, 133, 179, 0.26); }
+.predictor-title { font-size: 15px; font-weight: 800; color: var(--neon-pink); margin-bottom: 12px; }
+.predictor-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.predictor-item { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.05); }
+.predictor-label { font-size: 12px; color: var(--text-dim); margin-bottom: 4px; }
+.predictor-value { font-size: 16px; font-weight: 800; color: #fff; }
+.predictor-value.green { color: var(--neon-green); }
+.predictor-value.pink { color: var(--neon-pink); }
+.predictor-value.blue { color: var(--neon-blue); }
+.predictor-message { margin-top: 14px; background: rgba(137, 220, 235, 0.08); border: 1px solid rgba(137, 220, 235, 0.18); border-radius: 18px; padding: 14px; line-height: 1.6; color: #fff; font-size: 14px; }
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 1000; }
+.modal { background: rgba(28, 28, 42, 0.9); width: 90%; max-width: 320px; padding: 28px; border-radius: 35px; border: 1px solid rgba(137,220,235,0.35); }
+.modal h2 { margin-top: 0; color: var(--neon-blue); font-size: 22px; margin-bottom: 8px; }
+.modal-btns { display: flex; gap: 12px; margin-top: 24px; }
+.btn-modal { flex: 1; padding: 14px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; font-family: 'Lexend', sans-serif; }
+.btn-confirm { background: var(--neon-blue); color: #000; }
+.btn-cancel { background: rgba(255,255,255,0.08); color: #fff; }
+.cat-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(24, 24, 38, 0.86);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38), 0 0 18px rgba(255, 133, 179, 0.12);
+  backdrop-filter: blur(18px);
+  z-index: 1000;
+  min-width: 240px;
+}
+.cat-run { font-size: 22px; display: inline-block; }
+.widget-title { font-weight: 800; color: var(--neon-blue); margin-bottom: 8px; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+.widget-stats { font-size: 14px; color: #fff; line-height: 1.6; }
+.widget-stats .highlight-money { color: var(--neon-green); font-weight: 800; }
+.widget-stats .highlight-energy { color: var(--neon-purple); font-weight: 800; }
+.ai-status-mini { margin-top: 10px; font-size: 12px; color: var(--neon-yellow); }
+@media (max-width: 480px) {
+  .cat-widget { right: 12px; left: 12px; bottom: 14px; min-width: unset; }
+  .summary-grid, .expense-toolbar { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
-  <header class="header-ios">
-    <div class="header-row">
-      <div>
-        <div class="title">✨ Lịch Làm Việc 🎀</div>
-        <div class="header-meta">Trang user chỉ hiển thị lịch, chi tiêu, quỹ heo đất và mục tiêu.</div>
-      </div>
-      <div class="header-actions">
-        <button class="link-chip" id="openAdminBtn" type="button">🛠️ Vào admin</button>
-      </div>
-    </div>
-  </header>
+  <div class="header-ios">
+    <div class="title" id="appTitleDisplay">✨ Lịch Làm Việc 🎀</div>
+  </div>
 
   <div class="top-status-bar">
     <div class="glass-chip mood-banner" id="moodCard">
-      <div>
+      <div class="mood-info">
         <div class="mood-title">🐱 Tâm trạng của Mèo</div>
         <div class="mood-desc" id="moodDescription">Mèo đang quan sát bạn rất chăm chú nè.</div>
       </div>
       <div class="mood-pill" id="moodPill">Đang phân tích...</div>
     </div>
+
+    <div class="glass-chip" id="catInsightBox">
+      <div class="mood-title">😼 Cat Insight</div>
+      <div class="mood-desc" id="catInsightTextDisplay">Mèo đang tổng hợp insight...</div>
+    </div>
   </div>
 
-  <main class="container">
-    <section class="card" id="scheduleCard">
+  <div class="container">
+    <div class="card" id="scheduleCard">
       <h3>🧸 Lịch Trình Của Bạn</h3>
       <div class="grid" id="grid"></div>
-    </section>
+    </div>
 
-    <section class="card" id="expenseCard">
-      <h3>💸 Nhật Ký Mua Sắm 🛍️</h3>
-      <div class="money-action" style="border:none;padding-top:0;flex-wrap:wrap;">
-        <input type="text" id="expenseReason" class="textInput" placeholder="Mua gì dị nà...">
-        <input type="number" id="expenseAmount" class="moneyInput" placeholder="Tốn bao nhiêu...">
+    <div class="card" id="expenseCard">
+      <h3>💸 Theo dõi chi tiêu</h3>
+      <div class="money-action" style="border: none; padding-top: 0; flex-wrap: wrap; gap: 10px; margin-top: 0;">
+        <input type="text" id="expenseReason" class="moneyInput" placeholder="Lý do" style="width: 100%;">
+        <input type="number" id="expenseAmount" class="moneyInput" placeholder="Số tiền" style="width: 100%;">
+        <select id="expenseCategory" class="selectInput" style="width: 100%;"></select>
+        <button class="btn-expense" onclick="addExpense()">➕ Thêm chi tiêu</button>
       </div>
-      <button class="btn-expense" id="addExpenseBtn" type="button">🎀 XÁC NHẬN TIÊU TIỀN (TIẾC QUÁ) 💔</button>
+      <div class="expense-toolbar">
+        <select id="expenseFilterCategory" class="selectInput" onchange="renderExpenses()"></select>
+        <select id="expenseSort" class="selectInput" onchange="renderExpenses()">
+          <option value="newest">Mới nhất</option>
+          <option value="oldest">Cũ nhất</option>
+          <option value="high">Số tiền cao nhất</option>
+          <option value="low">Số tiền thấp nhất</option>
+        </select>
+      </div>
       <div id="expenseLog" class="expense-log"></div>
-    </section>
+    </div>
 
-    <section class="card" id="savingCard">
-      <h3>💖 Quỹ Heo Đất 🐖</h3>
-      <div class="stat-row" style="border-bottom:2px solid rgba(255,255,255,0.05);margin-bottom:10px;">
-        <span class="stat-label" style="color:var(--neon-purple);font-weight:700;">Ngày tháng nè 🌷</span>
-        <span class="stat-value" style="color:var(--neon-purple);">Tiền vô 💰</span>
+    <div class="card" id="savingCard">
+      <h3>🐖 Quỹ heo đất</h3>
+      <div class="money-action" style="margin-top: 0; padding-top: 0; border-top: none; flex-wrap: wrap; gap: 10px;">
+        <input type="number" id="quickIncomeInput" class="moneyInput" placeholder="💰 Cộng tiền nhanh" style="width: 100%;">
+        <button class="btn-income-quick" id="quickIncomeButtonLabel" onclick="addQuickIncome()">💰 Cộng tiền nhanh</button>
       </div>
-      <div id="incomeLog" class="expense-log"></div>
-      <div class="stat-row" style="margin-top:15px;border-top:2px solid rgba(255,255,255,0.05);padding-top:20px;border-bottom:none;">
-        <span class="stat-label" style="font-weight:800;font-size:16px;">TỔNG BỎ ỐNG HEO 🎀</span>
-        <span class="stat-value" id="totalAccumulated">0đ</span>
+
+      <div class="summary-grid">
+        <div class="summary-box">
+          <div class="summary-box-label">Tổng tích lũy</div>
+          <div class="summary-box-value purple" id="totalAccumulated">0đ</div>
+        </div>
+        <div class="summary-box">
+          <div class="summary-box-label">Tiết kiệm</div>
+          <div class="summary-box-value green" id="savingPocket">0đ</div>
+        </div>
+        <div class="summary-box">
+          <div class="summary-box-label">Dự phòng</div>
+          <div class="summary-box-value blue" id="reservePocket">0đ</div>
+        </div>
+      </div>
+
+      <div class="section-title-mini">Lịch sử thu nhập</div>
+      <div id="incomeLog" class="expense-log" style="max-height: 250px; overflow-y: auto;"></div>
+
+      <div class="goal-container" id="goalListWrap">
+        <div class="goal-header">
+          <span id="goalListTitleDisplay">📌 Mục tiêu đang theo đuổi</span>
+          <span id="extraGoalCount">0 mục tiêu</span>
+        </div>
+        <div id="extraGoalList"></div>
       </div>
 
       <div class="predictor-box">
-        <div class="goal-head">
-          <div>
-            <div class="mood-title">📈 Dự Báo Thu Nhập</div>
-            <div class="info-text">Giữ nguyên predictor cũ nhưng trình bày gọn lại.</div>
-          </div>
-        </div>
+        <div class="predictor-title" id="predictorTitleDisplay">🎯 Dự Báo Thu Nhập</div>
         <div class="predictor-grid">
-          <div class="predictor-item"><div class="predictor-label">Tốc độ kiếm trung bình / ngày</div><div class="predictor-value blue" id="predictAvgDaily">0đ</div></div>
-          <div class="predictor-item"><div class="predictor-label">Ngày dự kiến chạm mục tiêu</div><div class="predictor-value green" id="predictGoalDate">--/--</div></div>
-          <div class="predictor-item"><div class="predictor-label">Trạng thái tháng này</div><div class="predictor-value pink" id="predictStatus">Đang tính...</div></div>
-        </div>
-        <div class="predictor-message" id="predictMessage">Với tốc độ này, bé sẽ sớm chạm mục tiêu. Mèo đang tính kỹ hơn cho bạn nè.</div>
-      </div>
-    </section>
-
-    <section class="card" id="goalCard">
-      <h3>🎯 Mục tiêu</h3>
-      <div class="goal-card-inner">
-        <div class="goal-head">
-          <div>
-            <div class="mood-title" id="goalName">Mua xe</div>
-            <div class="goal-note" id="goalNote">Hoàn thành trước cuối tháng</div>
+          <div class="predictor-item">
+            <div class="predictor-label">Tốc độ kiếm trung bình / ngày</div>
+            <div class="predictor-value blue" id="predictAvgDaily">0đ</div>
           </div>
-          <div class="goal-badge" id="goalStatus">Đang cố gắng</div>
+          <div class="predictor-item">
+            <div class="predictor-label">Ngày dự kiến chạm mục tiêu gần nhất</div>
+            <div class="predictor-value green" id="predictGoalDate">--/--</div>
+          </div>
+          <div class="predictor-item">
+            <div class="predictor-label">Trạng thái hiện tại</div>
+            <div class="predictor-value pink" id="predictStatus">Đang tính...</div>
+          </div>
         </div>
-        <div class="goal-grid">
-          <div class="goal-item"><div class="goal-label">Số tiền mục tiêu</div><div class="goal-value blue" id="goalAmount">0đ</div></div>
-          <div class="goal-item"><div class="goal-label">Số tiền hiện tại</div><div class="goal-value green" id="goalCurrent">0đ</div></div>
-          <div class="goal-item"><div class="goal-label">Còn thiếu</div><div class="goal-value pink" id="goalRemaining">0đ</div></div>
-          <div class="goal-item"><div class="goal-label">Phần trăm hoàn thành</div><div class="goal-value" id="goalPercent">0%</div></div>
-        </div>
-        <div class="progress-bar-bg"><div class="progress-bar-fill" id="goalFill"></div></div>
-      </div>
-    </section>
-  </main>
-
-  <div id="modalOverlay" class="modal-overlay">
-    <div class="modal" id="moneyModal">
-      <h2>🎉 Ting Ting!</h2>
-      <p class="info-text">Nay kiếm được nhiêu lúa nà?</p>
-      <input type="number" id="popupMoneyInput" class="moneyInput" style="text-align:center;" placeholder="VD: 50000">
-      <div class="modal-btns">
-        <button class="btn-modal btn-cancel" id="closeModalBtn" type="button">HỦY</button>
-        <button class="btn-modal btn-confirm" id="confirmQuickAddBtn" type="button">LƯU LẠI</button>
+        <div class="predictor-message" id="predictMessage">Với tốc độ này, bé sẽ sớm chạm mục tiêu gần nhất. Mèo đang tính kỹ hơn cho bạn nè.</div>
       </div>
     </div>
   </div>
 
-  <aside class="cat-widget" id="catWidget" title="Nhấn để ẩn" onclick="this.style.opacity='0';setTimeout(()=>this.style.display='none',300)">
-    <div class="widget-title">🐱 ⏱ HÔM NAY</div>
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal" id="moneyModal">
+      <h2>🎉 Ting Ting!</h2>
+      <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 20px;">Nay kiếm được nhiêu lúa nà?</p>
+      <input type="number" id="popupMoneyInput" class="moneyInput" style="width: 100%; text-align: center;" placeholder="VD: 50000">
+      <div class="modal-btns">
+        <button class="btn-modal btn-cancel" onclick="closeModal()">HỦY</button>
+        <button class="btn-modal btn-confirm" onclick="confirmQuickAdd()">LƯU LẠI</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-widget" id="catWidget">
+    <div class="widget-title" id="catWidgetTitle"><span class="cat-run">🐱</span> ⏱ HÔM NAY</div>
     <div class="widget-stats">
       Đã làm: <b id="catWorked">0h</b><br>
       được 💰 <span class="highlight-money" id="catEarned">0 đ</span><br>
@@ -119,8 +455,819 @@
       <span class="highlight-energy">💎 Cả ngày: <span id="catTotal">0</span> đ</span>
       <div class="ai-status-mini" id="catMoodMini">Mood: Đang phân tích...</div>
     </div>
-  </aside>
+  </div>
 
-  <script type="module" src="assets/js/home.js"></script>
+<script>
+let schedule = [];
+let currentAddIndex = null;
+let incomePredictionData = null;
+let remoteGoals = [];
+let catInsights = [];
+let moodEntries = [];
+
+const grid = document.getElementById("grid");
+const now = new Date();
+const todayStr = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0');
+const currentYear = now.getFullYear();
+const todayFullStr = `${todayStr}/${currentYear}`;
+const todayDocId = `${currentYear}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+const FIREBASE_PROJECT_ID = "deas-75de8";
+const FIREBASE_BASE_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents`;
+const FIREBASE_SCHEDULE_URL = `${FIREBASE_BASE_URL}/warrior/root/schedule/main`;
+const FIREBASE_DAYS_URL = `${FIREBASE_BASE_URL}/warrior/root/days`;
+const FIREBASE_SETTINGS_URL = `${FIREBASE_BASE_URL}/warrior/root/settings/main`;
+const FIREBASE_CAT_URL = `${FIREBASE_BASE_URL}/warrior/root/cat/main`;
+const FIREBASE_UI_URL = `${FIREBASE_BASE_URL}/warrior/root/ui/main`;
+const FIREBASE_GOAL_URL = `${FIREBASE_BASE_URL}/warrior/root/goals/main`;
+
+const SCHEDULE_ALERT_KEY = "schedule_alerted_today";
+
+let appSettings = {
+  wageRate: 80000,
+  expenseWarning: 200000,
+  themeColor: '#cba6f7',
+  expenseKeepDays: 3,
+  telegramBotToken: '',
+  telegramChatId: '',
+  notifyTask: true,
+  notifyIncome: true,
+  notifyExpense: true,
+  notifySchedule: true,
+  notifyBefore10: true,
+  notifyBefore30: false,
+  enableConfetti: true,
+  enableCatWidget: true,
+  funds: [50, 30, 20, 0],
+  expenseCategories: ["Ăn uống", "Di chuyển", "Mua sắm", "Giải trí", "Học tập", "Khác"],
+  paidTaskKeywords: ['ship'],
+  nonWorkingKeywords: ['ngủ', 'ăn']
+};
+
+let uiConfig = {
+  appTitle: '✨ Lịch Làm Việc 🎀',
+  headerEmoji: '✨',
+  catEmoji: '🐱',
+  emptyScheduleText: 'Đang offline rùi bé ơi 🌸',
+  quickIncomeButtonText: '💰 Cộng tiền nhanh',
+  goalListTitle: '📌 Mục tiêu đang theo đuổi',
+  incomePredictorTitle: '🎯 Dự Báo Thu Nhập',
+  todayWidgetTitle: '⏱ HÔM NAY'
+};
+
+let currentMood = {
+  key: 'idle',
+  label: 'Đang phân tích...',
+  desc: 'Mèo đang quan sát bạn rất chăm chú nè.'
+};
+
+function formatMoney(value) { return `${Number(value || 0).toLocaleString()}đ`; }
+function safeJsonParse(text, fallback) { try { return JSON.parse(text); } catch (e) { return fallback; } }
+function parseFirestoreNumber(fieldObj) {
+  if (!fieldObj) return 0;
+  if (fieldObj.integerValue !== undefined) return Number(fieldObj.integerValue) || 0;
+  if (fieldObj.doubleValue !== undefined) return Number(fieldObj.doubleValue) || 0;
+  if (fieldObj.stringValue !== undefined) return Number(fieldObj.stringValue) || 0;
+  return 0;
+}
+function parseFirestoreString(fieldObj, fallback = '') {
+  if (!fieldObj) return fallback;
+  if (fieldObj.stringValue !== undefined) return fieldObj.stringValue;
+  return fallback;
+}
+function docIdToDateDisplay(docId) {
+  const parts = docId.split('-');
+  if (parts.length !== 3) return '';
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+function toggleTaskStyle(el) {
+  if (el.checked) el.parentElement.classList.add('completed');
+  else el.parentElement.classList.remove('completed');
+}
+function getExpenseCategories() {
+  return appSettings.expenseCategories?.length ? appSettings.expenseCategories : ["Ăn uống", "Di chuyển", "Mua sắm", "Giải trí", "Học tập", "Khác"];
+}
+function getTelegramEnabled() {
+  return appSettings.telegramBotToken && appSettings.telegramChatId;
+}
+
+function applyExpenseCategoriesToSelects() {
+  const categories = getExpenseCategories();
+  const mainSelect = document.getElementById('expenseCategory');
+  const filterSelect = document.getElementById('expenseFilterCategory');
+  mainSelect.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+  filterSelect.innerHTML = `<option value="all">Tất cả category</option>` + categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+}
+
+function applyUIToIndex() {
+  document.title = uiConfig.appTitle || 'Lịch Làm Việc';
+  document.getElementById('appTitleDisplay').innerText = uiConfig.appTitle || '✨ Lịch Làm Việc 🎀';
+  document.getElementById('quickIncomeButtonLabel').innerText = uiConfig.quickIncomeButtonText || '💰 Cộng tiền nhanh';
+  document.getElementById('goalListTitleDisplay').innerText = uiConfig.goalListTitle || '📌 Mục tiêu đang theo đuổi';
+  document.getElementById('predictorTitleDisplay').innerText = uiConfig.incomePredictorTitle || '🎯 Dự Báo Thu Nhập';
+  document.getElementById('catWidgetTitle').innerHTML = `<span class="cat-run">${uiConfig.catEmoji || '🐱'}</span> ${uiConfig.todayWidgetTitle || '⏱ HÔM NAY'}`;
+  document.documentElement.style.setProperty('--neon-purple', appSettings.themeColor || '#cba6f7');
+  if (!appSettings.enableCatWidget) document.getElementById('catWidget').style.display = 'none';
+}
+
+function applyRemoteCatMood(text) {
+  moodEntries = String(text || '').split('\n').map(x => x.trim()).filter(Boolean).map(row => {
+    const [key, label, desc] = row.split('|');
+    return { key: key || 'idle', label: label || '😼 Bình tĩnh', desc: desc || 'Mèo đang quan sát.' };
+  });
+}
+
+function applyRemoteCatInsights(text) {
+  catInsights = String(text || '').split('\n').map(x => x.trim()).filter(Boolean);
+  renderCatInsight();
+}
+
+function renderCatInsight() {
+  const el = document.getElementById('catInsightTextDisplay');
+  if (!catInsights.length) {
+    el.innerText = 'Hôm nay cứ làm từng việc một, mèo đang theo dõi cho bạn.';
+    return;
+  }
+  const idx = new Date().getDate() % catInsights.length;
+  el.innerText = catInsights[idx];
+}
+
+async function loadRemoteConfigs() {
+  try {
+    const [settingsRes, uiRes, catRes] = await Promise.all([
+      fetch(FIREBASE_SETTINGS_URL),
+      fetch(FIREBASE_UI_URL),
+      fetch(FIREBASE_CAT_URL)
+    ]);
+
+    if (settingsRes.ok) {
+      const settingsJson = await settingsRes.json();
+      const payload = safeJsonParse(parseFirestoreString(settingsJson?.fields?.settingsData, '{}'), {});
+      appSettings = { ...appSettings, ...payload };
+    }
+    if (uiRes.ok) {
+      const uiJson = await uiRes.json();
+      const payload = safeJsonParse(parseFirestoreString(uiJson?.fields?.uiData, '{}'), {});
+      uiConfig = { ...uiConfig, ...payload };
+    }
+    if (catRes.ok) {
+      const catJson = await catRes.json();
+      const payload = safeJsonParse(parseFirestoreString(catJson?.fields?.catData, '{}'), {});
+      if (payload.moods) applyRemoteCatMood(payload.moods);
+      if (payload.insights) applyRemoteCatInsights(payload.insights);
+    }
+
+    applyExpenseCategoriesToSelects();
+    applyUIToIndex();
+  } catch (e) {
+    console.log('Load config lỗi:', e);
+    applyExpenseCategoriesToSelects();
+    applyUIToIndex();
+  }
+}
+
+function renderSchedule() {
+  grid.innerHTML = '';
+  let foundToday = false;
+
+  schedule.forEach((day, index) => {
+    if (day[0] === todayStr) {
+      foundToday = true;
+      const card = document.createElement('div');
+      card.className = 'day';
+      let html = `<b>📅 Hôm nay: ${day[0]}/${currentYear}</b>`;
+      for (let i = 1; i < day.length; i++) {
+        html += `
+          <div class="task-item">
+            <input type="checkbox" data-index="${index}-${i}" onchange="toggleTaskStyle(this);update();notifyTask(this)">
+            <span>${day[i]}</span>
+          </div>
+        `;
+      }
+      html += `
+        <div class="money-action">
+          <span style="font-size:20px">💰</span>
+          <input class="moneyInput" type="number" data-index="${index}" placeholder="Nhập lúa thu được..." onchange="update();notifyMoney(this)">
+          <button class="btn-add" onclick="openModal(${index})">+</button>
+        </div>
+      `;
+      card.innerHTML = html;
+      grid.appendChild(card);
+    }
+  });
+
+  if (!foundToday) {
+    grid.innerHTML = `<div class="empty-state">${uiConfig.emptyScheduleText || 'Đang offline rùi bé ơi 🌸'}</div>`;
+  }
+}
+
+function getMoney() {
+  const savedMoney = JSON.parse(localStorage.getItem('money') || '[]');
+  return schedule.map((_, i) => Number(savedMoney[i]) || 0);
+}
+
+function parseTaskDuration(taskStr) {
+  const regex = /(\d{1,2})(?::(\d{2}))?\s*-\s*(\d{1,2})(?::(\d{2}))?/;
+  const m = taskStr.match(regex);
+  if (!m) return 0;
+  const h1 = parseInt(m[1] || 0, 10), m1 = parseInt(m[2] || 0, 10), h2 = parseInt(m[3] || 0, 10), m2 = parseInt(m[4] || 0, 10);
+  return (h2 + m2 / 60) - (h1 + m1 / 60);
+}
+
+function isNonWorkingTask(taskStr) {
+  const text = taskStr.toLowerCase();
+  const keywords = appSettings.nonWorkingKeywords || ['ngủ', 'ăn'];
+  return keywords.some(k => text.includes(k));
+}
+
+function isPaidTask(taskStr) {
+  const text = taskStr.toLowerCase();
+  const keywords = appSettings.paidTaskKeywords || ['ship'];
+  return keywords.some(k => text.includes(k));
+}
+
+function updateCatPredictor() {
+  let workedHours = 0;
+  let paidWorkedHours = 0;
+  let paidRemainingHours = 0;
+  const todayIdx = schedule.findIndex(day => day[0] === todayStr);
+  if (todayIdx === -1) return;
+  const dayData = schedule[todayIdx];
+  for (let i = 1; i < dayData.length; i++) {
+    const taskStr = dayData[i];
+    if (isNonWorkingTask(taskStr)) continue;
+    const duration = parseTaskDuration(taskStr);
+    const cb = document.querySelector(`input[data-index="${todayIdx}-${i}"]`);
+    const checked = cb && cb.checked;
+    if (checked) {
+      workedHours += duration;
+      if (isPaidTask(taskStr)) paidWorkedHours += duration;
+    } else {
+      if (isPaidTask(taskStr)) paidRemainingHours += duration;
+    }
+  }
+  workedHours = Math.round(workedHours * 10) / 10;
+  paidWorkedHours = Math.round(paidWorkedHours * 10) / 10;
+  paidRemainingHours = Math.round(paidRemainingHours * 10) / 10;
+  const moneyData = getMoney();
+  const actualEarned = Number(moneyData[todayIdx]) || 0;
+  let extraPredicted = 0;
+  if (paidWorkedHours > 0 && actualEarned > 0) {
+    const actualRatePerHour = actualEarned / paidWorkedHours;
+    extraPredicted = Math.round(actualRatePerHour * paidRemainingHours);
+  }
+  const totalPredicted = actualEarned + extraPredicted;
+  document.getElementById('catWorked').innerText = workedHours + 'h';
+  document.getElementById('catEarned').innerText = actualEarned.toLocaleString() + ' đ';
+  document.getElementById('catRemaining').innerText = paidRemainingHours;
+  document.getElementById('catExtra').innerText = extraPredicted.toLocaleString();
+  document.getElementById('catTotal').innerText = totalPredicted.toLocaleString();
+}
+
+function cleanOldExpenses(expensesArray) {
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  let isChanged = false;
+  const keepDays = Number(appSettings.expenseKeepDays || 3);
+
+  const filtered = expensesArray.filter(ex => {
+    if (!ex.date) return false;
+    const dateParts = ex.date.split('/');
+    let d, m, y;
+    if (dateParts.length === 3) [d, m, y] = dateParts;
+    else { [d, m] = dateParts; y = currentYear; }
+    const exDate = new Date(Number(y), Number(m) - 1, Number(d));
+    const diffDays = Math.floor((currentDate - exDate) / (1000 * 60 * 60 * 24));
+    if (diffDays > keepDays) { isChanged = true; return false; }
+    return true;
+  });
+  return { filtered, isChanged };
+}
+
+function addExpense(customReason = null, customAmount = null, customCategory = null) {
+  const reasonEl = document.getElementById('expenseReason');
+  const amountEl = document.getElementById('expenseAmount');
+  const categoryEl = document.getElementById('expenseCategory');
+
+  const reason = customReason !== null ? String(customReason).trim() : reasonEl.value.trim();
+  const amount = customAmount !== null ? Number(customAmount) : Number(amountEl.value);
+  const category = customCategory !== null ? customCategory : categoryEl.value;
+  if (!reason || amount <= 0) return false;
+
+  const newExpense = {
+    date: todayFullStr,
+    time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+    timestamp: Date.now(),
+    reason,
+    amount,
+    category: getExpenseCategories().includes(category) ? category : 'Khác'
+  };
+
+  let expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+  expenses.unshift(newExpense);
+  localStorage.setItem('expenses', JSON.stringify(cleanOldExpenses(expenses).filtered));
+
+  if (customReason === null) reasonEl.value = '';
+  if (customAmount === null) amountEl.value = '';
+  if (customCategory === null) categoryEl.value = getExpenseCategories()[0] || 'Khác';
+
+  renderExpenses();
+  update();
+  sendTelegram(buildTelegramBlock('⚠️ TRANSACTION ALERT', 'EXPENSE', [
+    ['🛍️ Nội dung', reason],
+    ['🏷️ Category', category],
+    ['💸 Số tiền', `-${amount.toLocaleString()} VND`],
+    ['🕒 Lúc', new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })],
+    ['📅 Ngày', todayFullStr]
+  ], '#Expense #MoneyFlow'));
+  return true;
+}
+
+function deleteExpense(index) {
+  if (!confirm('Bé có chắc muốn xóa khoản chi này không? 🥺')) return;
+  let expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+  expenses.splice(index, 1);
+  localStorage.setItem('expenses', JSON.stringify(expenses));
+  renderExpenses();
+  update();
+}
+
+function getVisibleExpenses() {
+  let expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+  const filterValue = document.getElementById('expenseFilterCategory')?.value || 'all';
+  const sortValue = document.getElementById('expenseSort')?.value || 'newest';
+  if (filterValue !== 'all') expenses = expenses.filter(ex => ex.category === filterValue);
+  expenses.sort((a, b) => {
+    if (sortValue === 'oldest') return (a.timestamp || 0) - (b.timestamp || 0);
+    if (sortValue === 'high') return Number(b.amount || 0) - Number(a.amount || 0);
+    if (sortValue === 'low') return Number(a.amount || 0) - Number(b.amount || 0);
+    return (b.timestamp || 0) - (a.timestamp || 0);
+  });
+  return expenses;
+}
+
+function renderExpenses() {
+  const logEl = document.getElementById('expenseLog');
+  const visibleExpenses = getVisibleExpenses();
+  const allExpenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+  if (allExpenses.length === 0) {
+    logEl.innerHTML = `<div class="empty-state">Chưa có chi tiêu.</div>`;
+    return;
+  }
+  if (visibleExpenses.length === 0) {
+    logEl.innerHTML = `<div class="empty-state">Không có chi tiêu trong category này.</div>`;
+    return;
+  }
+  logEl.innerHTML = visibleExpenses.map(ex => {
+    const originalIndex = allExpenses.findIndex(item => item.timestamp === ex.timestamp && item.reason === ex.reason && Number(item.amount) === Number(ex.amount));
+    return `
+      <div class="expense-item">
+        <div class="reason-box">
+          <div class="reason">${ex.reason}</div>
+          <div class="expense-meta">
+            <span class="category-badge">${ex.category || 'Khác'}</span>
+            <div class="time">${ex.time} • ${ex.date}</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <div class="amount">-${Number(ex.amount).toLocaleString()}đ</div>
+          <button class="btn-del-exp" onclick="deleteExpense(${originalIndex})">❌</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderGoalListForIndex(finalTotal = 0) {
+  const listEl = document.getElementById('extraGoalList');
+  const countEl = document.getElementById('extraGoalCount');
+  if (!remoteGoals.length) {
+    countEl.innerText = '0 mục tiêu';
+    listEl.innerHTML = `<div class="empty-state">Chưa có mục tiêu nào từ admin.</div>`;
+    return;
+  }
+  countEl.innerText = `${remoteGoals.length} mục tiêu`;
+  listEl.innerHTML = remoteGoals.map(goal => {
+    const percent = goal.amount > 0 ? Math.min((finalTotal / goal.amount) * 100, 100) : 0;
+    return `
+      <div style="margin-bottom:12px; background: rgba(255,255,255,0.04); border-radius:16px; padding:14px; border:1px solid rgba(255,255,255,0.06);">
+        <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:8px;">
+          <div>
+            <div style="font-weight:800; color:#fff;">${goal.name}</div>
+            <div style="font-size:12px; color:var(--text-dim);">${goal.tier || 'C'} • ${goal.deadline || 'Không deadline'} • ${formatMoney(goal.amount)}</div>
+          </div>
+          <div style="font-weight:800; color:var(--neon-blue);">${Math.floor(percent)}%</div>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${percent}%;"></div></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateIncomePredictor(totalIncome, totalExpenses, finalTotal) {
+  const nowDate = new Date();
+  const today = nowDate.getDate();
+  const daysInMonth = new Date(currentYear, nowDate.getMonth() + 1, 0).getDate();
+  const avgDaily = totalIncome > 0 ? (totalIncome / today) : 0;
+
+  let predictedGoalDate = '--/--';
+  let statusText = 'Chưa có dữ liệu goal';
+  let messageText = 'Admin đã bỏ mục tiêu tháng. Mèo đang dựa trên goal đang theo đuổi để tính cho bạn.';
+
+  const visibleGoals = remoteGoals.filter(g => Number(g.amount) > 0);
+  if (visibleGoals.length) {
+    const nearestGoal = [...visibleGoals].sort((a, b) => Number(a.amount) - Number(b.amount))[0];
+    if (finalTotal >= nearestGoal.amount) {
+      predictedGoalDate = todayStr;
+      statusText = `Đã đạt ${nearestGoal.name}`;
+      messageText = `Bạn đã chạm mục tiêu ${nearestGoal.name} rồi đó. Quá ổn luôn.`;
+    } else if (avgDaily > 0) {
+      const amountNeeded = nearestGoal.amount - finalTotal;
+      const daysNeeded = Math.ceil(amountNeeded / avgDaily);
+      const estimatedDate = new Date(currentYear, nowDate.getMonth(), today + daysNeeded);
+      predictedGoalDate = `${String(estimatedDate.getDate()).padStart(2, '0')}/${String(estimatedDate.getMonth() + 1).padStart(2, '0')}`;
+      statusText = `Đang chạy tới ${nearestGoal.name}`;
+      messageText = `Với tốc độ hiện tại, bạn sẽ chạm ${nearestGoal.name} khoảng ngày ${predictedGoalDate}.`;
+    } else {
+      statusText = `Chưa đủ dữ liệu cho ${nearestGoal.name}`;
+    }
+  }
+
+  document.getElementById('predictAvgDaily').innerText = `${Math.round(avgDaily).toLocaleString()}đ`;
+  document.getElementById('predictGoalDate').innerText = predictedGoalDate;
+  document.getElementById('predictStatus').innerText = statusText;
+  document.getElementById('predictMessage').innerText = messageText;
+
+  incomePredictionData = { avgDaily, predictedGoalDate, statusText, messageText, finalTotal, totalIncome, totalExpenses };
+}
+
+function renderIncomeTable() {
+  const logEl = document.getElementById('incomeLog');
+  const data = getMoney();
+  let html = '';
+  let totalIncome = 0;
+  let hasIncome = false;
+  schedule.forEach((day, index) => {
+    const amount = Number(data[index]) || 0;
+    if (amount > 0) {
+      hasIncome = true;
+      totalIncome += amount;
+      html += `<div class="stat-row"><span style="color:#fff;">${day[0]}/${currentYear}</span><span class="stat-value">+${amount.toLocaleString()}đ</span></div>`;
+    }
+  });
+  logEl.innerHTML = hasIncome ? html : `<div class="empty-state">Chưa có lịch sử thu nhập.</div>`;
+
+  const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+  const totalExpenses = expenses.reduce((sum, ex) => sum + Number(ex.amount || 0), 0);
+  let finalTotal = totalIncome - totalExpenses;
+  if (finalTotal < 0) finalTotal = 0;
+
+  document.getElementById('totalAccumulated').innerText = formatMoney(finalTotal);
+  const funds = appSettings.funds || [50, 30, 20, 0];
+  const savingPocket = Math.round(finalTotal * ((funds[0] || 0) / 100));
+  const reservePocket = Math.round(finalTotal * ((funds[1] || 0) / 100));
+  document.getElementById('savingPocket').innerText = formatMoney(savingPocket);
+  document.getElementById('reservePocket').innerText = formatMoney(reservePocket);
+
+  updateIncomePredictor(totalIncome, totalExpenses, finalTotal);
+  renderGoalListForIndex(finalTotal);
+  updateCatMood();
+}
+
+function openModal(index) {
+  currentAddIndex = index;
+  document.getElementById('modalOverlay').style.display = 'flex';
+  document.getElementById('popupMoneyInput').focus();
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').style.display = 'none';
+  document.getElementById('popupMoneyInput').value = '';
+}
+
+function confirmQuickAdd() {
+  const addVal = document.getElementById('popupMoneyInput').value;
+  if (addVal !== '' && !isNaN(addVal) && Number(addVal) > 0) {
+    const inputMain = document.querySelector(`.moneyInput[data-index="${currentAddIndex}"]`);
+    const newVal = (Number(inputMain.value) || 0) + Number(addVal);
+    inputMain.value = newVal;
+    update();
+    sendTelegram(buildTelegramBlock('💳 CASH INFLOW', 'SUCCESS', [
+      ['💰 Số tiền mới', `+${Number(addVal).toLocaleString()}đ`],
+      ['📊 Tổng ngày', `${newVal.toLocaleString()}đ`],
+      ['📅 Ngày', `${todayFullStr}`]
+    ], '#WarriorCapital #Income'));
+    closeModal();
+    launchConfetti(true);
+  } else {
+    alert('Nhập số tiền vô bé ơi!');
+  }
+}
+
+function addQuickIncome() {
+  const quickInput = document.getElementById('quickIncomeInput');
+  const addVal = Number(quickInput.value);
+  const todayIdx = schedule.findIndex(day => day[0] === todayStr);
+  if (todayIdx === -1) return alert('Hôm nay chưa có lịch để cộng tiền nha bé!');
+  if (!addVal || addVal <= 0) return alert('Nhập số tiền hợp lệ nha!');
+  const inputMain = document.querySelector(`.moneyInput[data-index="${todayIdx}"]`);
+  if (!inputMain) return alert('Chưa tìm thấy ô thu nhập hôm nay.');
+  const newVal = (Number(inputMain.value) || 0) + addVal;
+  inputMain.value = newVal;
+  quickInput.value = '';
+  update();
+  launchConfetti(true);
+  sendTelegram(buildTelegramBlock('💰 QUICK INCOME', 'SUCCESS', [
+    ['💰 Cộng nhanh', `+${addVal.toLocaleString()}đ`],
+    ['📊 Tổng hôm nay', `${newVal.toLocaleString()}đ`],
+    ['📅 Ngày', `${todayFullStr}`]
+  ], '#QuickIncome #WarriorAI'));
+}
+
+function saveData() {
+  const checks = {};
+  document.querySelectorAll('input[type=checkbox]').forEach(c => { checks[c.getAttribute('data-index')] = c.checked; });
+  const savedMoney = JSON.parse(localStorage.getItem('money') || '[]');
+  document.querySelectorAll('.moneyInput[data-index]').forEach(m => { savedMoney[m.getAttribute('data-index')] = m.value; });
+  localStorage.setItem('checks_today', JSON.stringify(checks));
+  localStorage.setItem('money', JSON.stringify(savedMoney));
+  const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+  backupCloud(checks, savedMoney, expenses);
+}
+
+function update() {
+  saveData();
+  renderIncomeTable();
+  renderExpenses();
+  updateCatPredictor();
+}
+
+async function loadRemoteGoals() {
+  try {
+    const res = await fetch(FIREBASE_GOAL_URL);
+    if (!res.ok) return;
+    const data = await res.json();
+    const payload = safeJsonParse(parseFirestoreString(data?.fields?.goalData, '[]'), []);
+    if (Array.isArray(payload)) remoteGoals = payload.filter(g => g.showOnIndex !== false);
+  } catch (e) {
+    console.log('Goal load lỗi:', e);
+  }
+}
+
+async function loadDataFromCloud() {
+  try {
+    const scheduleRes = await fetch(FIREBASE_SCHEDULE_URL);
+    if (scheduleRes.ok) {
+      const scheduleDoc = await scheduleRes.json();
+      const cloudSchedule = parseFirestoreString(scheduleDoc?.fields?.scheduleData, '');
+      if (cloudSchedule) schedule = safeJsonParse(cloudSchedule, schedule);
+    }
+
+    renderSchedule();
+    const daysRes = await fetch(FIREBASE_DAYS_URL);
+    let dayDocs = [];
+    if (daysRes.ok) {
+      const daysJson = await daysRes.json();
+      dayDocs = daysJson.documents || [];
+    }
+
+    const moneyArr = schedule.map(() => 0);
+    let checksToday = {};
+    let allExpenses = [];
+
+    dayDocs.forEach(doc => {
+      const fields = doc.fields || {};
+      const docName = doc.name || '';
+      const docId = docName.split('/').pop();
+      const dateDisplay = parseFirestoreString(fields.dateDisplay, docIdToDateDisplay(docId));
+      const shortDate = dateDisplay.slice(0, 5);
+      const scheduleIndex = schedule.findIndex(day => day[0] === shortDate);
+      const income = parseFirestoreNumber(fields.income);
+      if (scheduleIndex !== -1) moneyArr[scheduleIndex] = income;
+      const expenses = safeJsonParse(parseFirestoreString(fields.expenses, '[]'), []);
+      if (Array.isArray(expenses)) {
+        allExpenses = allExpenses.concat(expenses.map(ex => ({ ...ex, category: ex.category || 'Khác', timestamp: ex.timestamp || Date.now() })));
+      }
+      if (docId === todayDocId || dateDisplay === todayFullStr) {
+        checksToday = safeJsonParse(parseFirestoreString(fields.checks, '{}'), {});
+      }
+    });
+
+    const cleanResult = cleanOldExpenses(allExpenses);
+    localStorage.setItem('checks_today', JSON.stringify(checksToday));
+    localStorage.setItem('money', JSON.stringify(moneyArr));
+    localStorage.setItem('expenses', JSON.stringify(cleanResult.filtered));
+
+    document.querySelectorAll('input[type=checkbox]').forEach(c => {
+      if (checksToday[c.getAttribute('data-index')]) {
+        c.checked = true;
+        c.parentElement.classList.add('completed');
+      }
+    });
+    document.querySelectorAll('.moneyInput[data-index]').forEach(m => {
+      const value = moneyArr[m.getAttribute('data-index')];
+      if (value) m.value = value;
+    });
+
+    renderExpenses();
+    renderIncomeTable();
+    updateCatPredictor();
+    if (cleanResult.isChanged) {
+      const latestChecks = JSON.parse(localStorage.getItem('checks_today') || '{}');
+      const latestMoney = JSON.parse(localStorage.getItem('money') || '[]');
+      const latestExpenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+      backupCloud(latestChecks, latestMoney, latestExpenses);
+    }
+  } catch (e) {
+    console.log('Load cloud lỗi, fallback local:', e);
+    const checks = JSON.parse(localStorage.getItem('checks_today') || '{}');
+    const money = JSON.parse(localStorage.getItem('money') || '[]');
+    const cleanedExpenses = cleanOldExpenses(JSON.parse(localStorage.getItem('expenses') || '[]')).filtered;
+    localStorage.setItem('expenses', JSON.stringify(cleanedExpenses));
+    document.querySelectorAll('input[type=checkbox]').forEach(c => {
+      if (checks[c.getAttribute('data-index')]) {
+        c.checked = true;
+        c.parentElement.classList.add('completed');
+      }
+    });
+    document.querySelectorAll('.moneyInput[data-index]').forEach(m => {
+      if (money[m.getAttribute('data-index')]) m.value = money[m.getAttribute('data-index')];
+    });
+    renderExpenses();
+    renderIncomeTable();
+    updateCatPredictor();
+  }
+}
+
+async function backupCloud(checks, money, expenses) {
+  try {
+    const todayIdx = schedule.findIndex(day => day[0] === todayStr);
+    const todayIncome = todayIdx !== -1 ? Number(money[todayIdx]) || 0 : 0;
+    const todayExpenses = (expenses || []).filter(ex => ex.date === todayFullStr);
+    const todayDocUrl = `${FIREBASE_DAYS_URL}/${todayDocId}`;
+    await fetch(todayDocUrl, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fields: {
+          dateDisplay: { stringValue: todayFullStr },
+          income: { integerValue: String(todayIncome) },
+          checks: { stringValue: JSON.stringify(checks || {}) },
+          expenses: { stringValue: JSON.stringify(todayExpenses || []) },
+          updatedAt: { stringValue: new Date().toISOString() }
+        }
+      })
+    });
+  } catch (e) { console.log('Backup cloud lỗi:', e); }
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function buildTelegramBlock(title, status, rows = [], footer = '') {
+  const line = '◈════════════════════◈';
+  const bodyRows = rows.map(([label, value]) => `<b>${label}:</b> <code>${escapeHtml(value)}</code>`).join('\n');
+  return `<b>${line}</b>\n<b>${escapeHtml(title)} [${escapeHtml(status)}]</b>\n<b>${line}</b>\n\n${bodyRows}\n\n${footer}`;
+}
+function sendTelegram(msg) {
+  if (!getTelegramEnabled()) return;
+  fetch(`https://api.telegram.org/bot${appSettings.telegramBotToken}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: appSettings.telegramChatId, text: msg, parse_mode: 'HTML' })
+  });
+}
+function launchConfetti(isMoney = false) {
+  if (!appSettings.enableConfetti) return;
+  confetti({ particleCount: isMoney ? 150 : 80, spread: isMoney ? 100 : 60, origin: { y: isMoney ? 0.6 : 0.8 } });
+}
+function notifyTask(el) {
+  if (!appSettings.notifyTask) return;
+  if (el.checked) {
+    launchConfetti(false);
+    const taskName = el.nextElementSibling.innerText;
+    const timeNow = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    sendTelegram(buildTelegramBlock('🚀 MISSION COMPLETED', 'DONE', [
+      ['📌 Công việc', taskName],
+      ['🕒 Thời gian', timeNow],
+      ['✨ Status', 'Đã hoàn thành xuất sắc!']
+    ], '#WarriorAI #Productivity'));
+  }
+}
+function notifyMoney(el) {
+  if (!appSettings.notifyIncome) return;
+  if (Number(el.value) > 0) {
+    sendTelegram(buildTelegramBlock('💖 LÚA VỀ', 'SUCCESS', [
+      ['💰 Thu nhập', `+${Number(el.value).toLocaleString()} VND`],
+      ['📅 Ngày', `${todayFullStr}`]
+    ], '#Income #WarriorAI'));
+  }
+}
+
+function parseTaskStartTime(taskStr) {
+  const match = taskStr.match(/^(\d{1,2})(?::(\d{2}))?\s*-/);
+  if (!match) return null;
+  const hour = parseInt(match[1], 10);
+  const minute = parseInt(match[2] || '0', 10);
+  if (Number.isNaN(hour) || Number.isNaN(minute)) return null;
+  return { hour, minute, hhmm: `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}` };
+}
+function getAlertedScheduleMap() {
+  const raw = localStorage.getItem(SCHEDULE_ALERT_KEY);
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed.date === todayFullStr ? (parsed.items || {}) : {};
+  } catch (e) { return {}; }
+}
+function setAlertedScheduleMap(items) {
+  localStorage.setItem(SCHEDULE_ALERT_KEY, JSON.stringify({ date: todayFullStr, items }));
+}
+function checkScheduleAlerts() {
+  if (!appSettings.notifySchedule) return;
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  const todayIdx = schedule.findIndex(day => day[0] === todayStr);
+  if (todayIdx === -1) return;
+  const alertedMap = getAlertedScheduleMap();
+  const todaySchedule = schedule[todayIdx];
+  for (let i = 1; i < todaySchedule.length; i++) {
+    const taskStr = todaySchedule[i];
+    const startInfo = parseTaskStartTime(taskStr);
+    if (!startInfo) continue;
+    const alertKey = `${todayStr}-${i}-${startInfo.hhmm}`;
+    if (alertedMap[alertKey]) continue;
+    if (startInfo.hour === currentHour && startInfo.minute === currentMinute) {
+      launchConfetti(false);
+      sendTelegram(buildTelegramBlock('⏰ SCHEDULE ALERT', 'LIVE', [
+        ['🕒 Giờ bắt đầu', startInfo.hhmm],
+        ['📌 Công việc', taskStr],
+        ['📅 Ngày', `${todayFullStr}`],
+        ['🎯 Dự báo', incomePredictionData ? incomePredictionData.statusText : 'Đang cập nhật'],
+        ['🐱 Tâm trạng Mèo', currentMood.label],
+        ['🐱 Mèo nhắc', 'Tới giờ làm việc, vào guồng ngay thôi!']
+      ], '#Schedule #Reminder #WarriorAI'));
+      alertedMap[alertKey] = true;
+      setAlertedScheduleMap(alertedMap);
+    }
+  }
+}
+
+function getCompletedTaskCount() { return document.querySelectorAll('.task-item input[type="checkbox"]:checked').length; }
+function getTotalTaskCount() { return document.querySelectorAll('.task-item input[type="checkbox"]').length; }
+
+function getMoodByKey(key, fallback) {
+  return moodEntries.find(m => m.key === key) || fallback;
+}
+
+function updateCatMood() {
+  const hour = new Date().getHours();
+  const totalTasks = getTotalTaskCount();
+  const doneTasks = getCompletedTaskCount();
+  const completionRate = totalTasks > 0 ? doneTasks / totalTasks : 0;
+  const finalTotal = incomePredictionData ? incomePredictionData.finalTotal : 0;
+  const avgDaily = incomePredictionData ? incomePredictionData.avgDaily : 0;
+
+  let mood = getMoodByKey('idle', { key:'idle', label:'😼 Bình tĩnh', desc:'Mèo đang theo dõi nhịp làm việc của bạn nè.' });
+  if (hour >= 23) mood = getMoodByKey('sleepy', { key:'sleepy', label:'😴 Buồn ngủ', desc:'Đã khuya rồi đó, mèo muốn bạn nghỉ ngơi sớm.' });
+  else if (totalTasks > 0 && doneTasks === 0 && hour >= 16) mood = getMoodByKey('strict', { key:'strict', label:'😼 Nghiêm khắc', desc:'Hôm nay còn đang trống nhiều việc lắm đó.' });
+  else if (completionRate >= 0.7 || finalTotal >= 300000 || avgDaily >= 250000) mood = getMoodByKey('happy', { key:'happy', label:'🥳 Hớn hở', desc:'Bạn đang làm cực ổn luôn á.' });
+  else if (completionRate <= 0.2 && hour >= 14) mood = getMoodByKey('strict', { key:'strict', label:'😼 Nghiêm khắc', desc:'Tiếng Anh với các task hôm nay chưa xong đâu nha.' });
+
+  currentMood = mood;
+  document.getElementById('moodPill').innerText = mood.label;
+  document.getElementById('moodDescription').innerText = mood.desc;
+  document.getElementById('catMoodMini').innerText = `Mood: ${mood.label}`;
+}
+
+function initParallaxGlass() {
+  const handleMove = (xRatio, yRatio) => {
+    const tiltY = (xRatio - 0.5) * 6;
+    const tiltX = (0.5 - yRatio) * 5;
+    document.documentElement.style.setProperty('--tiltX', `${tiltX}deg`);
+    document.documentElement.style.setProperty('--tiltY', `${tiltY}deg`);
+  };
+  window.addEventListener('mousemove', e => handleMove(e.clientX / window.innerWidth, e.clientY / window.innerHeight));
+}
+
+document.getElementById('popupMoneyInput').addEventListener('keypress', e => { if (e.key === 'Enter') confirmQuickAdd(); });
+document.getElementById('quickIncomeInput').addEventListener('keypress', e => { if (e.key === 'Enter') addQuickIncome(); });
+
+async function bootstrap() {
+  await loadRemoteConfigs();
+  await loadRemoteGoals();
+  await loadDataFromCloud();
+  renderCatInsight();
+  initParallaxGlass();
+  checkScheduleAlerts();
+  updateCatMood();
+  renderExpenses();
+  renderIncomeTable();
+  setInterval(checkScheduleAlerts, 15000);
+  setInterval(updateCatMood, 30000);
+}
+bootstrap();
+</script>
 </body>
 </html>
