@@ -3,63 +3,133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin AI Scheduler - FPT Pro</title>
+  <title>Admin Premium Pro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-  <div class="container">
-    <div class="page-title">🤖 Admin AI Scheduler</div>
-
-    <div class="two-col">
-      <section class="card">
-        <h3>1. Dán bảng Lịch học FPT</h3>
-        <span class="info-tag">💡 AI sẽ tự bỏ DAT103, VIE111; giữ online 14:10-16:10; ngày trống sẽ tự thêm ship + ăn + ngủ như logic cũ.</span>
-        <textarea id="tkbInput" class="textareaInput" placeholder="Dán bảng TKB tại đây..."></textarea>
-        <div class="button-row">
-          <button id="processTKBBtn" type="button">🪄 PHÂN TÍCH & TẠO LỊCH</button>
-          <button id="loadCloudBtn" class="secondary" type="button">☁️ TẢI LỊCH TỪ CLOUD</button>
-        </div>
-      </section>
-
-      <section class="card">
-        <h3>🎯 Quản lý mục tiêu</h3>
-        <span class="subtle-text">Card này cấp dữ liệu cho mục “Mục tiêu” ở trang chủ. Nếu cloud lỗi sẽ fallback localStorage.</span>
-        <input id="goalNameInput" class="textInput" type="text" placeholder="Tên mục tiêu">
-        <input id="goalAmountInput" class="numberInput" type="number" placeholder="Số tiền mục tiêu">
-        <textarea id="goalNoteInput" class="textareaInput" style="min-height:120px;" placeholder="Ghi chú mục tiêu"></textarea>
-        <div class="goal-actions">
-          <button id="saveGoalBtn" class="success" type="button">💾 Lưu mục tiêu</button>
-          <button id="loadGoalBtn" class="secondary" type="button">☁️ Tải mục tiêu từ cloud</button>
-        </div>
-        <div id="goalStatus" class="status"></div>
-      </section>
-    </div>
-
-    <div id="status" class="status"></div>
-
-    <section class="card" id="listArea" style="display:none;">
-      <h3>2. Danh sách ngày</h3>
-      <div class="day-grid" id="dayGrid"></div>
-    </section>
-
-    <section class="card" id="editor" style="display:none;">
-      <h3 id="editLabel">Chỉnh sửa ngày</h3>
-      <input type="text" id="editDate" class="textInput">
-      <textarea id="editTasks" class="textareaInput" style="min-height:250px;"></textarea>
-      <div class="button-row">
-        <button id="saveEditBtn" class="success" type="button">Lưu thay đổi</button>
-        <button id="deleteDayBtn" class="danger" type="button">Xóa ngày</button>
+  <main class="admin-shell">
+    <header class="admin-header glass-card">
+      <div>
+        <p class="eyebrow">Admin control center</p>
+        <h1>🛠️ Premium Pro Admin</h1>
+        <p>Chỉnh schedule, goals, hệ thống cảnh báo, theme, Telegram, backup và toàn bộ dữ liệu vận hành.</p>
       </div>
+      <div class="admin-links">
+        <a href="index.html">← User Home</a>
+        <a href="history.html">📜 History</a>
+      </div>
+    </header>
+
+    <section class="panel-grid">
+      <article class="glass-card admin-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Schedule</p>
+            <h3>1. Quản lý schedule</h3>
+          </div>
+        </div>
+        <p class="hint">Giữ logic dán bảng lịch học FPT, bỏ DAT103/VIE111, giữ online 14:10-16:10 và tự sinh ngày trống.</p>
+        <textarea id="tkbInput" rows="8" placeholder="Dán bảng TKB FPT tại đây..."></textarea>
+        <div class="btn-row">
+          <button id="processTKBBtn" type="button">🪄 Process TKB</button>
+          <button id="loadCloudScheduleBtn" class="secondary" type="button">☁️ Tải từ cloud</button>
+          <button id="syncScheduleBtn" class="secondary" type="button">🚀 Sync schedule</button>
+        </div>
+        <div id="scheduleStatus" class="status-box"></div>
+        <div id="scheduleDayList" class="chip-list"></div>
+      </article>
+
+      <article class="glass-card admin-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Day editor</p>
+            <h3>Chỉnh từng ngày</h3>
+          </div>
+        </div>
+        <label><span>Ngày</span><input id="editDateInput" type="text" placeholder="DD/MM"></label>
+        <label><span>Tasks (mỗi dòng 1 task)</span><textarea id="editTasksInput" rows="10"></textarea></label>
+        <div class="btn-row">
+          <button id="saveDayBtn" class="success" type="button">💾 Lưu ngày</button>
+          <button id="deleteDayBtn" class="danger" type="button">🗑️ Xóa ngày</button>
+        </div>
+      </article>
     </section>
 
-    <div class="button-row">
-      <button id="syncBtn" class="secondary" type="button" style="display:none;">🚀 ĐỒNG BỘ LÊN CLOUD</button>
-      <a class="link-btn" href="index.html">← Về trang user</a>
-    </div>
-  </div>
+    <section class="panel-grid two-cols">
+      <article class="glass-card admin-card">
+        <div class="section-head"><div><p class="eyebrow">Goals</p><h3>2. Quản lý mục tiêu đa tầng</h3></div></div>
+        <div class="goal-form-grid" id="goalFormGrid"></div>
+        <div class="btn-row">
+          <button id="saveGoalsBtn" class="success" type="button">💾 Lưu goals</button>
+          <button id="loadGoalsBtn" class="secondary" type="button">☁️ Tải goals cloud</button>
+        </div>
+        <div id="goalStatus" class="status-box"></div>
+      </article>
+
+      <article class="glass-card admin-card">
+        <div class="section-head"><div><p class="eyebrow">System</p><h3>3-9. System settings</h3></div></div>
+        <div class="form-stack">
+          <label><span>Wage rate mặc định</span><input id="wageRateInput" type="number" min="0"></label>
+          <label><span>Ngưỡng cảnh báo chi tiêu/ngày</span><input id="expenseWarningInput" type="number" min="0"></label>
+          <label><span>Accent theme</span><input id="themeAccentInput" type="color"></label>
+        </div>
+        <div class="toggle-grid">
+          <label><input id="telegramEnabledInput" type="checkbox"> Bật Telegram tổng</label>
+          <label><input id="telegramTaskEnabledInput" type="checkbox"> Notify task</label>
+          <label><input id="telegramIncomeEnabledInput" type="checkbox"> Notify income</label>
+          <label><input id="telegramExpenseEnabledInput" type="checkbox"> Notify expense</label>
+          <label><input id="telegramScheduleEnabledInput" type="checkbox"> Notify schedule</label>
+          <label><input id="catWidgetEnabledInput" type="checkbox"> Bật widget mèo</label>
+        </div>
+        <div class="form-stack">
+          <label><span>Telegram Bot Token</span><input id="telegramBotTokenInput" type="text"></label>
+          <label><span>Telegram Chat ID</span><input id="telegramChatIdInput" type="text"></label>
+        </div>
+        <div class="fund-percent-grid">
+          <label><span>Tiết kiệm %</span><input id="savingPercentInput" type="number" min="0" max="100"></label>
+          <label><span>Tiêu vặt %</span><input id="spendingPercentInput" type="number" min="0" max="100"></label>
+          <label><span>Dự phòng %</span><input id="emergencyPercentInput" type="number" min="0" max="100"></label>
+          <label><span>Tương lai %</span><input id="futurePercentInput" type="number" min="0" max="100"></label>
+        </div>
+        <div class="alert-grid">
+          <label><span>Báo trước task 10 phút</span><input id="alert10Input" type="checkbox"></label>
+          <label><span>Báo trước task 30 phút</span><input id="alert30Input" type="checkbox"></label>
+        </div>
+        <div class="btn-row"><button id="saveSystemBtn" class="success" type="button">💾 Lưu system settings</button><button id="loadSystemBtn" class="secondary" type="button">☁️ Tải system cloud</button></div>
+        <div id="systemStatus" class="status-box"></div>
+      </article>
+    </section>
+
+    <section class="panel-grid two-cols">
+      <article class="glass-card admin-card">
+        <div class="section-head"><div><p class="eyebrow">Cat & insight</p><h3>7. Mood mèo / AI gợi ý</h3></div></div>
+        <label><span>Text mood mặc định</span><textarea id="catMoodTextInput" rows="4"></textarea></label>
+        <label><span>Câu AI gợi ý mặc định</span><textarea id="aiSuggestionTextInput" rows="4"></textarea></label>
+        <div class="btn-row"><button id="saveCatContentBtn" class="success" type="button">💾 Lưu mèo + insight</button></div>
+      </article>
+
+      <article class="glass-card admin-card">
+        <div class="section-head"><div><p class="eyebrow">Task colors</p><h3>8. Category task</h3></div></div>
+        <div class="color-grid" id="taskCategoryColorGrid"></div>
+        <div class="btn-row"><button id="saveTaskCategoryBtn" class="success" type="button">💾 Lưu màu category</button></div>
+      </article>
+    </section>
+
+    <section class="glass-card admin-card">
+      <div class="section-head"><div><p class="eyebrow">Backup</p><h3>10. Backup / restore</h3></div></div>
+      <div class="btn-row wrap">
+        <button id="exportJsonBtn" type="button">⬇️ Export JSON</button>
+        <button id="importJsonBtn" class="secondary" type="button">⬆️ Import JSON</button>
+        <button id="exportExpenseCsvBtn" class="secondary" type="button">📄 CSV chi tiêu</button>
+        <button id="exportIncomeCsvBtn" class="secondary" type="button">📄 CSV thu nhập</button>
+        <input id="importJsonFile" type="file" accept="application/json" hidden>
+      </div>
+      <div id="backupStatus" class="status-box"></div>
+    </section>
+  </main>
 
   <script type="module" src="assets/js/admin.js"></script>
 </body>

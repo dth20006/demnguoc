@@ -1,243 +1,47 @@
-import { DEFAULT_GOAL } from './config.js';
-import { loadGoalFromCloud, loadScheduleFromCloud, saveGoalToCloud, saveScheduleToCloud } from './firebase.js';
-import { getGoalSettings, setGoalSettings } from './storage.js';
-import { formatDateKey } from './utils.js';
+import { DEFAULT_GOALS, DEFAULT_SYSTEM_SETTINGS, TASK_CATEGORY_OPTIONS } from './config.js';
+import { loadGoalsFromCloud, loadScheduleFromCloud, loadSystemSettingsFromCloud, saveGoalsToCloud, saveScheduleToCloud, saveSystemSettingsToCloud } from './firebase.js';
+import { getBackupData, getExpenses, getGoalSettings, getMoney, getSchedule, getSystemSettings, restoreBackupData, setGoalSettings, setSchedule, setSystemSettings } from './storage.js';
+import { downloadTextFile, exportCsv, exportJson, formatDateKey } from './utils.js';
 
-const state = {
-  finalSchedule: [],
-  currentIndex: -1
-};
+const state = { schedule: getSchedule(), currentIndex: 0, goals: getGoalSettings(), system: getSystemSettings() };
+const goalFields = [
+  ['dailyGoalName', 'Tên mục tiêu ngày'], ['dailyGoalAmount', 'Số tiền mục tiêu ngày'], ['dailyGoalNote', 'Ghi chú mục tiêu ngày'],
+  ['weeklyGoalName', 'Tên mục tiêu tuần'], ['weeklyGoalAmount', 'Số tiền mục tiêu tuần'], ['weeklyGoalNote', 'Ghi chú mục tiêu tuần'],
+  ['monthlyGoalName', 'Tên mục tiêu tháng'], ['monthlyGoalAmount', 'Số tiền mục tiêu tháng'], ['monthlyGoalNote', 'Ghi chú mục tiêu tháng'],
+  ['longGoalName', 'Tên mục tiêu dài hạn'], ['longGoalAmount', 'Số tiền mục tiêu dài hạn'], ['longGoalNote', 'Ghi chú mục tiêu dài hạn']
+];
 
-const els = {
-  tkbInput: document.getElementById('tkbInput'),
-  status: document.getElementById('status'),
-  listArea: document.getElementById('listArea'),
-  dayGrid: document.getElementById('dayGrid'),
-  editor: document.getElementById('editor'),
-  editLabel: document.getElementById('editLabel'),
-  editDate: document.getElementById('editDate'),
-  editTasks: document.getElementById('editTasks'),
-  btnSync: document.getElementById('btnSync'),
-  goalName: document.getElementById('goalNameInput'),
-  goalAmount: document.getElementById('goalAmountInput'),
-  goalNote: document.getElementById('goalNoteInput'),
-  goalStatus: document.getElementById('goalStatus')
-};
+const els = Object.fromEntries(['tkbInput','scheduleStatus','scheduleDayList','editDateInput','editTasksInput','goalFormGrid','goalStatus','wageRateInput','expenseWarningInput','themeAccentInput','telegramEnabledInput','telegramTaskEnabledInput','telegramIncomeEnabledInput','telegramExpenseEnabledInput','telegramScheduleEnabledInput','catWidgetEnabledInput','telegramBotTokenInput','telegramChatIdInput','savingPercentInput','spendingPercentInput','emergencyPercentInput','futurePercentInput','alert10Input','alert30Input','systemStatus','catMoodTextInput','aiSuggestionTextInput','taskCategoryColorGrid','backupStatus','importJsonFile'].map((id)=>[id,document.getElementById(id)]));
 
-function setStatus(message, type = 'success') {
-  els.status.textContent = message;
-  els.status.dataset.type = type;
-}
+function setStatus(el, text, type='info'){ el.textContent=text; el.dataset.type=type; }
+function renderScheduleChips(){ els.scheduleDayList.innerHTML = state.schedule.map((day, index)=>`<button class="chip ${state.currentIndex===index?'active':''}" data-index="${index}">${day[0]}</button>`).join(''); els.scheduleDayList.querySelectorAll('button').forEach((b)=>b.onclick=()=>openDay(Number(b.dataset.index))); }
+function openDay(index){ if(!state.schedule[index]) return; state.currentIndex=index; els.editDateInput.value=state.schedule[index][0]; els.editTasksInput.value=state.schedule[index].slice(1).map((item)=>typeof item==='string'?item:item.text).join('\n'); renderScheduleChips(); }
 
-function setGoalStatus(message, type = 'success') {
-  els.goalStatus.textContent = message;
-  els.goalStatus.dataset.type = type;
-}
+function buildStudyDaySchedule(date, classList){ return [date,'00:00-06:00 Ngủ','06:00-09:00 Ship','11:30-12:00 Ăn trưa','12:00-13:30 Ship',...classList,'16:30-20:00 Ship','20:00-20:30 Ăn tối','21:00-23:30 Ship']; }
+function buildFreeDaySchedule(date){ return [date,'00:00-06:00 Ngủ','06:00-11:30 Ship','11:30-12:00 Ăn trưa','12:00-20:00 Ship','20:00-20:30 Ăn tối','20:30-23:59 Ship']; }
+function processTKB(){ const raw = els.tkbInput.value.trim(); if(!raw) return setStatus(els.scheduleStatus,'Thiếu dữ liệu TKB.','error'); const lines = raw.split('\n').filter(Boolean); const classesByDate={}; let minDate=null,maxDate=null; lines.forEach((line)=>{ const dateMatch=line.match(/(\d{2})\/(\d{2})\/(\d{4})/); if(!dateMatch) return; if(line.includes('DAT103')||line.includes('VIE111')||line.includes('Giáo dục thể chất')) return; const dateObj=new Date(Number(dateMatch[3]),Number(dateMatch[2])-1,Number(dateMatch[1])); const dateStr=formatDateKey(dateObj); minDate=!minDate||dateObj<minDate?new Date(dateObj):minDate; maxDate=!maxDate||dateObj>maxDate?new Date(dateObj):maxDate; const subjectMatch=line.match(/[A-Z]{3,4}\d{3,4}/); const subject=subjectMatch?subjectMatch[0]:'Học tập'; const isOnline=line.includes('Google Meet')||line.includes('Học Online')||line.includes('Meet'); let timeStr='14:10-16:10'; if(!isOnline){ const t=line.match(/(\d{2}:\d{2}):\d{2}\s*-\s*(\d{2}:\d{2}):\d{2}/); if(t) timeStr=`${t[1]}-${t[2]}`; } classesByDate[dateStr]=classesByDate[dateStr]||[]; classesByDate[dateStr].push(`${timeStr} ${subject}`); }); if(!minDate||!maxDate) return setStatus(els.scheduleStatus,'Không đọc được ngày trong TKB.','error'); const next=[]; for(let cursor=new Date(minDate); cursor<=maxDate; cursor.setDate(cursor.getDate()+1)){ const dateStr=formatDateKey(cursor); next.push((classesByDate[dateStr]||[]).length?buildStudyDaySchedule(dateStr,classesByDate[dateStr].sort()):buildFreeDaySchedule(dateStr)); } state.schedule=next; setSchedule(next); openDay(0); renderScheduleChips(); setStatus(els.scheduleStatus,`Đã tạo ${next.length} ngày schedule.`,'success'); }
+function saveDay(){ if(!state.schedule[state.currentIndex]) return; state.schedule[state.currentIndex]=[els.editDateInput.value.trim(),...els.editTasksInput.value.split('\n').map((line)=>line.trim()).filter(Boolean)]; setSchedule(state.schedule); renderScheduleChips(); setStatus(els.scheduleStatus,'Đã lưu chỉnh sửa ngày.','success'); }
+function deleteDay(){ if(!state.schedule[state.currentIndex]) return; state.schedule.splice(state.currentIndex,1); setSchedule(state.schedule); openDay(Math.max(0,state.currentIndex-1)); renderScheduleChips(); setStatus(els.scheduleStatus,'Đã xóa ngày khỏi schedule.','success'); }
+async function syncSchedule(){ try{ await saveScheduleToCloud(state.schedule); setStatus(els.scheduleStatus,'Đồng bộ schedule thành công.','success'); }catch{ setStatus(els.scheduleStatus,'Cloud lỗi khi sync schedule.','error'); }}
+async function loadScheduleCloud(){ try{ state.schedule=await loadScheduleFromCloud(); setSchedule(state.schedule); openDay(0); renderScheduleChips(); setStatus(els.scheduleStatus,'Đã tải schedule từ cloud.','success'); }catch{ setStatus(els.scheduleStatus,'Không tải được schedule cloud.','error'); }}
 
-function buildStudyDaySchedule(date, classList) {
-  const tasks = [date, '00:00-06:00 Ngủ', '06:00-09:00 Ship', '11:30-12:00 Ăn trưa', '12:00-13:30 Ship', ...classList, '16:30-20:00 Ship', '20:00-20:30 Ăn tối', '21:00-23:30 Ship'];
-  return [tasks[0], ...tasks.slice(1).sort()];
-}
+function renderGoalForm(){ els.goalFormGrid.innerHTML = goalFields.map(([key,label])=>`<label><span>${label}</span>${key.includes('Amount')?`<input data-goal-field="${key}" type="number" min="0">`:`${key.includes('Note')?`<textarea data-goal-field="${key}" rows="3"></textarea>`:`<input data-goal-field="${key}" type="text">`}`}</label>`).join(''); els.goalFormGrid.querySelectorAll('[data-goal-field]').forEach((input)=>{ input.value = state.goals[input.dataset.goalField] ?? ''; }); }
+function collectGoals(){ const next={...DEFAULT_GOALS}; els.goalFormGrid.querySelectorAll('[data-goal-field]').forEach((input)=>{ next[input.dataset.goalField] = input.type==='number'?Number(input.value||0):input.value.trim(); }); return next; }
+async function saveGoals(){ const next=collectGoals(); setGoalSettings(next); state.goals=next; try{ await saveGoalsToCloud(next); setStatus(els.goalStatus,'Đã lưu goals cloud + local.','success'); }catch{ setStatus(els.goalStatus,'Cloud lỗi, đã fallback local.','warning'); }}
+async function loadGoals(){ try{ state.goals=await loadGoalsFromCloud(); setGoalSettings(state.goals); renderGoalForm(); setStatus(els.goalStatus,'Đã tải goals từ cloud.','success'); }catch{ state.goals=getGoalSettings(); renderGoalForm(); setStatus(els.goalStatus,'Dùng goals local do cloud lỗi.','warning'); }}
 
-function buildFreeDaySchedule(date) {
-  return [date, '00:00-06:00 Ngủ', '06:00-11:30 Ship', '11:30-12:00 Ăn trưa', '12:00-20:00 Ship', '20:00-20:30 Ăn tối', '20:30-23:59 Ship'];
-}
+function renderSystem(){ const s=state.system; els.wageRateInput.value=s.wageRate; els.expenseWarningInput.value=s.expenseWarningThreshold; els.themeAccentInput.value=s.themeAccent; els.telegramEnabledInput.checked=s.telegramEnabled; els.telegramTaskEnabledInput.checked=s.telegramTaskEnabled; els.telegramIncomeEnabledInput.checked=s.telegramIncomeEnabled; els.telegramExpenseEnabledInput.checked=s.telegramExpenseEnabled; els.telegramScheduleEnabledInput.checked=s.telegramScheduleEnabled; els.catWidgetEnabledInput.checked=s.catWidgetEnabled; els.telegramBotTokenInput.value=s.telegramBotToken; els.telegramChatIdInput.value=s.telegramChatId; els.savingPercentInput.value=s.savingPercent; els.spendingPercentInput.value=s.spendingPercent; els.emergencyPercentInput.value=s.emergencyPercent; els.futurePercentInput.value=s.futurePercent; els.alert10Input.checked=s.scheduleAlert10Enabled; els.alert30Input.checked=s.scheduleAlert30Enabled; els.catMoodTextInput.value=s.catMoodDefaultText; els.aiSuggestionTextInput.value=s.aiSuggestionDefaultText; els.taskCategoryColorGrid.innerHTML=TASK_CATEGORY_OPTIONS.map((category)=>`<label><span>${category}</span><input data-color-key="${category}" type="color" value="${s.taskCategoryColors?.[category]||'#89dceb'}"></label>`).join(''); }
+function collectSystem(){ const colors={}; els.taskCategoryColorGrid.querySelectorAll('[data-color-key]').forEach((input)=>{ colors[input.dataset.colorKey]=input.value; }); return { ...state.system, wageRate:Number(els.wageRateInput.value||0), expenseWarningThreshold:Number(els.expenseWarningInput.value||0), themeAccent:els.themeAccentInput.value, telegramEnabled:els.telegramEnabledInput.checked, telegramTaskEnabled:els.telegramTaskEnabledInput.checked, telegramIncomeEnabled:els.telegramIncomeEnabledInput.checked, telegramExpenseEnabled:els.telegramExpenseEnabledInput.checked, telegramScheduleEnabled:els.telegramScheduleEnabledInput.checked, catWidgetEnabled:els.catWidgetEnabledInput.checked, telegramBotToken:els.telegramBotTokenInput.value.trim(), telegramChatId:els.telegramChatIdInput.value.trim(), savingPercent:Number(els.savingPercentInput.value||0), spendingPercent:Number(els.spendingPercentInput.value||0), emergencyPercent:Number(els.emergencyPercentInput.value||0), futurePercent:Number(els.futurePercentInput.value||0), scheduleAlert10Enabled:els.alert10Input.checked, scheduleAlert30Enabled:els.alert30Input.checked, catMoodDefaultText:els.catMoodTextInput.value.trim(), aiSuggestionDefaultText:els.aiSuggestionTextInput.value.trim(), taskCategoryColors:colors }; }
+async function saveSystem(){ const next=collectSystem(); state.system=next; setSystemSettings(next); try{ await saveSystemSettingsToCloud(next); setStatus(els.systemStatus,'Đã lưu system settings cloud + local.','success'); }catch{ setStatus(els.systemStatus,'Cloud lỗi, đã fallback local.','warning'); }}
+async function loadSystem(){ try{ state.system=await loadSystemSettingsFromCloud(); setSystemSettings(state.system); renderSystem(); setStatus(els.systemStatus,'Đã tải system settings từ cloud.','success'); }catch{ state.system=getSystemSettings(); renderSystem(); setStatus(els.systemStatus,'Dùng system local do cloud lỗi.','warning'); }}
 
-function renderGrid() {
-  els.dayGrid.innerHTML = '';
-  state.finalSchedule.forEach((day, index) => {
-    const item = document.createElement('button');
-    item.className = `day-item ${state.currentIndex === index ? 'active' : ''}`;
-    item.type = 'button';
-    item.textContent = day[0];
-    item.addEventListener('click', () => openEdit(index));
-    els.dayGrid.appendChild(item);
-  });
-}
+function exportBackupJson(){ downloadTextFile(`premium-pro-backup-${Date.now()}.json`, exportJson(getBackupData())); setStatus(els.backupStatus,'Đã export JSON backup.','success'); }
+function importBackupJson(){ els.importJsonFile.click(); }
+function handleImportFile(event){ const file=event.target.files?.[0]; if(!file) return; file.text().then((text)=>{ restoreBackupData(JSON.parse(text)); state.schedule=getSchedule(); state.goals=getGoalSettings(); state.system=getSystemSettings(); renderScheduleChips(); renderGoalForm(); renderSystem(); openDay(0); setStatus(els.backupStatus,'Đã import JSON backup.','success'); }); }
+function exportExpenseCsv(){ const rows=[['dateId','reason','category','amount','createdAt'],...getExpenses().map((item)=>[item.dateId,item.reason,item.category,item.amount,item.createdAt])]; downloadTextFile('expenses.csv', exportCsv(rows), 'text/csv'); setStatus(els.backupStatus,'Đã export CSV chi tiêu.','success'); }
+function exportIncomeCsv(){ const rows=[['date','amount'],...getSchedule().map((day,index)=>[day[0],getMoney()[index]||0])]; downloadTextFile('income.csv', exportCsv(rows), 'text/csv'); setStatus(els.backupStatus,'Đã export CSV thu nhập.','success'); }
 
-function openEdit(index) {
-  state.currentIndex = index;
-  renderGrid();
-  els.editor.style.display = 'block';
-  els.editDate.value = state.finalSchedule[index][0];
-  els.editTasks.value = state.finalSchedule[index].slice(1).join('\n');
-  els.editLabel.textContent = `Ngày ${state.finalSchedule[index][0]}`;
-}
+function bind(){ document.getElementById('processTKBBtn').onclick=processTKB; document.getElementById('saveDayBtn').onclick=saveDay; document.getElementById('deleteDayBtn').onclick=deleteDay; document.getElementById('syncScheduleBtn').onclick=syncSchedule; document.getElementById('loadCloudScheduleBtn').onclick=loadScheduleCloud; document.getElementById('saveGoalsBtn').onclick=saveGoals; document.getElementById('loadGoalsBtn').onclick=loadGoals; document.getElementById('saveSystemBtn').onclick=saveSystem; document.getElementById('loadSystemBtn').onclick=loadSystem; document.getElementById('saveCatContentBtn').onclick=saveSystem; document.getElementById('saveTaskCategoryBtn').onclick=saveSystem; document.getElementById('exportJsonBtn').onclick=exportBackupJson; document.getElementById('importJsonBtn').onclick=importBackupJson; document.getElementById('exportExpenseCsvBtn').onclick=exportExpenseCsv; document.getElementById('exportIncomeCsvBtn').onclick=exportIncomeCsv; els.importJsonFile.onchange=handleImportFile; }
 
-function processTKB() {
-  const rawText = els.tkbInput.value.trim();
-  if (!rawText) {
-    alert('Bé chưa dán gì cả!');
-    return;
-  }
-
-  const lines = rawText.split('\n').filter((line) => line.trim());
-  const classesByDate = {};
-  let minDate = null;
-  let maxDate = null;
-
-  lines.forEach((line) => {
-    const dateMatch = line.match(/(\d{2})\/(\d{2})\/(\d{4})/);
-    if (!dateMatch) return;
-
-    const day = Number(dateMatch[1]);
-    const month = Number(dateMatch[2]) - 1;
-    const year = Number(dateMatch[3]);
-    const dateObj = new Date(year, month, day);
-    const dateStr = formatDateKey(dateObj);
-
-    if (!minDate || dateObj < minDate) minDate = new Date(dateObj);
-    if (!maxDate || dateObj > maxDate) maxDate = new Date(dateObj);
-
-    if (line.includes('DAT103') || line.includes('VIE111') || line.includes('Giáo dục thể chất')) return;
-
-    const subjectMatch = line.match(/[A-Z]{3,4}\d{3,4}/);
-    const subject = subjectMatch ? subjectMatch[0] : 'Học tập';
-    const isOnline = line.includes('Google Meet') || line.includes('Học Online') || line.includes('Meet');
-
-    let timeStr = '14:10-16:10';
-    if (!isOnline) {
-      const timeMatch = line.match(/(\d{2}:\d{2}):\d{2}\s*-\s*(\d{2}:\d{2}):\d{2}/);
-      if (timeMatch) timeStr = `${timeMatch[1]}-${timeMatch[2]}`;
-    }
-
-    if (!classesByDate[dateStr]) classesByDate[dateStr] = [];
-    classesByDate[dateStr].push(`${timeStr} ${subject}`);
-  });
-
-  if (!minDate || !maxDate) {
-    alert('Không đọc được ngày từ bảng lịch!');
-    return;
-  }
-
-  state.finalSchedule = [];
-  const cursor = new Date(minDate);
-  while (cursor <= maxDate) {
-    const dateStr = formatDateKey(cursor);
-    const classes = (classesByDate[dateStr] || []).sort();
-    state.finalSchedule.push(classes.length ? buildStudyDaySchedule(dateStr, classes) : buildFreeDaySchedule(dateStr));
-    cursor.setDate(cursor.getDate() + 1);
-  }
-
-  state.currentIndex = -1;
-  renderGrid();
-  els.listArea.style.display = 'block';
-  els.btnSync.style.display = 'block';
-  els.editor.style.display = 'none';
-  setStatus(`✅ Đã tạo lịch cho ${state.finalSchedule.length} ngày!`);
-}
-
-function saveEdit() {
-  if (state.currentIndex < 0) return;
-  const date = els.editDate.value.trim();
-  const tasks = els.editTasks.value.split('\n').map((line) => line.trim()).filter(Boolean);
-  if (!date) {
-    alert('Ngày không được để trống.');
-    return;
-  }
-  state.finalSchedule[state.currentIndex] = [date, ...tasks];
-  renderGrid();
-  setStatus(`💾 Đã cập nhật ngày ${date}`);
-}
-
-function deleteDay() {
-  if (state.currentIndex < 0) return;
-  if (!window.confirm('Xóa ngày này?')) return;
-  state.finalSchedule.splice(state.currentIndex, 1);
-  state.currentIndex = -1;
-  els.editor.style.display = 'none';
-  renderGrid();
-  setStatus('🗑️ Đã xóa ngày khỏi lịch hiện tại.');
-}
-
-async function loadScheduleFromCloudAction() {
-  setStatus('⏳ Đang tải lịch từ Cloud...', 'info');
-  try {
-    state.finalSchedule = await loadScheduleFromCloud();
-    state.currentIndex = -1;
-    renderGrid();
-    els.listArea.style.display = 'block';
-    els.btnSync.style.display = 'block';
-    els.editor.style.display = 'none';
-    setStatus(`☁️ Đã tải ${state.finalSchedule.length} ngày từ Cloud.`);
-  } catch (error) {
-    console.error(error);
-    setStatus('❌ Lỗi tải Cloud!', 'error');
-    alert('Không tải được schedule từ Firebase.');
-  }
-}
-
-async function syncToCloud() {
-  if (!state.finalSchedule.length) {
-    alert('Chưa có lịch để đồng bộ.');
-    return;
-  }
-  setStatus('⏳ Đang gửi lên Cloud...', 'info');
-  try {
-    await saveScheduleToCloud(state.finalSchedule);
-    setStatus('🚀 ĐỒNG BỘ THÀNH CÔNG!');
-    alert('Đã cập nhật lịch mới lên cloud!');
-  } catch (error) {
-    console.error(error);
-    setStatus('❌ Đồng bộ thất bại!', 'error');
-    alert('Lỗi khi đồng bộ Firebase!');
-  }
-}
-
-function loadGoalToForm(goal) {
-  els.goalName.value = goal.goalName || DEFAULT_GOAL.goalName;
-  els.goalAmount.value = goal.goalAmount || DEFAULT_GOAL.goalAmount;
-  els.goalNote.value = goal.goalNote || DEFAULT_GOAL.goalNote;
-}
-
-async function saveGoal() {
-  const goal = {
-    goalName: els.goalName.value.trim() || DEFAULT_GOAL.goalName,
-    goalAmount: Math.max(0, Number(els.goalAmount.value) || 0),
-    goalNote: els.goalNote.value.trim()
-  };
-
-  try {
-    await saveGoalToCloud(goal);
-    setGoalSettings(goal);
-    setGoalStatus('✅ Đã lưu mục tiêu lên cloud và local.');
-  } catch (error) {
-    console.error(error);
-    setGoalSettings(goal);
-    setGoalStatus('⚠️ Cloud lỗi, đã fallback lưu localStorage.', 'warning');
-  }
-}
-
-async function loadGoalFromCloudAction() {
-  setGoalStatus('⏳ Đang tải mục tiêu từ cloud...', 'info');
-  try {
-    const goal = await loadGoalFromCloud();
-    loadGoalToForm(goal);
-    setGoalSettings(goal);
-    setGoalStatus('☁️ Đã tải mục tiêu từ cloud.');
-  } catch (error) {
-    console.error(error);
-    const goal = getGoalSettings();
-    loadGoalToForm(goal);
-    setGoalStatus('⚠️ Không tải được cloud, đang dùng localStorage.', 'warning');
-  }
-}
-
-function bindEvents() {
-  document.getElementById('processTKBBtn').addEventListener('click', processTKB);
-  document.getElementById('loadCloudBtn').addEventListener('click', loadScheduleFromCloudAction);
-  document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
-  document.getElementById('deleteDayBtn').addEventListener('click', deleteDay);
-  document.getElementById('syncBtn').addEventListener('click', syncToCloud);
-  document.getElementById('saveGoalBtn').addEventListener('click', saveGoal);
-  document.getElementById('loadGoalBtn').addEventListener('click', loadGoalFromCloudAction);
-}
-
-async function init() {
-  bindEvents();
-  loadGoalToForm(getGoalSettings());
-  await loadGoalFromCloudAction();
-  await loadScheduleFromCloudAction();
-}
-
+function init(){ renderGoalForm(); renderSystem(); renderScheduleChips(); openDay(0); bind(); }
 init();

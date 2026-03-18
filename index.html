@@ -3,123 +3,288 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>✨ Lịch Làm Việc Cute 🎀</title>
+  <title>Premium Pro • Lịch Làm Việc & Quỹ Cá Nhân</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/main.css">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-  <header class="header-ios">
-    <div class="header-row">
-      <div>
-        <div class="title">✨ Lịch Làm Việc 🎀</div>
-        <div class="header-meta">Trang user chỉ hiển thị lịch, chi tiêu, quỹ heo đất và mục tiêu.</div>
-      </div>
-      <div class="header-actions">
-        <button class="link-chip" id="openAdminBtn" type="button">🛠️ Vào admin</button>
-      </div>
+  <div class="aurora aurora-1"></div>
+  <div class="aurora aurora-2"></div>
+
+  <header class="site-header glass-card">
+    <div>
+      <p class="eyebrow">Premium Pro Dashboard</p>
+      <h1>✨ Lịch làm việc cute + quỹ cá nhân + mèo đồng hành</h1>
+      <p class="header-copy">Trang chủ dành cho user cuối: tập trung theo dõi lịch hôm nay, tài chính, mục tiêu và gợi ý hành động thông minh.</p>
+    </div>
+    <div class="header-actions">
+      <a class="chip-link" href="history.html">📜 History</a>
+      <a class="chip-link" href="admin.html">🛠️ Admin</a>
     </div>
   </header>
 
-  <div class="top-status-bar">
-    <div class="glass-chip mood-banner" id="moodCard">
-      <div>
-        <div class="mood-title">🐱 Tâm trạng của Mèo</div>
-        <div class="mood-desc" id="moodDescription">Mèo đang quan sát bạn rất chăm chú nè.</div>
-      </div>
-      <div class="mood-pill" id="moodPill">Đang phân tích...</div>
-    </div>
-  </div>
-
-  <main class="container">
-    <section class="card" id="scheduleCard">
-      <h3>🧸 Lịch Trình Của Bạn</h3>
-      <div class="grid" id="grid"></div>
-    </section>
-
-    <section class="card" id="expenseCard">
-      <h3>💸 Nhật Ký Mua Sắm 🛍️</h3>
-      <div class="money-action" style="border:none;padding-top:0;flex-wrap:wrap;">
-        <input type="text" id="expenseReason" class="textInput" placeholder="Mua gì dị nà...">
-        <input type="number" id="expenseAmount" class="moneyInput" placeholder="Tốn bao nhiêu...">
-      </div>
-      <button class="btn-expense" id="addExpenseBtn" type="button">🎀 XÁC NHẬN TIÊU TIỀN (TIẾC QUÁ) 💔</button>
-      <div id="expenseLog" class="expense-log"></div>
-    </section>
-
-    <section class="card" id="savingCard">
-      <h3>💖 Quỹ Heo Đất 🐖</h3>
-      <div class="stat-row" style="border-bottom:2px solid rgba(255,255,255,0.05);margin-bottom:10px;">
-        <span class="stat-label" style="color:var(--neon-purple);font-weight:700;">Ngày tháng nè 🌷</span>
-        <span class="stat-value" style="color:var(--neon-purple);">Tiền vô 💰</span>
-      </div>
-      <div id="incomeLog" class="expense-log"></div>
-      <div class="stat-row" style="margin-top:15px;border-top:2px solid rgba(255,255,255,0.05);padding-top:20px;border-bottom:none;">
-        <span class="stat-label" style="font-weight:800;font-size:16px;">TỔNG BỎ ỐNG HEO 🎀</span>
-        <span class="stat-value" id="totalAccumulated">0đ</span>
-      </div>
-
-      <div class="predictor-box">
-        <div class="goal-head">
-          <div>
-            <div class="mood-title">📈 Dự Báo Thu Nhập</div>
-            <div class="info-text">Giữ nguyên predictor cũ nhưng trình bày gọn lại.</div>
+  <main class="page-shell">
+    <section class="hero-grid">
+      <article class="glass-card cat-hero">
+        <div>
+          <p class="eyebrow">Mood mèo hôm nay</p>
+          <h2 id="catMoodTitle">🐱 Mèo đang khởi động năng lượng...</h2>
+          <p id="catMoodDescription">Mèo sẽ phân tích task, thu nhập, chi tiêu và streak để nhắc bạn vừa chiến vừa giữ sức.</p>
+        </div>
+        <div class="cat-hero-side">
+          <span class="status-pill" id="catMoodPill">Đang phân tích</span>
+          <div class="cat-meta-grid">
+            <div class="mini-stat">
+              <span>Level</span>
+              <strong id="catLevel">1</strong>
+            </div>
+            <div class="mini-stat">
+              <span>Rank</span>
+              <strong id="catRank">Mèo thường</strong>
+            </div>
+            <div class="mini-stat">
+              <span>Streak</span>
+              <strong id="streakQuick">0 ngày</strong>
+            </div>
           </div>
         </div>
-        <div class="predictor-grid">
-          <div class="predictor-item"><div class="predictor-label">Tốc độ kiếm trung bình / ngày</div><div class="predictor-value blue" id="predictAvgDaily">0đ</div></div>
-          <div class="predictor-item"><div class="predictor-label">Ngày dự kiến chạm mục tiêu</div><div class="predictor-value green" id="predictGoalDate">--/--</div></div>
-          <div class="predictor-item"><div class="predictor-label">Trạng thái tháng này</div><div class="predictor-value pink" id="predictStatus">Đang tính...</div></div>
+      </article>
+
+      <article class="glass-card daily-journal-card">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">Nhật ký ngày</p>
+            <h3>💭 Note + mood cá nhân</h3>
+          </div>
         </div>
-        <div class="predictor-message" id="predictMessage">Với tốc độ này, bé sẽ sớm chạm mục tiêu. Mèo đang tính kỹ hơn cho bạn nè.</div>
-      </div>
+        <div class="journal-grid">
+          <label>
+            <span>Mood cá nhân</span>
+            <select id="personalMoodInput">
+              <option value="🙂 ổn">🙂 ổn</option>
+              <option value="😴 mệt">😴 mệt</option>
+              <option value="🔥 rất sung">🔥 rất sung</option>
+              <option value="😵 quá tải">😵 quá tải</option>
+            </select>
+          </label>
+          <label>
+            <span>Mức năng lượng</span>
+            <input id="energyLevelInput" type="range" min="1" max="10" value="7">
+            <small id="energyLevelValue">7/10</small>
+          </label>
+          <label>
+            <span>Đánh giá ngày</span>
+            <input id="dayRatingInput" type="number" min="1" max="10" value="8">
+          </label>
+          <label class="full-span">
+            <span>Note ngắn</span>
+            <textarea id="dayNoteInput" rows="3" placeholder="Hôm nay muốn lưu lại điều gì đó dễ thương nè..."></textarea>
+          </label>
+        </div>
+        <button class="primary-btn" id="saveDayJournalBtn" type="button">💾 Lưu nhật ký ngày</button>
+      </article>
     </section>
 
-    <section class="card" id="goalCard">
-      <h3>🎯 Mục tiêu</h3>
-      <div class="goal-card-inner">
-        <div class="goal-head">
+    <section class="dashboard-grid" id="dashboardGrid"></section>
+
+    <section class="content-grid">
+      <article class="glass-card section-card schedule-card">
+        <div class="section-head">
           <div>
-            <div class="mood-title" id="goalName">Mua xe</div>
-            <div class="goal-note" id="goalNote">Hoàn thành trước cuối tháng</div>
+            <p class="eyebrow">Lịch hôm nay</p>
+            <h3>🧸 Lịch Trình Của Bạn</h3>
           </div>
-          <div class="goal-badge" id="goalStatus">Đang cố gắng</div>
+          <button class="ghost-btn" id="completePastTasksBtn" type="button">⏱️ Hoàn thành task đã qua giờ</button>
         </div>
-        <div class="goal-grid">
-          <div class="goal-item"><div class="goal-label">Số tiền mục tiêu</div><div class="goal-value blue" id="goalAmount">0đ</div></div>
-          <div class="goal-item"><div class="goal-label">Số tiền hiện tại</div><div class="goal-value green" id="goalCurrent">0đ</div></div>
-          <div class="goal-item"><div class="goal-label">Còn thiếu</div><div class="goal-value pink" id="goalRemaining">0đ</div></div>
-          <div class="goal-item"><div class="goal-label">Phần trăm hoàn thành</div><div class="goal-value" id="goalPercent">0%</div></div>
+        <div class="toolbar-grid">
+          <div class="filter-pills" id="taskFilterGroup"></div>
+          <label>
+            <span>Tăng tiền nhanh</span>
+            <button class="secondary-btn" id="openQuickAddBtn" type="button">➕ Popup cộng tiền</button>
+          </label>
         </div>
-        <div class="progress-bar-bg"><div class="progress-bar-fill" id="goalFill"></div></div>
-      </div>
+        <div id="scheduleSummary" class="soft-panel"></div>
+        <div id="scheduleList" class="task-list"></div>
+        <div class="schedule-footer-grid">
+          <label>
+            <span>Thu nhập hôm nay</span>
+            <input id="todayIncomeInput" type="number" min="0" placeholder="VD: 350000">
+          </label>
+          <label>
+            <span>Lọc theo chữ</span>
+            <input id="taskSearchInput" type="text" placeholder="Tìm task...">
+          </label>
+        </div>
+      </article>
+
+      <article class="glass-card section-card expense-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Expense tracker</p>
+            <h3>💸 Nhật Ký Mua Sắm</h3>
+          </div>
+        </div>
+        <div class="expense-form-grid">
+          <input id="expenseReasonInput" type="text" placeholder="Mua gì / trả gì...">
+          <input id="expenseAmountInput" type="number" min="0" placeholder="Số tiền">
+          <select id="expenseCategoryInput">
+            <option value="ăn uống">Ăn uống</option>
+            <option value="di chuyển">Di chuyển</option>
+            <option value="mua sắm">Mua sắm</option>
+            <option value="học tập">Học tập</option>
+            <option value="khác">Khác</option>
+          </select>
+          <button class="primary-btn" id="addExpenseBtn" type="button">🎀 Thêm chi tiêu</button>
+        </div>
+        <div class="toolbar-grid expense-toolbar">
+          <div class="filter-pills" id="expenseTimeFilterGroup"></div>
+          <div class="inline-filters">
+            <select id="expenseCategoryFilter">
+              <option value="all">Tất cả category</option>
+              <option value="ăn uống">Ăn uống</option>
+              <option value="di chuyển">Di chuyển</option>
+              <option value="mua sắm">Mua sắm</option>
+              <option value="học tập">Học tập</option>
+              <option value="khác">Khác</option>
+            </select>
+            <select id="expenseSortFilter">
+              <option value="latest">Mới nhất</option>
+              <option value="highest">Số tiền cao nhất</option>
+              <option value="lowest">Số tiền thấp nhất</option>
+            </select>
+            <input id="expenseSearchInput" type="text" placeholder="Tìm chi tiêu...">
+          </div>
+        </div>
+        <div id="expenseSummary" class="soft-panel"></div>
+        <div id="expenseList" class="list-block"></div>
+      </article>
+
+      <article class="glass-card section-card saving-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Piggy bank</p>
+            <h3>💖 Quỹ Heo Đất</h3>
+          </div>
+        </div>
+        <div id="incomeHistoryList" class="list-block compact-list"></div>
+        <div class="fund-grid" id="fundAllocationGrid"></div>
+      </article>
+
+      <article class="glass-card section-card goals-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Goal stack</p>
+            <h3>🎯 Mục tiêu Premium</h3>
+          </div>
+        </div>
+        <div id="goalCards" class="goal-stack"></div>
+      </article>
+
+      <article class="glass-card section-card stats-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Daily stats</p>
+            <h3>📊 Thống kê ngày</h3>
+          </div>
+        </div>
+        <div id="dailyStatsGrid" class="metric-grid"></div>
+      </article>
+
+      <article class="glass-card section-card finance-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Finance analytics</p>
+            <h3>📈 Phân tích tài chính</h3>
+          </div>
+        </div>
+        <div id="financeAnalyticsGrid" class="metric-grid"></div>
+      </article>
+
+      <article class="glass-card section-card insight-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">AI insight</p>
+            <h3>🧠 AI Insight / Gợi ý hôm nay</h3>
+          </div>
+        </div>
+        <div id="insightList" class="insight-list"></div>
+      </article>
+
+      <article class="glass-card section-card streak-card">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Achievement</p>
+            <h3>🏆 Streak + Thành tựu</h3>
+          </div>
+        </div>
+        <div id="achievementSummary" class="soft-panel"></div>
+        <div id="achievementList" class="badge-grid"></div>
+      </article>
+    </section>
+
+    <section class="charts-grid">
+      <article class="glass-card chart-card">
+        <h3>📉 Thu nhập 7 ngày gần nhất</h3>
+        <canvas id="incomeChart"></canvas>
+      </article>
+      <article class="glass-card chart-card">
+        <h3>💸 Chi tiêu 7 ngày gần nhất</h3>
+        <canvas id="expenseChart"></canvas>
+      </article>
+      <article class="glass-card chart-card">
+        <h3>🐷 Tích lũy 30 ngày</h3>
+        <canvas id="balanceChart"></canvas>
+      </article>
+      <article class="glass-card chart-card">
+        <h3>🧃 Category chi tiêu</h3>
+        <canvas id="categoryChart"></canvas>
+      </article>
+      <article class="glass-card chart-card wide">
+        <h3>✅ Tỷ lệ hoàn thành task</h3>
+        <canvas id="taskCompletionChart"></canvas>
+      </article>
     </section>
   </main>
 
-  <div id="modalOverlay" class="modal-overlay">
-    <div class="modal" id="moneyModal">
-      <h2>🎉 Ting Ting!</h2>
-      <p class="info-text">Nay kiếm được nhiêu lúa nà?</p>
-      <input type="number" id="popupMoneyInput" class="moneyInput" style="text-align:center;" placeholder="VD: 50000">
-      <div class="modal-btns">
-        <button class="btn-modal btn-cancel" id="closeModalBtn" type="button">HỦY</button>
-        <button class="btn-modal btn-confirm" id="confirmQuickAddBtn" type="button">LƯU LẠI</button>
+  <aside class="cat-widget glass-card hidden" id="catWidget">
+    <button class="close-widget" id="closeCatWidgetBtn" type="button">×</button>
+    <p class="eyebrow">Widget mèo nổi premium</p>
+    <h3 id="floatingCatTitle">🐱 Mèo trợ lý</h3>
+    <p id="floatingCatDesc">Sẵn sàng nhắc bạn kiếm tiền và giữ mood ổn định.</p>
+    <div class="floating-grid">
+      <div><span>Level</span><strong id="floatingCatLevel">1</strong></div>
+      <div><span>Rank</span><strong id="floatingCatRank">Mèo thường</strong></div>
+      <div><span>Còn lại</span><strong id="floatingRemainingTasks">0 task</strong></div>
+      <div><span>Dự báo thêm</span><strong id="floatingPotentialIncome">0đ</strong></div>
+    </div>
+  </aside>
+
+  <div class="modal-overlay hidden" id="quickMoneyModal">
+    <div class="modal-card glass-card">
+      <div class="modal-orb modal-orb-pink"></div>
+      <div class="modal-orb modal-orb-blue"></div>
+      <div class="modal-topline">
+        <span class="modal-chip">💖 Premium popup</span>
+        <button class="modal-close" id="closeQuickMoneyModalBtn" type="button" aria-label="Đóng popup">×</button>
+      </div>
+      <h3>🎉 Popup cộng tiền nhanh</h3>
+      <p>Thêm nhanh thu nhập cho hôm nay để dashboard, predictor và mood mèo sáng lên ngay lập tức.</p>
+      <label class="modal-field">
+        <span>Số tiền vừa kiếm được</span>
+        <input id="quickMoneyInput" type="number" min="0" placeholder="VD: 50000">
+      </label>
+      <div class="modal-actions">
+        <button class="ghost-btn" id="modalCancelBtn" type="button">Để sau</button>
+        <button class="primary-btn" id="confirmQuickMoneyBtn" type="button">Lưu thu nhập</button>
       </div>
     </div>
   </div>
 
-  <aside class="cat-widget" id="catWidget" title="Nhấn để ẩn" onclick="this.style.opacity='0';setTimeout(()=>this.style.display='none',300)">
-    <div class="widget-title">🐱 ⏱ HÔM NAY</div>
-    <div class="widget-stats">
-      Đã làm: <b id="catWorked">0h</b><br>
-      được 💰 <span class="highlight-money" id="catEarned">0 đ</span><br>
-      <span class="highlight-energy">⚡ Nếu làm thêm <span id="catRemaining">0</span>h → thêm <span id="catExtra">0</span> đ</span><br>
-      <span class="highlight-energy">💎 Cả ngày: <span id="catTotal">0</span> đ</span>
-      <div class="ai-status-mini" id="catMoodMini">Mood: Đang phân tích...</div>
-    </div>
-  </aside>
+  <div class="toast-container" id="toastContainer"></div>
 
   <script type="module" src="assets/js/home.js"></script>
 </body>
