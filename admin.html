@@ -1,66 +1,111 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin AI Scheduler - FPT Pro</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/admin.css">
+
+ <meta charset="UTF-8">
+
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+ <title>Admin AI Scheduler - FPT Pro</title>
+
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+ <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;700;800&display=swap" rel="stylesheet">
+
+ <link rel="stylesheet" href="assets/css/admin.css">
+
 </head>
+
 <body>
-  <div class="container">
-    <div class="page-title">🤖 Admin AI Scheduler</div>
+ <div class="container">
 
-    <div class="two-col">
-      <section class="card">
-        <h3>1. Dán bảng Lịch học FPT</h3>
-        <span class="info-tag">💡 AI sẽ tự bỏ DAT103, VIE111; giữ online 14:10-16:10; ngày trống sẽ tự thêm ship + ăn + ngủ như logic cũ.</span>
-        <textarea id="tkbInput" class="textareaInput" placeholder="Dán bảng TKB tại đây..."></textarea>
-        <div class="button-row">
-          <button id="processTKBBtn" type="button">🪄 PHÂN TÍCH & TẠO LỊCH</button>
-          <button id="loadCloudBtn" class="secondary" type="button">☁️ TẢI LỊCH TỪ CLOUD</button>
-        </div>
-      </section>
+ <div class="page-title"> Admin AI Scheduler</div>
 
-      <section class="card">
-        <h3>🎯 Quản lý mục tiêu</h3>
-        <span class="subtle-text">Card này cấp dữ liệu cho mục “Mục tiêu” ở trang chủ. Nếu cloud lỗi sẽ fallback localStorage.</span>
-        <input id="goalNameInput" class="textInput" type="text" placeholder="Tên mục tiêu">
-        <input id="goalAmountInput" class="numberInput" type="number" placeholder="Số tiền mục tiêu">
-        <textarea id="goalNoteInput" class="textareaInput" style="min-height:120px;" placeholder="Ghi chú mục tiêu"></textarea>
-        <div class="goal-actions">
-          <button id="saveGoalBtn" class="success" type="button">💾 Lưu mục tiêu</button>
-          <button id="loadGoalBtn" class="secondary" type="button">☁️ Tải mục tiêu từ cloud</button>
-        </div>
-        <div id="goalStatus" class="status"></div>
-      </section>
-    </div>
+ <div class="two-col">
 
-    <div id="status" class="status"></div>
+ <section class="card">
 
-    <section class="card" id="listArea" style="display:none;">
-      <h3>2. Danh sách ngày</h3>
-      <div class="day-grid" id="dayGrid"></div>
-    </section>
+ <h3>1. Dán bảng Lịch học FPT</h3>
 
-    <section class="card" id="editor" style="display:none;">
-      <h3 id="editLabel">Chỉnh sửa ngày</h3>
-      <input type="text" id="editDate" class="textInput">
-      <textarea id="editTasks" class="textareaInput" style="min-height:250px;"></textarea>
-      <div class="button-row">
-        <button id="saveEditBtn" class="success" type="button">Lưu thay đổi</button>
-        <button id="deleteDayBtn" class="danger" type="button">Xóa ngày</button>
-      </div>
-    </section>
+ <span class="info-tag"> AI sẽ tự bỏ DAT103, VIE111; giữ online 14:10-16:10; ngày trống sẽ tự thêm ship + ăn + ngủ như logic cũ.</span>
 
-    <div class="button-row">
-      <button id="syncBtn" class="secondary" type="button" style="display:none;">🚀 ĐỒNG BỘ LÊN CLOUD</button>
-      <a class="link-btn" href="index.html">← Về trang user</a>
-    </div>
-  </div>
+ <textarea id="tkbInput" class="textareaInput" placeholder="Dán bảng TKB tại đây..."></textarea>
 
-  <script type="module" src="assets/js/admin.js"></script>
+ <div class="button-row">
+
+ <button id="processTKBBtn" type="button"> PHÂN TÍCH & TẠO LỊCH</button>
+ <button id="loadCloudBtn" class="secondary" type="button">☁️ TẢI LỊCH TỪ CLOUD</button>
+
+ </div>
+
+ </section>
+
+ <section class="card">
+
+ <h3> Quản lý mục tiêu</h3>
+
+ <span class="subtle-text">Card này cấp dữ liệu cho mục “Mục tiêu” ở trang chủ. Nếu cloud lỗi sẽ fallback localStorage.</span>
+
+ <input id="goalNameInput" class="textInput" type="text" placeholder="Tên mục tiêu">
+
+ <input id="goalAmountInput" class="numberInput" type="number" placeholder="Số tiền mục tiêu">
+ <textarea id="goalNoteInput" class="textareaInput" style="min-height:120px;" placeholder="Ghi chú mục tiêu"></textarea>
+
+ <div class="goal-actions">
+
+ <button id="saveGoalBtn" class="success" type="button"> Lưu mục tiêu</button>
+
+ <button id="loadGoalBtn" class="secondary" type="button">☁️ Tải mục tiêu từ cloud</button>
+
+ </div>
+
+ <div id="goalStatus" class="status"></div>
+
+ </section>
+
+ </div>
+
+ <div id="status" class="status"></div>
+
+ <section class="card" id="listArea" style="display:none;">
+ <h3>2. Danh sách ngày</h3>
+
+ <div class="day-grid" id="dayGrid"></div>
+
+ </section>
+
+ <section class="card" id="editor" style="display:none;">
+
+ <h3 id="editLabel">Chỉnh sửa ngày</h3>
+
+ <input type="text" id="editDate" class="textInput">
+
+ <textarea id="editTasks" class="textareaInput" style="min-height:250px;"></textarea>
+
+ <div class="button-row">
+
+ <button id="saveEditBtn" class="success" type="button">Lưu thay đổi</button>
+
+ <button id="deleteDayBtn" class="danger" type="button">Xóa ngày</button>
+ </div>
+
+ </section>
+
+ <div class="button-row">
+
+ <button id="syncBtn" class="secondary" type="button" style="display:none;"> ĐỒNG BỘ LÊN CLOUD</button>
+
+ <a class="link-btn" href="index.html">← Về trang user</a>
+
+ </div>
+
+ </div>
+
+ <script type="module" src="assets/js/admin.js"></script>
+
 </body>
+
 </html>
