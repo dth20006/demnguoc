@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch sử Premium Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/history.css">
+</head>
+<body>
+  <main class="history-shell">
+    <header class="glass-card history-header">
+      <div>
+        <p class="eyebrow">Timeline & nhật ký</p>
+        <h1>📜 History / Timeline theo ngày</h1>
+        <p>Theo dõi hiệu suất, thu nhập, chi tiêu, mood mèo, mood cá nhân và note từng ngày.</p>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">← User Home</a>
+        <a href="admin.html">🛠️ Admin</a>
+      </div>
+    </header>
+
+    <section class="glass-card filter-card">
+      <div class="filter-row">
+        <label>
+          <span>Khoảng lọc</span>
+          <select id="historyRangeFilter">
+            <option value="day">Theo ngày</option>
+            <option value="week">Theo tuần</option>
+            <option value="month">Theo tháng</option>
+          </select>
+        </label>
+        <label>
+          <span>Ngày bắt đầu</span>
+          <input id="historyDateFilter" type="date">
+        </label>
+        <label>
+          <span>Tìm note / mood</span>
+          <input id="historySearchFilter" type="text" placeholder="Gõ từ khóa...">
+        </label>
+      </div>
+    </section>
+
+    <section class="timeline" id="historyTimeline"></section>
+  </main>
+
+  <script type="module" src="assets/js/history.js"></script>
+</body>
+</html>
