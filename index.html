@@ -1,282 +1,159 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Premium Pro • Lịch Làm Việc & Quỹ Cá Nhân</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/main.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-</head>
-<body>
-  <div class="aurora aurora-1"></div>
-  <div class="aurora aurora-2"></div>
+.app-shell {
+  width: min(1400px, calc(100% - 32px));
+  margin: 24px auto 40px;
+}
 
-  <header class="site-header glass-card">
-    <div>
-      <p class="eyebrow">Premium Pro Dashboard</p>
-      <h1>✨ Lịch làm việc cute + quỹ cá nhân + mèo đồng hành</h1>
-      <p class="header-copy">Trang chủ dành cho user cuối: tập trung theo dõi lịch hôm nay, tài chính, mục tiêu và gợi ý hành động thông minh.</p>
-    </div>
-    <div class="header-actions">
-      <a class="chip-link" href="history.html">📜 History</a>
-      <a class="chip-link" href="admin.html">🛠️ Admin</a>
-    </div>
-  </header>
+.clean-layout {
+  display: grid;
+  gap: 20px;
+}
 
-  <main class="page-shell">
-    <section class="hero-grid">
-      <article class="glass-card cat-hero">
-        <div>
-          <p class="eyebrow">Mood mèo hôm nay</p>
-          <h2 id="catMoodTitle">🐱 Mèo đang khởi động năng lượng...</h2>
-          <p id="catMoodDescription">Mèo sẽ phân tích task, thu nhập, chi tiêu và streak để nhắc bạn vừa chiến vừa giữ sức.</p>
-        </div>
-        <div class="cat-hero-side">
-          <span class="status-pill" id="catMoodPill">Đang phân tích</span>
-          <div class="cat-meta-grid">
-            <div class="mini-stat">
-              <span>Level</span>
-              <strong id="catLevel">1</strong>
-            </div>
-            <div class="mini-stat">
-              <span>Rank</span>
-              <strong id="catRank">Mèo thường</strong>
-            </div>
-            <div class="mini-stat">
-              <span>Streak</span>
-              <strong id="streakQuick">0 ngày</strong>
-            </div>
-          </div>
-        </div>
-      </article>
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 24px;
+  margin-bottom: 20px;
+}
 
-      <article class="glass-card daily-journal-card">
-        <div class="section-head compact">
-          <div>
-            <p class="eyebrow">Nhật ký ngày</p>
-            <h3>💭 Note + mood cá nhân</h3>
-          </div>
-        </div>
-        <div class="journal-grid">
-          <label>
-            <span>Mood cá nhân</span>
-            <select id="personalMoodInput">
-              <option value="🙂 ổn">🙂 ổn</option>
-              <option value="😴 mệt">😴 mệt</option>
-              <option value="🔥 rất sung">🔥 rất sung</option>
-              <option value="😵 quá tải">😵 quá tải</option>
-            </select>
-          </label>
-          <label>
-            <span>Mức năng lượng</span>
-            <input id="energyLevelInput" type="range" min="1" max="10" value="7">
-            <small id="energyLevelValue">7/10</small>
-          </label>
-          <label>
-            <span>Đánh giá ngày</span>
-            <input id="dayRatingInput" type="number" min="1" max="10" value="8">
-          </label>
-          <label class="full-span">
-            <span>Note ngắn</span>
-            <textarea id="dayNoteInput" rows="3" placeholder="Hôm nay muốn lưu lại điều gì đó dễ thương nè..."></textarea>
-          </label>
-        </div>
-        <button class="primary-btn" id="saveDayJournalBtn" type="button">💾 Lưu nhật ký ngày</button>
-      </article>
-    </section>
+.header-main {
+  max-width: 760px;
+}
 
-    <section class="dashboard-grid" id="dashboardGrid"></section>
+.top-overview {
+  display: grid;
+  grid-template-columns: 1.35fr 0.95fr;
+  gap: 20px;
+}
 
-    <section class="content-grid">
-      <article class="glass-card section-card schedule-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Lịch hôm nay</p>
-            <h3>🧸 Lịch Trình Của Bạn</h3>
-          </div>
-          <button class="ghost-btn" id="completePastTasksBtn" type="button">⏱️ Hoàn thành task đã qua giờ</button>
-        </div>
-        <div class="toolbar-grid">
-          <div class="filter-pills" id="taskFilterGroup"></div>
-          <label>
-            <span>Tăng tiền nhanh</span>
-            <button class="secondary-btn" id="openQuickAddBtn" type="button">➕ Popup cộng tiền</button>
-          </label>
-        </div>
-        <div id="scheduleSummary" class="soft-panel"></div>
-        <div id="scheduleList" class="task-list"></div>
-        <div class="schedule-footer-grid">
-          <label>
-            <span>Thu nhập hôm nay</span>
-            <input id="todayIncomeInput" type="number" min="0" placeholder="VD: 350000">
-          </label>
-          <label>
-            <span>Lọc theo chữ</span>
-            <input id="taskSearchInput" type="text" placeholder="Tìm task...">
-          </label>
-        </div>
-      </article>
+.dashboard-strip {
+  padding: 20px;
+}
 
-      <article class="glass-card section-card expense-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Expense tracker</p>
-            <h3>💸 Nhật Ký Mua Sắm</h3>
-          </div>
-        </div>
-        <div class="expense-form-grid">
-          <input id="expenseReasonInput" type="text" placeholder="Mua gì / trả gì...">
-          <input id="expenseAmountInput" type="number" min="0" placeholder="Số tiền">
-          <select id="expenseCategoryInput">
-            <option value="ăn uống">Ăn uống</option>
-            <option value="di chuyển">Di chuyển</option>
-            <option value="mua sắm">Mua sắm</option>
-            <option value="học tập">Học tập</option>
-            <option value="khác">Khác</option>
-          </select>
-          <button class="primary-btn" id="addExpenseBtn" type="button">🎀 Thêm chi tiêu</button>
-        </div>
-        <div class="toolbar-grid expense-toolbar">
-          <div class="filter-pills" id="expenseTimeFilterGroup"></div>
-          <div class="inline-filters">
-            <select id="expenseCategoryFilter">
-              <option value="all">Tất cả category</option>
-              <option value="ăn uống">Ăn uống</option>
-              <option value="di chuyển">Di chuyển</option>
-              <option value="mua sắm">Mua sắm</option>
-              <option value="học tập">Học tập</option>
-              <option value="khác">Khác</option>
-            </select>
-            <select id="expenseSortFilter">
-              <option value="latest">Mới nhất</option>
-              <option value="highest">Số tiền cao nhất</option>
-              <option value="lowest">Số tiền thấp nhất</option>
-            </select>
-            <input id="expenseSearchInput" type="text" placeholder="Tìm chi tiêu...">
-          </div>
-        </div>
-        <div id="expenseSummary" class="soft-panel"></div>
-        <div id="expenseList" class="list-block"></div>
-      </article>
+.main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+  gap: 20px;
+  align-items: start;
+}
 
-      <article class="glass-card section-card saving-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Piggy bank</p>
-            <h3>💖 Quỹ Heo Đất</h3>
-          </div>
-        </div>
-        <div id="incomeHistoryList" class="list-block compact-list"></div>
-        <div class="fund-grid" id="fundAllocationGrid"></div>
-      </article>
+.main-column,
+.side-column {
+  display: grid;
+  gap: 20px;
+}
 
-      <article class="glass-card section-card goals-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Goal stack</p>
-            <h3>🎯 Mục tiêu Premium</h3>
-          </div>
-        </div>
-        <div id="goalCards" class="goal-stack"></div>
-      </article>
+.section-card {
+  padding: 22px;
+}
 
-      <article class="glass-card section-card stats-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Daily stats</p>
-            <h3>📊 Thống kê ngày</h3>
-          </div>
-        </div>
-        <div id="dailyStatsGrid" class="metric-grid"></div>
-      </article>
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
 
-      <article class="glass-card section-card finance-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Finance analytics</p>
-            <h3>📈 Phân tích tài chính</h3>
-          </div>
-        </div>
-        <div id="financeAnalyticsGrid" class="metric-grid"></div>
-      </article>
+.section-head.compact {
+  margin-bottom: 14px;
+}
 
-      <article class="glass-card section-card insight-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">AI insight</p>
-            <h3>🧠 AI Insight / Gợi ý hôm nay</h3>
-          </div>
-        </div>
-        <div id="insightList" class="insight-list"></div>
-      </article>
+.hero-text h2,
+.site-header h1,
+.section-head h3 {
+  line-height: 1.2;
+}
 
-      <article class="glass-card section-card streak-card">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Achievement</p>
-            <h3>🏆 Streak + Thành tựu</h3>
-          </div>
-        </div>
-        <div id="achievementSummary" class="soft-panel"></div>
-        <div id="achievementList" class="badge-grid"></div>
-      </article>
-    </section>
+.hero-side {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
 
-    <section class="charts-grid">
-      <article class="glass-card chart-card">
-        <h3>📉 Thu nhập 7 ngày gần nhất</h3>
-        <canvas id="incomeChart"></canvas>
-      </article>
-      <article class="glass-card chart-card">
-        <h3>💸 Chi tiêu 7 ngày gần nhất</h3>
-        <canvas id="expenseChart"></canvas>
-      </article>
-      <article class="glass-card chart-card">
-        <h3>🐷 Tích lũy 30 ngày</h3>
-        <canvas id="balanceChart"></canvas>
-      </article>
-      <article class="glass-card chart-card">
-        <h3>🧃 Category chi tiêu</h3>
-        <canvas id="categoryChart"></canvas>
-      </article>
-      <article class="glass-card chart-card wide">
-        <h3>✅ Tỷ lệ hoàn thành task</h3>
-        <canvas id="taskCompletionChart"></canvas>
-      </article>
-    </section>
-  </main>
+.cat-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
 
-  <aside class="cat-widget glass-card hidden" id="catWidget">
-    <button class="close-widget" id="closeCatWidgetBtn" type="button">×</button>
-    <p class="eyebrow">Widget mèo nổi premium</p>
-    <h3 id="floatingCatTitle">🐱 Mèo trợ lý</h3>
-    <p id="floatingCatDesc">Sẵn sàng nhắc bạn kiếm tiền và giữ mood ổn định.</p>
-    <div class="floating-grid">
-      <div><span>Level</span><strong id="floatingCatLevel">1</strong></div>
-      <div><span>Rank</span><strong id="floatingCatRank">Mèo thường</strong></div>
-      <div><span>Còn lại</span><strong id="floatingRemainingTasks">0 task</strong></div>
-      <div><span>Dự báo thêm</span><strong id="floatingPotentialIncome">0đ</strong></div>
-    </div>
-  </aside>
+.mini-stat,
+.soft-chart-card,
+.soft-panel {
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
 
-  <div class="modal-overlay hidden" id="quickMoneyModal">
-    <div class="modal-card glass-card">
-      <h3>🎉 Popup cộng tiền nhanh</h3>
-      <p>Thêm nhanh thu nhập cho hôm nay để cập nhật dashboard và dự báo.</p>
-      <input id="quickMoneyInput" type="number" min="0" placeholder="VD: 50000">
-      <div class="modal-actions">
-        <button class="ghost-btn" id="closeQuickMoneyModalBtn" type="button">Hủy</button>
-        <button class="primary-btn" id="confirmQuickMoneyBtn" type="button">Lưu thu nhập</button>
-      </div>
-    </div>
-  </div>
+.toolbar-grid,
+.schedule-footer-grid,
+.expense-form-grid,
+.inline-filters,
+.journal-grid,
+.fund-grid,
+.metric-grid,
+.goal-stack,
+.badge-grid,
+.insight-list {
+  gap: 14px;
+}
 
-  <div class="toast-container" id="toastContainer"></div>
+.charts-grid.compact-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
 
-  <script type="module" src="assets/js/home.js"></script>
-</body>
-</html>
+.chart-card.wide {
+  grid-column: 1 / -1;
+}
+
+.chart-card {
+  padding: 16px;
+  border-radius: 20px;
+}
+
+.chart-card h4 {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.filter-pills,
+.inline-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 1100px) {
+  .top-overview,
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid.compact-charts {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card.wide {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    flex-direction: column;
+  }
+
+  .cat-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-card,
+  .site-header,
+  .dashboard-strip {
+    padding: 18px;
+  }
+}
