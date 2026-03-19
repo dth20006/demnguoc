@@ -309,28 +309,425 @@ input[type="checkbox"]:checked::after { content: '❤'; color: #fff; font-size: 
 .btn-modal { flex: 1; padding: 14px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; font-family: 'Lexend', sans-serif; }
 .btn-confirm { background: var(--neon-blue); color: #000; }
 .btn-cancel { background: rgba(255,255,255,0.08); color: #fff; }
-.cat-widget {
+.cat-fab {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(24, 24, 38, 0.86);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 22px;
-  padding: 16px;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38), 0 0 18px rgba(255, 133, 179, 0.12);
-  backdrop-filter: blur(18px);
+  right: 18px;
+  bottom: 18px;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.2), rgba(255,255,255,0.04) 35%),
+    rgba(24, 24, 38, 0.9);
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.35),
+    0 0 18px rgba(255, 133, 179, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   z-index: 1000;
-  min-width: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.cat-run { font-size: 22px; display: inline-block; }
-.widget-title { font-weight: 800; color: var(--neon-blue); margin-bottom: 8px; font-size: 15px; display: flex; align-items: center; gap: 6px; }
-.widget-stats { font-size: 14px; color: #fff; line-height: 1.6; }
-.widget-stats .highlight-money { color: var(--neon-green); font-weight: 800; }
-.widget-stats .highlight-energy { color: var(--neon-purple); font-weight: 800; }
-.ai-status-mini { margin-top: 10px; font-size: 12px; color: var(--neon-yellow); }
+
+.cat-fab:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.cat-fab:active {
+  transform: scale(0.96);
+}
+
+.cat-fab-face {
+  font-size: 34px;
+  line-height: 1;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.15));
+}
+
+.cat-level-badge {
+  position: absolute;
+  top: -4px;
+  right: -2px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+  color: #09111a;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0 0 12px rgba(137,220,235,0.3);
+}
+
+.cat-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid rgba(137,220,235,0.18);
+  pointer-events: none;
+}
+
+.cat-panel {
+  position: fixed;
+  right: 18px;
+  bottom: 104px;
+  width: min(320px, calc(100vw - 24px));
+  background: rgba(24, 24, 38, 0.92);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.35),
+    0 0 18px rgba(255, 133, 179, 0.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+  pointer-events: none;
+  transition: 0.25s ease;
+}
+
+.cat-panel.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.cat-panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.cat-panel-title {
+  font-weight: 800;
+  color: var(--neon-blue);
+  font-size: 15px;
+}
+
+.cat-panel-sub {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.cat-progress-mini {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.cat-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+  border-radius: inherit;
+  transition: width 0.35s ease;
+}
+
+.cat-stats-line {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #fff;
+}
+
+.cat-stats-line b {
+  color: var(--neon-green);
+}
+
+.ai-status-mini {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--neon-yellow);
+}
+
 @media (max-width: 480px) {
-  .cat-widget { right: 12px; left: 12px; bottom: 14px; min-width: unset; }
-  .summary-grid, .expense-toolbar { grid-template-columns: 1fr; }
+  .cat-fab {
+    right: 12px;
+    bottom: 12px;
+    width: 68px;
+    height: 68px;
+  }
+
+  .cat-panel {
+    right: 12px;
+    bottom: 92px;
+    width: calc(100vw - 24px);
+  }
+
+  .summary-grid,
+  .expense-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
+
+:root {
+  --bg: #1e1e2e;
+  --bg-soft: #23263a;
+  --card: rgba(255,255,255,0.08);
+  --card-border: rgba(255,255,255,0.10);
+  --text: #ffffff;
+  --muted: rgba(255,255,255,0.72);
+  --accent: #cba6f7;
+  --accent-2: #89dceb;
+  --glow: rgba(203,166,247,0.35);
+  --shadow: 0 12px 40px rgba(0,0,0,0.25);
+  --blur: 18px;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, var(--glow), transparent 30%),
+    radial-gradient(circle at top right, rgba(255,255,255,0.06), transparent 20%),
+    linear-gradient(180deg, var(--bg), var(--bg-soft));
+  color: var(--text);
+  transition: background 0.5s ease, color 0.3s ease;
+}
+
+.glass,
+.card,
+.stats-card,
+.task-item,
+.panel {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease;
+}
+
+.parallax-layer {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.task-item.done {
+  animation: taskDonePop 0.45s ease;
+}
+
+@keyframes taskDonePop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+#catMiniWidget {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  width: 62px;
+  height: 62px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06));
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.28), 0 0 30px var(--glow);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+#catMiniWidget.left {
+  left: 18px;
+  right: auto;
+}
+
+#catMiniWidget:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+#catMiniWidget .cat-face {
+  font-size: 28px;
+}
+
+#catMiniWidget .pulse-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  animation: pulseDot 1.5s infinite;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(1.9); opacity: 0; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+#catPanel {
+  position: fixed;
+  bottom: 92px;
+  right: 18px;
+  width: min(360px, calc(100vw - 24px));
+  max-height: 70vh;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: linear-gradient(180deg, rgba(34,36,55,0.88), rgba(24,25,39,0.92));
+  backdrop-filter: blur(22px);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+}
+
+#catPanel.left {
+  left: 18px;
+  right: auto;
+}
+
+#catPanel.open {
+  display: flex;
+  animation: catPanelIn 0.22s ease;
+}
+
+@keyframes catPanelIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cat-panel-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cat-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.cat-insight {
+  padding: 12px 16px;
+  color: var(--muted);
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+#catMessages {
+  padding: 14px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-bubble {
+  max-width: 85%;
+  padding: 10px 12px;
+  border-radius: 16px;
+  line-height: 1.45;
+  font-size: 14px;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: rgba(137,220,235,0.18);
+  border: 1px solid rgba(137,220,235,0.20);
+}
+
+.chat-bubble.cat {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.cat-quick {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.cat-chip {
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border-radius: 999px;
+  padding: 8px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cat-input-row {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+#catInput {
+  flex: 1;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  padding: 12px 14px;
+  outline: none;
+}
+
+.cat-send-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #111;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.task-item {
+  position: relative;
+}
+
+.task-item.swiping {
+  transition: none !important;
+}
+
+.task-item.swipe-complete::after,
+.task-item.swipe-delete::after {
+  content: attr(data-swipe-label);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.task-item.swipe-complete::after {
+  left: 14px;
+  color: #a6e3a1;
+}
+
+.task-item.swipe-delete::after {
+  right: 14px;
+  color: #f38ba8;
 }
 </style>
 </head>
@@ -446,14 +843,37 @@ input[type="checkbox"]:checked::after { content: '❤'; color: #fff; font-size: 
     </div>
   </div>
 
-  <div class="cat-widget" id="catWidget">
-    <div class="widget-title" id="catWidgetTitle"><span class="cat-run">🐱</span> ⏱ HÔM NAY</div>
-    <div class="widget-stats">
-      Đã làm: <b id="catWorked">0h</b><br>
-      được 💰 <span class="highlight-money" id="catEarned">0 đ</span><br>
-      <span class="highlight-energy">⚡ Nếu làm thêm <span id="catRemaining">0</span>h → thêm <span id="catExtra">0</span> đ</span><br>
-      <span class="highlight-energy">💎 Cả ngày: <span id="catTotal">0</span> đ</span>
-      <div class="ai-status-mini" id="catMoodMini">Mood: Đang phân tích...</div>
+  <div id="catMiniWidget" aria-label="Cat Widget">
+    <span class="cat-face">😼</span>
+    <span class="pulse-dot"></span>
+  </div>
+
+  <div id="catPanel">
+    <div class="cat-panel-header">
+      <div class="cat-panel-title">
+        <span style="font-size:22px;">😼</span>
+        <div>
+          <div>Cat & Insight</div>
+          <div id="catMoodLine" style="font-size:12px;color:rgba(255,255,255,0.65);font-weight:500;">Đang theo dõi nhịp của bạn</div>
+        </div>
+      </div>
+      <button onclick="toggleCatPanel(false)" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;width:auto;margin-top:0;padding:0 4px;">×</button>
+    </div>
+
+    <div class="cat-insight" id="catInsightText">Hôm nay mình sẽ giữ bạn đúng mood và đúng task.</div>
+
+    <div id="catMessages"></div>
+
+    <div class="cat-quick">
+      <button class="cat-chip" onclick="askCatQuick('Hôm nay mình nên làm gì trước?')">Nên làm gì trước?</button>
+      <button class="cat-chip" onclick="askCatQuick('Chi tiêu hôm nay có ổn không?')">Chi tiêu ổn không?</button>
+      <button class="cat-chip" onclick="askCatQuick('Tại sao mood mèo strict?')">Sao mood strict?</button>
+      <button class="cat-chip" onclick="askCatQuick('Mình còn thiếu gì hôm nay?')">Còn thiếu gì?</button>
+    </div>
+
+    <div class="cat-input-row">
+      <input id="catInput" type="text" placeholder="Nhắn với mèo..." />
+      <button class="cat-send-btn" onclick="sendCatMessage()">Gửi</button>
     </div>
   </div>
 
@@ -521,6 +941,51 @@ let currentMood = {
   desc: 'Mèo đang quan sát bạn rất chăm chú nè.'
 };
 
+let catLevelData = {
+  level: 1,
+  levelName: 'Mèo mới vào guồng',
+  emoji: '🐾',
+  progress: 0
+};
+
+// Ensure audio context is unlocked for mobile browsers
+let upgradeAudioCtx = null;
+
+function ensureAudioCtx() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return null;
+  if (!upgradeAudioCtx) {
+    upgradeAudioCtx = new AudioContextClass();
+  }
+  return upgradeAudioCtx;
+}
+
+function resumeAudioCtx(ctx) {
+  if (!ctx) return Promise.resolve(null);
+  if (ctx.state !== "suspended") return Promise.resolve(ctx);
+  return ctx.resume().then(() => ctx).catch(() => null);
+}
+
+// Add event listeners to unlock audio on interaction
+function initAudioUnlock() {
+  let audioUnlockBound = false;
+
+  if (audioUnlockBound) return;
+  audioUnlockBound = true;
+
+  const unlock = () => {
+    const ctx = ensureAudioCtx();
+    if (!ctx || ctx.state !== "suspended") return;
+    ctx.resume().catch(() => {});
+  };
+
+  window.addEventListener("pointerdown", unlock, { passive: true });
+  window.addEventListener("touchstart", unlock, { passive: true });
+  window.addEventListener("keydown", unlock);
+}
+
+initAudioUnlock();
+
 function formatMoney(value) { return `${Number(value || 0).toLocaleString()}đ`; }
 function safeJsonParse(text, fallback) { try { return JSON.parse(text); } catch (e) { return fallback; } }
 function parseFirestoreNumber(fieldObj) {
@@ -565,9 +1030,18 @@ function applyUIToIndex() {
   document.getElementById('quickIncomeButtonLabel').innerText = uiConfig.quickIncomeButtonText || '💰 Cộng tiền nhanh';
   document.getElementById('goalListTitleDisplay').innerText = uiConfig.goalListTitle || '📌 Mục tiêu đang theo đuổi';
   document.getElementById('predictorTitleDisplay').innerText = uiConfig.incomePredictorTitle || '🎯 Dự Báo Thu Nhập';
-  document.getElementById('catWidgetTitle').innerHTML = `<span class="cat-run">${uiConfig.catEmoji || '🐱'}</span> ${uiConfig.todayWidgetTitle || '⏱ HÔM NAY'}`;
   document.documentElement.style.setProperty('--neon-purple', appSettings.themeColor || '#cba6f7');
-  if (!appSettings.enableCatWidget) document.getElementById('catWidget').style.display = 'none';
+  updateCatLevelUI(catLevelData.workedHours || 0, catLevelData.earned || 0, catLevelData.totalPredicted || 0);
+
+  const catWidget = document.getElementById('catMiniWidget');
+  const catPanel = document.getElementById('catPanel');
+  const isCatEnabled = appSettings.enableCatWidget !== false;
+
+  if (catWidget) catWidget.style.display = isCatEnabled ? 'flex' : 'none';
+  if (catPanel) {
+    catPanel.style.display = isCatEnabled ? '' : 'none';
+    if (!isCatEnabled) catPanel.classList.remove('open');
+  }
 }
 
 function applyRemoteCatMood(text) {
@@ -634,13 +1108,15 @@ function renderSchedule() {
     if (day[0] === todayStr) {
       foundToday = true;
       const card = document.createElement('div');
-      card.className = 'day';
-      let html = `<b>📅 Hôm nay: ${day[0]}/${currentYear}</b>`;
+      card.className = 'day glass parallax-layer';
+      let html = `<b>📅 Hôm nay: ${escapeHtml(day[0])}/${currentYear}</b>`;
       for (let i = 1; i < day.length; i++) {
+        const taskId = `task_${todayDocId}_${index}_${i}`;
+        const taskAmount = estimateTaskAmount(day[i]);
         html += `
-          <div class="task-item">
-            <input type="checkbox" data-index="${index}-${i}" onchange="toggleTaskStyle(this);update();notifyTask(this)">
-            <span>${day[i]}</span>
+          <div class="task-item glass parallax-layer" data-task-id="${taskId}" data-amount="${taskAmount}">
+            <input type="checkbox" data-index="${index}-${i}" data-complete-task onchange="toggleTaskStyle(this);update();notifyTask(this)">
+            <span class="task-title">${escapeHtml(day[i])}</span>
           </div>
         `;
       }
@@ -686,6 +1162,12 @@ function isPaidTask(taskStr) {
   return keywords.some(k => text.includes(k));
 }
 
+function estimateTaskAmount(taskStr) {
+  if (!isPaidTask(taskStr)) return 0;
+  const duration = parseTaskDuration(taskStr);
+  return Math.max(0, Math.round(duration * Number(appSettings.wageRate || 0)));
+}
+
 function updateCatPredictor() {
   let workedHours = 0;
   let paidWorkedHours = 0;
@@ -717,11 +1199,17 @@ function updateCatPredictor() {
     extraPredicted = Math.round(actualRatePerHour * paidRemainingHours);
   }
   const totalPredicted = actualEarned + extraPredicted;
-  document.getElementById('catWorked').innerText = workedHours + 'h';
-  document.getElementById('catEarned').innerText = actualEarned.toLocaleString() + ' đ';
-  document.getElementById('catRemaining').innerText = paidRemainingHours;
-  document.getElementById('catExtra').innerText = extraPredicted.toLocaleString();
-  document.getElementById('catTotal').innerText = totalPredicted.toLocaleString();
+  const catWorked = document.getElementById('catWorked');
+  const catEarned = document.getElementById('catEarned');
+  const catRemaining = document.getElementById('catRemaining');
+  const catExtra = document.getElementById('catExtra');
+  const catTotal = document.getElementById('catTotal');
+  if (catWorked) catWorked.innerText = workedHours + 'h';
+  if (catEarned) catEarned.innerText = actualEarned.toLocaleString() + ' đ';
+  if (catRemaining) catRemaining.innerText = paidRemainingHours;
+  if (catExtra) catExtra.innerText = extraPredicted.toLocaleString();
+  if (catTotal) catTotal.innerText = totalPredicted.toLocaleString();
+  updateCatLevelUI(workedHours, actualEarned, totalPredicted);
 }
 
 function cleanOldExpenses(expensesArray) {
@@ -812,7 +1300,7 @@ function renderExpenses() {
   const allExpenses = JSON.parse(localStorage.getItem('expenses') || '[]');
   if (allExpenses.length === 0) {
     logEl.innerHTML = `<div class="empty-state">Chưa có chi tiêu.</div>`;
-    return;
+    return; 
   }
   if (visibleExpenses.length === 0) {
     logEl.innerHTML = `<div class="empty-state">Không có chi tiêu trong category này.</div>`;
@@ -952,6 +1440,9 @@ function confirmQuickAdd() {
     const newVal = (Number(inputMain.value) || 0) + Number(addVal);
     inputMain.value = newVal;
     update();
+    if (typeof window.playUiFeedbackSound === 'function') {
+      window.playUiFeedbackSound('money');
+    }
     sendTelegram(buildTelegramBlock('💳 CASH INFLOW', 'SUCCESS', [
       ['💰 Số tiền mới', `+${Number(addVal).toLocaleString()}đ`],
       ['📊 Tổng ngày', `${newVal.toLocaleString()}đ`],
@@ -976,6 +1467,9 @@ function addQuickIncome() {
   inputMain.value = newVal;
   quickInput.value = '';
   update();
+  if (typeof window.playUiFeedbackSound === 'function') {
+    window.playUiFeedbackSound('money');
+  }
   launchConfetti(true);
   sendTelegram(buildTelegramBlock('💰 QUICK INCOME', 'SUCCESS', [
     ['💰 Cộng nhanh', `+${addVal.toLocaleString()}đ`],
@@ -1238,7 +1732,72 @@ function updateCatMood() {
   currentMood = mood;
   document.getElementById('moodPill').innerText = mood.label;
   document.getElementById('moodDescription').innerText = mood.desc;
-  document.getElementById('catMoodMini').innerText = `Mood: ${mood.label}`;
+  const catMoodMini = document.getElementById('catMoodMini');
+  if (catMoodMini) catMoodMini.innerText = `Mood: ${mood.label}`;
+}
+
+function toggleCatPanel(force) {
+  const panel = document.getElementById('catPanel');
+  if (!panel) return;
+  const shouldOpen = typeof force === 'boolean' ? force : !panel.classList.contains('open');
+  panel.classList.toggle('open', shouldOpen);
+}
+
+function updateCatLevelUI(workedHours = 0, earned = 0, totalPredicted = 0) {
+  const totalTasks = getTotalTaskCount();
+  const doneTasks = getCompletedTaskCount();
+
+  const completionScore = totalTasks > 0 ? (doneTasks / totalTasks) * 60 : 0;
+  const hourScore = Math.min(workedHours * 8, 40);
+  const incomeScore = Math.min(earned / 10000, 35);
+  const projectedScore = Math.min(totalPredicted / 15000, 20);
+
+  const score = Math.round(completionScore + hourScore + incomeScore + projectedScore);
+
+  let level = 1;
+  if (score >= 30) level = 2;
+  if (score >= 55) level = 3;
+  if (score >= 80) level = 4;
+  if (score >= 110) level = 5;
+
+  const levelMap = {
+    1: { name: 'Mèo mới vào guồng', emoji: '🐾', base: 0, next: 30 },
+    2: { name: 'Mèo chăm chỉ', emoji: '🐱', base: 30, next: 55 },
+    3: { name: 'Mèo tăng tốc', emoji: '😼', base: 55, next: 80 },
+    4: { name: 'Mèo chiến thần', emoji: '🔥', base: 80, next: 110 },
+    5: { name: 'Mèo boss huyền thoại', emoji: '👑', base: 110, next: 140 }
+  };
+
+  const meta = levelMap[level];
+  const progress = level === 5
+    ? 100
+    : Math.max(0, Math.min(100, ((score - meta.base) / (meta.next - meta.base)) * 100));
+  const catTitle = uiConfig.todayWidgetTitle && uiConfig.todayWidgetTitle !== '⏱ HÔM NAY'
+    ? uiConfig.todayWidgetTitle
+    : 'Hệ Mèo Chiến';
+
+  catLevelData = {
+    level,
+    levelName: meta.name,
+    emoji: meta.emoji,
+    progress,
+    workedHours,
+    earned,
+    totalPredicted
+  };
+
+  const catFabFace = document.getElementById('catFabFace');
+  const catLevelBadge = document.getElementById('catLevelBadge');
+  const catLevelBadgePanel = document.getElementById('catLevelBadgePanel');
+  const catLevelName = document.getElementById('catLevelName');
+  const catLevelProgress = document.getElementById('catLevelProgress');
+  const catWidgetTitle = document.getElementById('catWidgetTitle');
+  if (catFabFace) catFabFace.innerText = meta.emoji;
+  if (catLevelBadge) catLevelBadge.innerText = `Lv.${level}`;
+  if (catLevelBadgePanel) catLevelBadgePanel.innerText = `Lv.${level}`;
+  if (catLevelName) catLevelName.innerText = `Level ${level} • ${meta.name}`;
+  if (catLevelProgress) catLevelProgress.style.width = `${progress}%`;
+  if (catWidgetTitle) catWidgetTitle.innerText = `${meta.emoji} ${catTitle}`;
 }
 
 function initParallaxGlass() {
@@ -1268,6 +1827,741 @@ async function bootstrap() {
   setInterval(updateCatMood, 30000);
 }
 bootstrap();
+</script>
+<script>
+(function () {
+  if (window.__uiUpgradePackLoaded) return;
+  window.__uiUpgradePackLoaded = true;
+
+  const UI_CONFIG_KEY = "ai_scheduler_ui_config_v1";
+
+  const defaultUiUpgradeConfig = {
+    themeByMood: true,
+    autoDarkMode: true,
+    soundEnabled: true,
+    soundType: "sparkle",
+    volume: 0.7,
+    confettiStyle: "money",
+    gestureEnabled: true,
+    widgetAlwaysOn: true,
+    widgetPosition: "bottom-right",
+    dayStart: "06:00",
+    eveningStart: "18:00",
+    nightStart: "23:00",
+    moods: {
+      happy: { accent: "#89dceb", glow: "#f5c2e7" },
+      strict: { accent: "#f38ba8", glow: "#cba6f7" },
+      sleepy: { accent: "#74c7ec", glow: "#89b4fa" },
+      idle: { accent: "#cba6f7", glow: "#f5c2e7" }
+    },
+    catLines: {
+      greeting: "Meo~ mình ở đây để giữ bạn đúng nhịp nhé.",
+      strict: "Bạn còn việc quan trọng chưa xong, tập trung nào.",
+      happy: "Hôm nay bạn làm khá ổn đó, tiến tiếp đi!"
+    }
+  };
+
+  let uiUpgradeConfig = getUiUpgradeConfig();
+  let upgradeAudioCtx = null;
+  let audioUnlockBound = false;
+
+  function cloneUiUpgradeConfig() {
+    return JSON.parse(JSON.stringify(defaultUiUpgradeConfig));
+  }
+
+  function mergeUiUpgradeConfig(rawConfig = {}) {
+    const base = cloneUiUpgradeConfig();
+    return {
+      ...base,
+      ...rawConfig,
+      moods: {
+        happy: { ...base.moods.happy, ...(rawConfig.moods?.happy || {}) },
+        strict: { ...base.moods.strict, ...(rawConfig.moods?.strict || {}) },
+        sleepy: { ...base.moods.sleepy, ...(rawConfig.moods?.sleepy || {}) },
+        idle: { ...base.moods.idle, ...(rawConfig.moods?.idle || {}) }
+      },
+      catLines: {
+        ...base.catLines,
+        ...(rawConfig.catLines || {})
+      }
+    };
+  }
+
+  function getUiUpgradeConfig() {
+    const raw = localStorage.getItem(UI_CONFIG_KEY);
+    if (!raw) return cloneUiUpgradeConfig();
+    try {
+      return mergeUiUpgradeConfig(JSON.parse(raw));
+    } catch {
+      return cloneUiUpgradeConfig();
+    }
+  }
+
+  function refreshUiUpgradeConfig() {
+    uiUpgradeConfig = getUiUpgradeConfig();
+    return uiUpgradeConfig;
+  }
+
+  function getTodayTasksSnapshot() {
+    return Array.from(document.querySelectorAll("#grid .task-item")).map((taskEl, index) => {
+      const checkbox = taskEl.querySelector('input[type="checkbox"]');
+      const titleEl = taskEl.querySelector('.task-title') || taskEl.querySelector('span');
+      const title = titleEl?.textContent?.trim() || "";
+      return {
+        id: taskEl.dataset.taskId || `task_${todayDocId}_${index}`,
+        title,
+        amount: Number(taskEl.dataset.amount || 0),
+        completed: !!checkbox?.checked
+      };
+    });
+  }
+
+  function getTodayIncomeValue() {
+    const todayIdx = schedule.findIndex(day => day[0] === todayStr);
+    const money = typeof getMoney === "function" ? getMoney() : [];
+    return todayIdx === -1 ? 0 : Number(money[todayIdx]) || 0;
+  }
+
+  function getTodayExpenseValue() {
+    const expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
+    return expenses
+      .filter(ex => ex.date === todayFullStr)
+      .reduce((sum, ex) => sum + Number(ex.amount || 0), 0);
+  }
+
+  function getTodayStats() {
+    const tasks = getTodayTasksSnapshot();
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(t => t.completed).length;
+    const paidTasks = tasks.filter(t => t.completed && Number(t.amount || 0) > 0).length;
+    const completionRate = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+    return {
+      tasks,
+      totalTasks,
+      completedTasks,
+      paidTasks,
+      completionRate,
+      todayIncome: getTodayIncomeValue(),
+      todayExpense: getTodayExpenseValue()
+    };
+  }
+
+  function getCurrentMoodKey() {
+    if (window.currentMood && typeof window.currentMood === "object" && window.currentMood.key) {
+      return window.currentMood.key;
+    }
+
+    const stats = getTodayStats();
+    const hour = new Date().getHours();
+    if (hour >= 23 || hour < 5) return "sleepy";
+    if (stats.completionRate >= 70) return "happy";
+    if (stats.totalTasks > 0 && stats.completionRate < 35) return "strict";
+    return "idle";
+  }
+
+  function parseTimeToMinutes(timeStr) {
+    const [h, m] = String(timeStr || "00:00").split(":").map(Number);
+    return (h || 0) * 60 + (m || 0);
+  }
+
+  function getTimeMode() {
+    const now = new Date();
+    const current = now.getHours() * 60 + now.getMinutes();
+    const day = parseTimeToMinutes(uiUpgradeConfig.dayStart);
+    const evening = parseTimeToMinutes(uiUpgradeConfig.eveningStart);
+    const night = parseTimeToMinutes(uiUpgradeConfig.nightStart);
+
+    if (current >= day && current < evening) return "day";
+    if (current >= evening && current < night) return "evening";
+    return "night";
+  }
+
+  function hexToRgba(hex, alpha) {
+    const normalized = String(hex || "#ffffff").replace("#", "");
+    const safeHex = normalized.length === 3
+      ? normalized.split("").map(ch => ch + ch).join("")
+      : normalized;
+    const bigint = parseInt(safeHex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  function updateCatWidgetVisibility() {
+    const widget = document.getElementById("catMiniWidget");
+    const panel = document.getElementById("catPanel");
+    if (!widget || !panel) return;
+
+    const shouldShow = appSettings.enableCatWidget !== false && uiUpgradeConfig.widgetAlwaysOn !== false;
+    widget.style.display = shouldShow ? "flex" : "none";
+    panel.style.display = shouldShow ? "" : "none";
+
+    widget.classList.toggle("left", uiUpgradeConfig.widgetPosition === "bottom-left");
+    panel.classList.toggle("left", uiUpgradeConfig.widgetPosition === "bottom-left");
+
+    if (!shouldShow) {
+      panel.classList.remove("open");
+    }
+  }
+
+  function updateCatMoodUi(mood, timeMode) {
+    const face = document.querySelector("#catMiniWidget .cat-face");
+    const moodLine = document.getElementById("catMoodLine");
+    if (!face || !moodLine) return;
+
+    const moodMap = {
+      happy: "😺",
+      strict: "😼",
+      sleepy: "😴",
+      idle: "🐱"
+    };
+
+    const moodText = {
+      happy: "Mood tốt, tiến độ đẹp",
+      strict: "Đang siết nhịp tập trung",
+      sleepy: "Đêm rồi, làm khéo thôi",
+      idle: "Giữ nhịp ổn định"
+    };
+
+    face.textContent = moodMap[mood] || "🐱";
+    moodLine.textContent = `${moodText[mood] || "Theo dõi tiến độ"} · ${timeMode}`;
+  }
+
+  function applyThemeFromMood() {
+    refreshUiUpgradeConfig();
+
+    const mood = getCurrentMoodKey();
+    const timeMode = uiUpgradeConfig.autoDarkMode ? getTimeMode() : "evening";
+    const moodColors = uiUpgradeConfig.moods[mood] || uiUpgradeConfig.moods.idle;
+
+    let bg = "#1e1e2e";
+    let bgSoft = "#23263a";
+    let card = "rgba(255,255,255,0.08)";
+    let blur = "18px";
+
+    if (timeMode === "day") {
+      bg = "#24273a";
+      bgSoft = "#2a2d45";
+      card = "rgba(255,255,255,0.10)";
+      blur = "16px";
+    } else if (timeMode === "night") {
+      bg = "#141522";
+      bgSoft = "#191b2b";
+      card = "rgba(255,255,255,0.07)";
+      blur = "20px";
+    }
+
+    document.documentElement.style.setProperty("--bg", bg);
+    document.documentElement.style.setProperty("--bg-soft", bgSoft);
+    document.documentElement.style.setProperty("--card", card);
+    document.documentElement.style.setProperty("--accent", moodColors.accent);
+    document.documentElement.style.setProperty("--accent-2", moodColors.glow);
+    document.documentElement.style.setProperty("--glow", hexToRgba(moodColors.glow, timeMode === "night" ? 0.23 : 0.33));
+    document.documentElement.style.setProperty("--blur", blur);
+
+    updateCatMoodUi(mood, timeMode);
+  }
+
+  function ensureAudioCtx() {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    if (!upgradeAudioCtx) {
+      upgradeAudioCtx = new AudioContextClass();
+    }
+    return upgradeAudioCtx;
+  }
+
+  function resumeAudioCtx(ctx) {
+    if (!ctx) return Promise.resolve(null);
+    if (ctx.state !== "suspended") return Promise.resolve(ctx);
+    return ctx.resume().then(() => ctx).catch(() => null);
+  }
+
+  function initAudioUnlock() {
+    if (audioUnlockBound) return;
+    audioUnlockBound = true;
+
+    const unlock = () => {
+      const ctx = ensureAudioCtx();
+      if (!ctx || ctx.state !== "suspended") return;
+      ctx.resume().catch(() => {});
+    };
+
+    window.addEventListener("pointerdown", unlock, { passive: true });
+    window.addEventListener("touchstart", unlock, { passive: true });
+    window.addEventListener("keydown", unlock);
+  }
+
+  function playTaskCompleteSound(type = uiUpgradeConfig.soundType) {
+    refreshUiUpgradeConfig();
+    if (!uiUpgradeConfig.soundEnabled) return;
+
+    const ctx = ensureAudioCtx();
+    if (!ctx) return;
+
+    const startPlayback = () => {
+      const now = ctx.currentTime;
+      const volume = Math.max(0, Math.min(1, Number(uiUpgradeConfig.volume || 0.7)));
+
+      const makeTone = (freq, duration, gainValue, wave = "sine", start = 0) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = wave;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, now + start);
+        gain.gain.exponentialRampToValueAtTime(gainValue * volume, now + start + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + start + duration);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now + start);
+        osc.stop(now + start + duration + 0.02);
+      };
+
+      if (type === "pop") {
+        makeTone(280, 0.08, 0.14, "triangle", 0);
+        makeTone(220, 0.09, 0.08, "sine", 0.02);
+      } else if (type === "ding") {
+        makeTone(660, 0.25, 0.12, "sine", 0);
+        makeTone(990, 0.18, 0.08, "triangle", 0.04);
+      } else {
+        makeTone(520, 0.12, 0.09, "triangle", 0);
+        makeTone(760, 0.16, 0.07, "sine", 0.05);
+        makeTone(1040, 0.12, 0.05, "sine", 0.11);
+      }
+    };
+
+    resumeAudioCtx(ctx).then(activeCtx => {
+      if (!activeCtx) return;
+      startPlayback();
+    });
+  }
+
+  function playUiFeedbackSound(kind = "task") {
+    const soundType = kind === "money" ? "ding" : uiUpgradeConfig.soundType;
+    playTaskCompleteSound(soundType);
+  }
+
+  function burstConfetti(style = "sparkle") {
+    const count = style === "burst" ? 30 : 18;
+
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement("div");
+      el.style.position = "fixed";
+      el.style.left = `${window.innerWidth / 2}px`;
+      el.style.top = `${window.innerHeight / 2}px`;
+      el.style.width = style === "money" ? "14px" : "9px";
+      el.style.height = style === "money" ? "8px" : "9px";
+      el.style.borderRadius = style === "sparkle" ? "999px" : "3px";
+      el.style.background = i % 2 ? "var(--accent)" : "var(--accent-2)";
+      el.style.zIndex = "10000";
+      el.style.pointerEvents = "none";
+      el.style.boxShadow = "0 0 12px rgba(255,255,255,0.25)";
+      document.body.appendChild(el);
+
+      const angle = Math.random() * Math.PI * 2;
+      const distance = style === "burst" ? 180 + Math.random() * 160 : 80 + Math.random() * 100;
+      const x = Math.cos(angle) * distance;
+      const y = Math.sin(angle) * distance;
+
+      el.animate(
+        [
+          { transform: "translate(0,0) scale(1)", opacity: 1 },
+          { transform: `translate(${x}px, ${y}px) rotate(${Math.random() * 520}deg) scale(0.6)`, opacity: 0 }
+        ],
+        {
+          duration: 700 + Math.random() * 450,
+          easing: "cubic-bezier(.2,.8,.2,1)"
+        }
+      );
+
+      setTimeout(() => el.remove(), 1300);
+    }
+  }
+
+  function triggerTaskAnimation(taskEl, task = {}) {
+    if (taskEl) {
+      taskEl.classList.add("done");
+      setTimeout(() => taskEl.classList.remove("done"), 500);
+    }
+
+    const stats = getTodayStats();
+    if (Number(task.amount || 0) > 0) {
+      burstConfetti("money");
+    } else if (stats.totalTasks > 0 && stats.completedTasks === stats.totalTasks) {
+      burstConfetti("burst");
+    } else {
+      burstConfetti(uiUpgradeConfig.confettiStyle || "sparkle");
+    }
+  }
+
+  function updateCatInsight() {
+    const panelInsight = document.getElementById("catInsightText");
+    if (!panelInsight) return;
+
+    const stats = getTodayStats();
+    const mood = getCurrentMoodKey();
+    let text = `Hoàn thành ${stats.completedTasks}/${stats.totalTasks} task · Thu ${formatMoney(stats.todayIncome)} · Chi ${formatMoney(stats.todayExpense)}`;
+
+    if (mood === "strict") {
+      text += " · Mèo đang nhắc bạn ưu tiên việc quan trọng.";
+    } else if (mood === "happy") {
+      text += " · Nhịp hôm nay khá đẹp đó.";
+    } else if (mood === "sleepy") {
+      text += " · Giữ nhịp nhẹ và chốt việc còn dang dở.";
+    }
+
+    panelInsight.textContent = text;
+  }
+
+  function addCatMessage(role, text) {
+    const list = document.getElementById("catMessages");
+    if (!list) return;
+
+    const div = document.createElement("div");
+    div.className = `chat-bubble ${role}`;
+    div.textContent = text;
+    list.appendChild(div);
+    list.scrollTop = list.scrollHeight;
+  }
+
+  function getCatReply(message) {
+    const msg = String(message || "").toLowerCase();
+    const stats = getTodayStats();
+    const mood = getCurrentMoodKey();
+
+    if (msg.includes("làm gì trước") || msg.includes("nên làm gì")) {
+      if (stats.totalTasks === 0) return "Hôm nay chưa có task nào. Hãy tạo 1–3 việc quan trọng nhất trước đã.";
+      if (stats.completionRate < 35) return "Bạn nên làm task quan trọng nhất hoặc task có tiền trước. Đừng mở quá nhiều việc cùng lúc.";
+      if (stats.completionRate < 70) return "Bạn đang vào nhịp rồi. Tiếp tục xử lý các task ngắn để tăng đà hoàn thành.";
+      return "Bạn đã làm khá ổn. Giờ ưu tiên chốt nốt việc còn dang dở và tránh mở thêm việc mới.";
+    }
+
+    if (msg.includes("chi tiêu") || msg.includes("ổn không") || msg.includes("tiêu")) {
+      if (stats.todayExpense === 0) return "Hôm nay gần như chưa có chi tiêu, khá ổn. Giữ nhịp này nếu muốn tối ưu tiết kiệm.";
+      if (stats.todayIncome === 0 && stats.todayExpense > 0) return "Hôm nay đang có chi nhưng chưa có thu. Tối nay nên siết các khoản không cần thiết.";
+      if (stats.todayExpense > stats.todayIncome) return "Chi tiêu hôm nay đang vượt thu nhập hiện tại. Nên hạn chế mua thêm và ưu tiên task tạo tiền.";
+      return "Chi tiêu hôm nay vẫn trong mức an toàn so với thu nhập hiện tại.";
+    }
+
+    if (msg.includes("strict") || msg.includes("gắt") || msg.includes("sao mood")) {
+      if (mood === "strict") return uiUpgradeConfig.catLines.strict || "Bạn còn việc quan trọng chưa xong, tập trung nào.";
+      if (mood === "happy") return "Mèo chưa strict vì tiến độ của bạn hôm nay khá ổn.";
+      if (mood === "sleepy") return "Không phải strict đâu, chỉ là đang giờ đêm nên mèo dịu nhưng cảnh giác.";
+      return "Mèo đang ở chế độ ổn định, chưa cần siết mạnh.";
+    }
+
+    if (msg.includes("còn thiếu") || msg.includes("thiếu gì")) {
+      if (stats.totalTasks === 0) return "Bạn đang thiếu danh sách task rõ ràng cho hôm nay.";
+      if (stats.completedTasks < stats.totalTasks) return `Bạn còn ${stats.totalTasks - stats.completedTasks} task chưa xong. Hãy chốt cái quan trọng nhất trước.`;
+      return "Phần task hôm nay đã ổn. Giờ chỉ cần kiểm tra lại chi tiêu và chuẩn bị cho ngày mai.";
+    }
+
+    if (msg.includes("thu nhập") || msg.includes("kiếm được")) {
+      if (stats.todayIncome === 0) return "Hôm nay chưa có thu nhập ghi nhận. Nên ưu tiên các task có tiền hoặc việc dễ chốt.";
+      if (stats.todayIncome > stats.todayExpense) return `Hôm nay thu ${formatMoney(stats.todayIncome)} và đang vượt chi, khá ổn đó.`;
+      return `Hôm nay có thu ${formatMoney(stats.todayIncome)}, nhưng cần giữ thêm nhịp vì chi đang bám khá sát.`;
+    }
+
+    if (mood === "happy") return uiUpgradeConfig.catLines.happy || "Hôm nay bạn làm khá ổn đó, tiến tiếp đi!";
+    if (mood === "strict") return "Meo. Bớt phân tán nhé. Chốt việc quan trọng trước rồi hãy thư giãn.";
+    if (mood === "sleepy") return "Đêm rồi, làm ít nhưng trúng. Chốt nhanh một việc nữa là đẹp.";
+    return "Mình đang theo dõi tiến độ, chi tiêu và mood của bạn để nhắc đúng lúc.";
+  }
+
+  function askCatQuick(text) {
+    const input = document.getElementById("catInput");
+    if (!input) return;
+    input.value = text;
+    sendCatMessage();
+  }
+
+  function sendCatMessage() {
+    const input = document.getElementById("catInput");
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+
+    addCatMessage("user", text);
+    input.value = "";
+
+    const reply = getCatReply(text);
+    setTimeout(() => {
+      addCatMessage("cat", reply);
+      updateCatInsight();
+    }, 220);
+  }
+
+  function toggleCatPanel(force) {
+    const panel = document.getElementById("catPanel");
+    if (!panel) return;
+    const shouldOpen = typeof force === "boolean" ? force : !panel.classList.contains("open");
+    panel.classList.toggle("open", shouldOpen);
+  }
+
+  function initCatWidget() {
+    const widget = document.getElementById("catMiniWidget");
+    const input = document.getElementById("catInput");
+    const messages = document.getElementById("catMessages");
+    if (!widget || !input || !messages) return;
+
+    updateCatWidgetVisibility();
+    if (widget.dataset.boundWidget !== "1") {
+      widget.dataset.boundWidget = "1";
+      widget.addEventListener("click", () => toggleCatPanel());
+    }
+
+    if (input.dataset.boundEnter !== "1") {
+      input.dataset.boundEnter = "1";
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendCatMessage();
+      });
+    }
+
+    if (!messages.children.length) {
+      addCatMessage("cat", uiUpgradeConfig.catLines.greeting || "Meo~ mình ở đây.");
+    }
+
+    updateCatInsight();
+    updateCatMoodUi(getCurrentMoodKey(), uiUpgradeConfig.autoDarkMode ? getTimeMode() : "evening");
+  }
+
+  function ensureTaskItemCompatibility() {
+    document.querySelectorAll("#grid .task-item").forEach((taskEl, index) => {
+      taskEl.classList.add("glass", "parallax-layer");
+
+      const checkbox = taskEl.querySelector('input[type="checkbox"]');
+      if (checkbox && !checkbox.hasAttribute("data-complete-task")) {
+        checkbox.setAttribute("data-complete-task", "");
+      }
+
+      const titleEl = taskEl.querySelector('.task-title') || taskEl.querySelector('span');
+      if (titleEl && !titleEl.classList.contains("task-title")) {
+        titleEl.classList.add("task-title");
+      }
+
+      if (!taskEl.dataset.taskId) {
+        taskEl.dataset.taskId = `task_${todayDocId}_${index}`;
+      }
+
+      if (!taskEl.dataset.amount) {
+        taskEl.dataset.amount = String(estimateTaskAmount(titleEl?.textContent || ""));
+      }
+    });
+  }
+
+  function handleTaskCompleteFromElement(taskEl) {
+    if (!taskEl) return;
+    const checkbox = taskEl.querySelector('input[type="checkbox"]');
+    if (!checkbox || checkbox.checked) return;
+
+    checkbox.checked = true;
+    if (typeof window.toggleTaskStyle === "function") {
+      window.toggleTaskStyle(checkbox);
+    }
+    if (typeof window.update === "function") {
+      window.update();
+    }
+    if (typeof window.notifyTask === "function") {
+      window.notifyTask(checkbox);
+    }
+  }
+
+  function handleTaskHideFromElement(taskEl) {
+    if (!taskEl) return;
+    taskEl.animate(
+      [
+        { opacity: 1, transform: "translateX(0)" },
+        { opacity: 0, transform: "translateX(-40px)" }
+      ],
+      { duration: 220, easing: "ease" }
+    );
+    setTimeout(() => {
+      taskEl.style.display = "none";
+    }, 220);
+  }
+
+  function bindCompleteButtons() {
+    document.querySelectorAll("[data-complete-task]").forEach((btn) => {
+      if (btn.matches('input[type="checkbox"]')) return;
+      if (btn.dataset.boundComplete === "1") return;
+      btn.dataset.boundComplete = "1";
+      btn.addEventListener("click", () => {
+        handleTaskCompleteFromElement(btn.closest(".task-item"));
+      });
+    });
+  }
+
+  function initSwipeGestures() {
+    refreshUiUpgradeConfig();
+    if (!uiUpgradeConfig.gestureEnabled) return;
+
+    document.querySelectorAll("#grid .task-item").forEach((item) => {
+      if (item.dataset.swipeBound === "1") return;
+      item.dataset.swipeBound = "1";
+
+      let startX = 0;
+      let currentX = 0;
+      let swiping = false;
+
+      item.style.position = "relative";
+      item.style.overflow = "hidden";
+
+      const onStart = (x) => {
+        startX = x;
+        currentX = x;
+        swiping = true;
+        item.classList.add("swiping");
+      };
+
+      const onMove = (x) => {
+        if (!swiping) return;
+        currentX = x;
+        const dx = currentX - startX;
+        item.style.transform = `translateX(${dx}px)`;
+
+        if (dx > 40) {
+          item.classList.add("swipe-complete");
+          item.classList.remove("swipe-delete");
+          item.dataset.swipeLabel = "✓ Complete";
+        } else if (dx < -40) {
+          item.classList.add("swipe-delete");
+          item.classList.remove("swipe-complete");
+          item.dataset.swipeLabel = "✕ Hide";
+        } else {
+          item.classList.remove("swipe-complete", "swipe-delete");
+          item.dataset.swipeLabel = "";
+        }
+      };
+
+      const onEnd = () => {
+        if (!swiping) return;
+        swiping = false;
+        item.classList.remove("swiping");
+
+        const dx = currentX - startX;
+        if (dx > 90) {
+          handleTaskCompleteFromElement(item);
+        } else if (dx < -90) {
+          handleTaskHideFromElement(item);
+        }
+
+        item.style.transform = "";
+        item.classList.remove("swipe-complete", "swipe-delete");
+        item.dataset.swipeLabel = "";
+      };
+
+      item.addEventListener("touchstart", (e) => onStart(e.touches[0].clientX), { passive: true });
+      item.addEventListener("touchmove", (e) => onMove(e.touches[0].clientX), { passive: true });
+      item.addEventListener("touchend", onEnd, { passive: true });
+    });
+  }
+
+  const originalApplyUIToIndex = window.applyUIToIndex;
+  window.applyUIToIndex = function (...args) {
+    const result = typeof originalApplyUIToIndex === "function" ? originalApplyUIToIndex.apply(this, args) : undefined;
+    refreshUiUpgradeConfig();
+    updateCatWidgetVisibility();
+    initCatWidget();
+    ensureTaskItemCompatibility();
+    bindCompleteButtons();
+    initSwipeGestures();
+    if (uiUpgradeConfig.themeByMood) {
+      applyThemeFromMood();
+    }
+    return result;
+  };
+
+  const originalRenderSchedule = window.renderSchedule;
+  window.renderSchedule = function (...args) {
+    const result = typeof originalRenderSchedule === "function" ? originalRenderSchedule.apply(this, args) : undefined;
+    ensureTaskItemCompatibility();
+    bindCompleteButtons();
+    initSwipeGestures();
+    updateCatInsight();
+    if (uiUpgradeConfig.themeByMood) {
+      applyThemeFromMood();
+    }
+    return result;
+  };
+
+  const originalUpdate = window.update;
+  window.update = function (...args) {
+    const result = typeof originalUpdate === "function" ? originalUpdate.apply(this, args) : undefined;
+    refreshUiUpgradeConfig();
+    updateCatInsight();
+    if (uiUpgradeConfig.themeByMood) {
+      applyThemeFromMood();
+    }
+    ensureTaskItemCompatibility();
+    bindCompleteButtons();
+    initSwipeGestures();
+    return result;
+  };
+
+  const originalUpdateCatMood = window.updateCatMood;
+  window.updateCatMood = function (...args) {
+    const result = typeof originalUpdateCatMood === "function" ? originalUpdateCatMood.apply(this, args) : undefined;
+    updateCatMoodUi(getCurrentMoodKey(), uiUpgradeConfig.autoDarkMode ? getTimeMode() : "evening");
+    updateCatInsight();
+    return result;
+  };
+
+  const originalNotifyTask = window.notifyTask;
+  window.notifyTask = function (el, ...args) {
+    const taskEl = el?.closest?.(".task-item");
+    const task = { amount: Number(taskEl?.dataset.amount || 0) };
+
+    if (el?.checked) {
+      playTaskCompleteSound();
+      triggerTaskAnimation(taskEl, task);
+    }
+
+    const result = typeof originalNotifyTask === "function" ? originalNotifyTask.call(this, el, ...args) : undefined;
+    updateCatInsight();
+    if (uiUpgradeConfig.themeByMood) {
+      setTimeout(applyThemeFromMood, 80);
+    }
+    return result;
+  };
+
+  const originalNotifyMoney = window.notifyMoney;
+  window.notifyMoney = function (el, ...args) {
+    if (Number(el?.value) > 0) {
+      playUiFeedbackSound("money");
+    }
+
+    const result = typeof originalNotifyMoney === "function" ? originalNotifyMoney.call(this, el, ...args) : undefined;
+    updateCatInsight();
+    return result;
+  };
+
+  window.toggleCatPanel = toggleCatPanel;
+  window.askCatQuick = askCatQuick;
+  window.sendCatMessage = sendCatMessage;
+  window.playUiFeedbackSound = playUiFeedbackSound;
+  window.completeTaskByElement = function (taskEl) {
+    handleTaskCompleteFromElement(taskEl);
+  };
+
+  initAudioUnlock();
+  initCatWidget();
+  ensureTaskItemCompatibility();
+  bindCompleteButtons();
+  initSwipeGestures();
+  updateCatInsight();
+  if (uiUpgradeConfig.themeByMood) {
+    applyThemeFromMood();
+  }
+
+  setInterval(() => {
+    refreshUiUpgradeConfig();
+    updateCatInsight();
+    if (uiUpgradeConfig.themeByMood) {
+      applyThemeFromMood();
+    }
+  }, 60000);
+})();
 </script>
 </body>
 </html>
