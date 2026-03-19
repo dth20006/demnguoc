@@ -134,10 +134,68 @@ button:hover { opacity: 0.9; transform: translateY(-2px); }
   text-align: center;
 }
 .small-label { font-size: 13px; margin-bottom: 6px; display: block; color: var(--blue); }
+
+.admin-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 18px;
+  backdrop-filter: blur(16px);
+  margin-top: 18px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.admin-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.admin-card input,
+.admin-card select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  outline: none;
+}
+
+.admin-card input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+}
+
+.btn {
+  background: linear-gradient(135deg, rgba(203,166,247,0.35), rgba(137,220,235,0.25));
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  width: auto;
+  margin-top: 0;
+}
+
 @media (max-width: 700px) {
   .row, .settings-grid, .settings-grid-4, .checkbox-list {
     grid-template-columns: 1fr;
     display: grid;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
   }
 }
 </style>
@@ -276,6 +334,150 @@ Khác</textarea>
     </div>
     <button onclick="saveUIConfig()">💾 Lưu UI Config</button>
   </div>
+
+  <section class="admin-card">
+    <h2>🎨 UI Mood / Widget / Sound</h2>
+
+    <div class="grid-2">
+      <label>
+        <span>Theme auto theo mood</span>
+        <input type="checkbox" id="cfgThemeByMood" checked />
+      </label>
+
+      <label>
+        <span>Auto dark mode theo giờ</span>
+        <input type="checkbox" id="cfgAutoDark" checked />
+      </label>
+
+      <label>
+        <span>Bật sound effect</span>
+        <input type="checkbox" id="cfgSoundEnabled" checked />
+      </label>
+
+      <label>
+        <span>Kiểu sound</span>
+        <select id="cfgSoundType">
+          <option value="pop">Pop</option>
+          <option value="sparkle" selected>Sparkle</option>
+          <option value="ding">Ding</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Âm lượng</span>
+        <input type="range" id="cfgVolume" min="0" max="1" step="0.05" value="0.7" />
+      </label>
+
+      <label>
+        <span>Kiểu confetti</span>
+        <select id="cfgConfettiStyle">
+          <option value="sparkle">Sparkle</option>
+          <option value="money" selected>Money</option>
+          <option value="burst">Burst</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Bật gesture swipe</span>
+        <input type="checkbox" id="cfgGestureEnabled" checked />
+      </label>
+
+      <label>
+        <span>Widget mini luôn nổi</span>
+        <input type="checkbox" id="cfgWidgetAlwaysOn" checked />
+      </label>
+
+      <label>
+        <span>Vị trí widget</span>
+        <select id="cfgWidgetPosition">
+          <option value="bottom-right" selected>Bottom Right</option>
+          <option value="bottom-left">Bottom Left</option>
+        </select>
+      </label>
+    </div>
+
+    <hr style="margin:18px 0;border:none;border-top:1px solid rgba(255,255,255,0.08)">
+
+    <h3>🌈 Màu theo mood</h3>
+    <div class="grid-2">
+      <label>
+        <span>Happy accent</span>
+        <input type="color" id="cfgHappyAccent" value="#89dceb" />
+      </label>
+      <label>
+        <span>Happy glow</span>
+        <input type="color" id="cfgHappyGlow" value="#f5c2e7" />
+      </label>
+
+      <label>
+        <span>Strict accent</span>
+        <input type="color" id="cfgStrictAccent" value="#f38ba8" />
+      </label>
+      <label>
+        <span>Strict glow</span>
+        <input type="color" id="cfgStrictGlow" value="#cba6f7" />
+      </label>
+
+      <label>
+        <span>Sleepy accent</span>
+        <input type="color" id="cfgSleepyAccent" value="#74c7ec" />
+      </label>
+      <label>
+        <span>Sleepy glow</span>
+        <input type="color" id="cfgSleepyGlow" value="#89b4fa" />
+      </label>
+
+      <label>
+        <span>Idle accent</span>
+        <input type="color" id="cfgIdleAccent" value="#cba6f7" />
+      </label>
+      <label>
+        <span>Idle glow</span>
+        <input type="color" id="cfgIdleGlow" value="#f5c2e7" />
+      </label>
+    </div>
+
+    <hr style="margin:18px 0;border:none;border-top:1px solid rgba(255,255,255,0.08)">
+
+    <h3>🌙 Khung giờ auto dark</h3>
+    <div class="grid-2">
+      <label>
+        <span>Bắt đầu Day</span>
+        <input type="time" id="cfgDayStart" value="06:00" />
+      </label>
+      <label>
+        <span>Bắt đầu Evening</span>
+        <input type="time" id="cfgEveningStart" value="18:00" />
+      </label>
+      <label>
+        <span>Bắt đầu Night</span>
+        <input type="time" id="cfgNightStart" value="23:00" />
+      </label>
+    </div>
+
+    <hr style="margin:18px 0;border:none;border-top:1px solid rgba(255,255,255,0.08)">
+
+    <h3>🐱 Lời thoại mặc định của mèo</h3>
+    <div class="grid-2">
+      <label style="grid-column:1/-1;">
+        <span>Lời chào</span>
+        <input type="text" id="cfgCatGreeting" value="Meo~ mình ở đây để giữ bạn đúng nhịp nhé." />
+      </label>
+      <label style="grid-column:1/-1;">
+        <span>Lời nhắc strict</span>
+        <input type="text" id="cfgCatStrictLine" value="Bạn còn việc quan trọng chưa xong, tập trung nào." />
+      </label>
+      <label style="grid-column:1/-1;">
+        <span>Lời nhắc happy</span>
+        <input type="text" id="cfgCatHappyLine" value="Hôm nay bạn làm khá ổn đó, tiến tiếp đi!" />
+      </label>
+    </div>
+
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn" onclick="saveUiConfig()">💾 Lưu UI Config</button>
+      <button class="btn" onclick="resetUiConfig()">♻️ Reset mặc định</button>
+    </div>
+  </section>
 
   <div class="card">
     <h3 class="section-title">😼 Cat & Insight</h3>
@@ -816,10 +1018,155 @@ async function loadCatInsight() {
   } catch (e) {}
 }
 
+const UI_CONFIG_KEY = "ai_scheduler_ui_config_v1";
+
+const defaultUiConfig = {
+  themeByMood: true,
+  autoDarkMode: true,
+  soundEnabled: true,
+  soundType: "sparkle",
+  volume: 0.7,
+  confettiStyle: "money",
+  gestureEnabled: true,
+  widgetAlwaysOn: true,
+  widgetPosition: "bottom-right",
+  dayStart: "06:00",
+  eveningStart: "18:00",
+  nightStart: "23:00",
+  moods: {
+    happy: { accent: "#89dceb", glow: "#f5c2e7" },
+    strict: { accent: "#f38ba8", glow: "#cba6f7" },
+    sleepy: { accent: "#74c7ec", glow: "#89b4fa" },
+    idle: { accent: "#cba6f7", glow: "#f5c2e7" }
+  },
+  catLines: {
+    greeting: "Meo~ mình ở đây để giữ bạn đúng nhịp nhé.",
+    strict: "Bạn còn việc quan trọng chưa xong, tập trung nào.",
+    happy: "Hôm nay bạn làm khá ổn đó, tiến tiếp đi!"
+  }
+};
+
+function cloneDefaultUiConfig() {
+  return JSON.parse(JSON.stringify(defaultUiConfig));
+}
+
+function mergeUiConfigWithDefaults(rawConfig = {}) {
+  const base = cloneDefaultUiConfig();
+  return {
+    ...base,
+    ...rawConfig,
+    moods: {
+      happy: { ...base.moods.happy, ...(rawConfig.moods?.happy || {}) },
+      strict: { ...base.moods.strict, ...(rawConfig.moods?.strict || {}) },
+      sleepy: { ...base.moods.sleepy, ...(rawConfig.moods?.sleepy || {}) },
+      idle: { ...base.moods.idle, ...(rawConfig.moods?.idle || {}) }
+    },
+    catLines: {
+      ...base.catLines,
+      ...(rawConfig.catLines || {})
+    }
+  };
+}
+
+function getUiConfig() {
+  const raw = localStorage.getItem(UI_CONFIG_KEY);
+  if (!raw) return cloneDefaultUiConfig();
+  try {
+    return mergeUiConfigWithDefaults(JSON.parse(raw));
+  } catch {
+    return cloneDefaultUiConfig();
+  }
+}
+
+function setUiConfig(config) {
+  localStorage.setItem(UI_CONFIG_KEY, JSON.stringify(config));
+}
+
+function fillUiConfigForm() {
+  const cfg = getUiConfig();
+
+  document.getElementById("cfgThemeByMood").checked = cfg.themeByMood;
+  document.getElementById("cfgAutoDark").checked = cfg.autoDarkMode;
+  document.getElementById("cfgSoundEnabled").checked = cfg.soundEnabled;
+  document.getElementById("cfgSoundType").value = cfg.soundType;
+  document.getElementById("cfgVolume").value = cfg.volume;
+  document.getElementById("cfgConfettiStyle").value = cfg.confettiStyle;
+  document.getElementById("cfgGestureEnabled").checked = cfg.gestureEnabled;
+  document.getElementById("cfgWidgetAlwaysOn").checked = cfg.widgetAlwaysOn;
+  document.getElementById("cfgWidgetPosition").value = cfg.widgetPosition;
+
+  document.getElementById("cfgDayStart").value = cfg.dayStart;
+  document.getElementById("cfgEveningStart").value = cfg.eveningStart;
+  document.getElementById("cfgNightStart").value = cfg.nightStart;
+
+  document.getElementById("cfgHappyAccent").value = cfg.moods.happy.accent;
+  document.getElementById("cfgHappyGlow").value = cfg.moods.happy.glow;
+  document.getElementById("cfgStrictAccent").value = cfg.moods.strict.accent;
+  document.getElementById("cfgStrictGlow").value = cfg.moods.strict.glow;
+  document.getElementById("cfgSleepyAccent").value = cfg.moods.sleepy.accent;
+  document.getElementById("cfgSleepyGlow").value = cfg.moods.sleepy.glow;
+  document.getElementById("cfgIdleAccent").value = cfg.moods.idle.accent;
+  document.getElementById("cfgIdleGlow").value = cfg.moods.idle.glow;
+
+  document.getElementById("cfgCatGreeting").value = cfg.catLines.greeting;
+  document.getElementById("cfgCatStrictLine").value = cfg.catLines.strict;
+  document.getElementById("cfgCatHappyLine").value = cfg.catLines.happy;
+}
+
+function saveUiConfig() {
+  const cfg = {
+    themeByMood: document.getElementById("cfgThemeByMood").checked,
+    autoDarkMode: document.getElementById("cfgAutoDark").checked,
+    soundEnabled: document.getElementById("cfgSoundEnabled").checked,
+    soundType: document.getElementById("cfgSoundType").value,
+    volume: parseFloat(document.getElementById("cfgVolume").value || "0.7"),
+    confettiStyle: document.getElementById("cfgConfettiStyle").value,
+    gestureEnabled: document.getElementById("cfgGestureEnabled").checked,
+    widgetAlwaysOn: document.getElementById("cfgWidgetAlwaysOn").checked,
+    widgetPosition: document.getElementById("cfgWidgetPosition").value,
+    dayStart: document.getElementById("cfgDayStart").value,
+    eveningStart: document.getElementById("cfgEveningStart").value,
+    nightStart: document.getElementById("cfgNightStart").value,
+    moods: {
+      happy: {
+        accent: document.getElementById("cfgHappyAccent").value,
+        glow: document.getElementById("cfgHappyGlow").value
+      },
+      strict: {
+        accent: document.getElementById("cfgStrictAccent").value,
+        glow: document.getElementById("cfgStrictGlow").value
+      },
+      sleepy: {
+        accent: document.getElementById("cfgSleepyAccent").value,
+        glow: document.getElementById("cfgSleepyGlow").value
+      },
+      idle: {
+        accent: document.getElementById("cfgIdleAccent").value,
+        glow: document.getElementById("cfgIdleGlow").value
+      }
+    },
+    catLines: {
+      greeting: document.getElementById("cfgCatGreeting").value.trim(),
+      strict: document.getElementById("cfgCatStrictLine").value.trim(),
+      happy: document.getElementById("cfgCatHappyLine").value.trim()
+    }
+  };
+
+  setUiConfig(cfg);
+  alert("Đã lưu UI config ✅");
+}
+
+function resetUiConfig() {
+  setUiConfig(cloneDefaultUiConfig());
+  fillUiConfigForm();
+  alert("Đã reset về mặc định ✅");
+}
+
 renderGoals();
 loadSettings();
 loadCatInsight();
 loadUIConfig();
+document.addEventListener("DOMContentLoaded", fillUiConfigForm);
 </script>
 </body>
 </html>
